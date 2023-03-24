@@ -30,26 +30,32 @@ int main(int argc, char const *argv[]) {
     }
 
     // Écoute des connexions entrantes
-    if (listen(server_socket, 3) < 0) {
-        perror("listen failed");
-        exit(EXIT_FAILURE);
+        if (listen(server_socket, 3) < 0) {
+            perror("listen failed");
+            exit(EXIT_FAILURE);
+        }
+
+        // Attente de connexion d'un client
+        int address_length = sizeof(client_address);
+        if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t*)&address_length)) < 0) {
+            perror("accept failed");
+            exit(EXIT_FAILURE);
+        }
+    while(1){
+        printf("start\n");
+        memset(buffer, 0, sizeof(buffer));
+        
+        // Lecture des données envoyées par le client
+        int bytes_received = read(client_socket, buffer, 1024);
+        printf("here\n");
+        printf("Received message: %s\n", buffer);
+        
+
+        // Envoi d'une réponse au client
+        char *response = "Message received";
+        int bytes_sent = send(client_socket, response, strlen(response), 0);
+        printf("Response sent: %s\n", response);
     }
-
-    // Attente de connexion d'un client
-    int address_length = sizeof(client_address);
-    if ((client_socket = accept(server_socket, (struct sockaddr *)&client_address, (socklen_t*)&address_length)) < 0) {
-        perror("accept failed");
-        exit(EXIT_FAILURE);
-    }
-
-    // Lecture des données envoyées par le client
-    int bytes_received = read(client_socket, buffer, 1024);
-    printf("Received message: %s\n", buffer);
-
-    // Envoi d'une réponse au client
-    char *response = "Message received";
-    int bytes_sent = send(client_socket, response, strlen(response), 0);
-    printf("Response sent: %s\n", response);
 
     // Fermeture des sockets
     close(client_socket);
