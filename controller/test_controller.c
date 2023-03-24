@@ -30,10 +30,17 @@ int main(int argc, char const *argv[]) {
     }
 
     // Écoute des connexions entrantes
-        if (listen(server_socket, 3) < 0) {
-            perror("listen failed");
-            exit(EXIT_FAILURE);
-        }
+    if (listen(server_socket, 3) < 0) {
+        perror("listen failed");
+        exit(EXIT_FAILURE);
+    }
+
+    while (1) {
+        char command[1024];
+        printf("$ ");
+        fgets(command, 1024, stdin);
+
+        // Traiter la commande ici
 
         // Attente de connexion d'un client
         int address_length = sizeof(client_address);
@@ -41,20 +48,20 @@ int main(int argc, char const *argv[]) {
             perror("accept failed");
             exit(EXIT_FAILURE);
         }
-    while(1){
-        printf("start\n");
-        memset(buffer, 0, sizeof(buffer));
-        
+
         // Lecture des données envoyées par le client
         int bytes_received = read(client_socket, buffer, 1024);
-        printf("here\n");
         printf("Received message: %s\n", buffer);
-        
 
         // Envoi d'une réponse au client
         char *response = "Message received";
         int bytes_sent = send(client_socket, response, strlen(response), 0);
         printf("Response sent: %s\n", response);
+
+        // Quitter la boucle infinie si l'utilisateur entre "exit"
+        if (strncmp(command, "exit\n", 5) == 0) {
+            break;
+        }
     }
 
     // Fermeture des sockets
