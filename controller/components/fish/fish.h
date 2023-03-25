@@ -25,7 +25,7 @@ struct fish{
  * @param height    the height of the fish
  * @return          the adress of the strcuture fish created
  */
-struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY strategy,int x,int y,int width,int height)
+struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY strategy,int x,int y,int width,int height);
 
 /**
  * @fn          free_fish
