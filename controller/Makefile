@@ -1,6 +1,10 @@
 CC=gcc
 objets = parser.o aquarium.o prompt.o controller.o mutex.o 
 
+all: controller
+
+test: test_aquarium test_parser
+
 prompt.o: components/prompt/prompt.c
 	$(CC) -c components/prompt/prompt.c
 
@@ -23,12 +27,12 @@ controller: $(objets)
 
 test_aquarium.o: tests/test_aquarium.c
 	$(CC) -c tests/test_aquarium.c
+test_parser.o: tests/test_parser.c
+	$(CC) -c tests/test_parser.c
 
 test_aquarium: test_aquarium.o aquarium.o parser.o
 	$(CC) -o $@ $^
 
-test_parser.o: tests/test_parser.c
-	$(CC) -c tests/test_parser.c
 test_parser: parser.o
 	$(CC) -o $@ parser.o
 
