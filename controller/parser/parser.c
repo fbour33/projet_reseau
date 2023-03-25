@@ -94,7 +94,7 @@ void parser_save_aquarium(char *file,struct aquarium *aquarium){
     }
     fprintf(aquarium_load_file,"%dx%d\n",aquarium->dimension.width,aquarium->dimension.height);
     for(int i=0;i<aquarium->num_aquarium_views;i++){
-        fprintf(aquarium_load_file,"N%i %dx%d+%d+%d\n",aquarium->aquarium_views[i]->id,aquarium->aquarium_views[i]->p.x,aquarium->aquarium_views[i]->p.y,aquarium->aquarium_views[i]->d.width,aquarium->aquarium_views[i]->d.height);
+        fprintf(aquarium_load_file,"N%d %dx%d+%d+%d\n",aquarium->aquarium_views[i]->id,aquarium->aquarium_views[i]->p.x,aquarium->aquarium_views[i]->p.y,aquarium->aquarium_views[i]->d.width,aquarium->aquarium_views[i]->d.height);
     }
     fclose(aquarium_load_file);
 }

@@ -23,7 +23,7 @@ struct aquarium *create_aquarium(){
  * @brief   load a aquarium from the aquarium.load file  
  */
 void load_aquarium(struct aquarium *aquarium){
-    parser_load_aquarium("../../../aquarium.load",aquarium);
+    parser_load_aquarium("../aquarium.load",aquarium);
     printf("\t-> aquarium loaded (%d display views) !\n",aquarium->num_aquarium_views);
 }
 
@@ -82,7 +82,7 @@ void del_view_aquarium(struct aquarium* aquarium, int view_id){
  */
 
 void save_aquarium(struct aquarium* aquarium){
-    parser_save_aquarium("../../../aquarium.load",aquarium);
+    parser_save_aquarium("../aquarium.load",aquarium);
     printf("\t-> aquarium saved !(%d display views)\n",aquarium->num_aquarium_views);
 }
 

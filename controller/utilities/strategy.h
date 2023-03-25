@@ -7,8 +7,14 @@ enum STRATEGY{
 };
 
 /**
- * convert a string value of a strategy get from the client to a enum value 
- * @param strategy the string strategy to use for the fish get from the client
+ * @brief           convert a string value of a strategy get from the client to a enum value 
+ * @param strategy  the string strategy to use for the fish get from the client
  */
 enum STRATEGY get_strategy_from_string(char *strategy);
+
+/**
+ * @brief    implement fish random move strategy
+ * @param fish the string strategy to use for the fish get from the client
+ */
+void RandomWayPoint(struct fish *fish);
 #endif

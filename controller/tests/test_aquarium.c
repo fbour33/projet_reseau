@@ -3,8 +3,13 @@
 #include <assert.h>
 #include "../components/aquarium/aquarium.h"
 
-
-void test_add_view_aquarium(){
+/**
+ * @brief test function view aquarium 
+ * @note if you want to test in the tes directory, you need to change path of 
+ * the aquarium.load file because it a relative path
+ * @note the best way it to test from the controller directory
+ */
+void test_function_view_aquarium(){
     printf("test_add_view_aquarium\n");
     struct aquarium *aquarium = create_aquarium();
     load_aquarium(aquarium);
@@ -24,7 +29,7 @@ void test_add_view_aquarium(){
 }
 
 int main(){
-    test_add_view_aquarium();
+    test_function_view_aquarium();
 }
 
 
