@@ -5,8 +5,10 @@
 #include "../../global.h"
 #define MAX_COMMAND_LENGTH 32
 
-
-
+/**
+ * @brief main function of the prompt
+ * @note it is the function which will be given to the thread
+ */
 void * main_prompt_menu(void *args){
     char command[MAX_COMMAND_LENGTH];
     while (1) {
@@ -18,6 +20,10 @@ void * main_prompt_menu(void *args){
     }
 }
 
+/**
+ * @brief function for handling the prompt entry
+ * @return 1 on success, 0 on failure
+ */
 int handle_command_line(char *command_line){
     char *token;
     char *delim = " ";
@@ -48,6 +54,10 @@ int handle_command_line(char *command_line){
     return 1;
 }
 
+/**
+ * @brief function for calling the right callback function
+ * @return 1 on success, 0 on failure
+ */
 int call_command(enum COMMAND command){
     if(global_aquarium==NULL && command!=LOAD){
         printf("\t-> Impossible to execute a command on non-existing aquarium\n");
@@ -70,14 +80,27 @@ int call_command(enum COMMAND command){
     }
 }
 
+/**
+ * @brief function called when a load command is received
+ * @return 1 on success, 0 on failure
+ */
 int command_load_aquarium(){
     global_aquarium = create_aquarium(); // pour le moment j'initialise l'aquarium ici
     load_aquarium(global_aquarium);
 }
+
+/**
+ * @brief function called when the show command is received
+ * @return 1 on success, 0 on failure
+ */
 int command_show_aquarium(){
     show_aquarium(global_aquarium);
 }
 
+/**
+ * @brief function called when the add command is received
+ * @return 1 on success, 0 on failure
+ */
 int command_add_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
@@ -105,6 +128,10 @@ int command_add_aquarium(){
     
 }
 
+/**
+ * @brief function called when the delete command is received
+ * @return 1 on success, 0 on failure
+ */
 int command_del_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
@@ -114,6 +141,10 @@ int command_del_aquarium(){
     del_view_aquarium(global_aquarium,num);
 }
 
+/**
+ * @brief function called when the save command is received
+ * @return 1 on success, 0 on failure
+ */
 int command_save_aquarium(){
     save_aquarium(global_aquarium);
 }
