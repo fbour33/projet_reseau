@@ -1,6 +1,5 @@
 #ifndef AQUARIUM_TOOLS_H
 #define AQUARIUM_TOOLS_H
-#include "../components/view/view.h"
 
 /********** STRUCT POSITION *************/ 
 struct position{

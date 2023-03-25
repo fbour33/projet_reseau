@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../parser/parser.h"
+#include "../components/aquarium/aquarium.h"
 
-void test_parser_load_aquarium(){
+void test_parser_load_aquarium() {
     printf("test_parser_load_aquarium  ");
 
     struct aquarium *aquarium = malloc(sizeof(struct aquarium));
@@ -50,10 +51,9 @@ void test_parser_load_aquarium(){
     }
     free(aquarium);
     printf("OK\n");
-
 }
-
 
 int main(){
     test_parser_load_aquarium();
+    return 0;
 }

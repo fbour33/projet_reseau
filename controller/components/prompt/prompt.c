@@ -12,7 +12,7 @@
 void * main_prompt_menu(void *args){
     char command[MAX_COMMAND_LENGTH];
     while (1) {
-        printf(GREENBOLD"aquarium$ ");
+        printf(GREENBOLD"aquarium: $ ");
         fgets(command, MAX_COMMAND_LENGTH, stdin);
         if (!handle_command_line(command)) {
             break;
@@ -32,19 +32,19 @@ int handle_command_line(char *command_line){
     if (token == NULL){
         return 0;
     }else{
-        if(strcmp(token, "load")==0){
+        if(strncmp(token, "load\n", 5) == 0){
             call_command(LOAD);
         }
-        else if(strcmp(token, "show")==0){
+        else if(strncmp(token, "show\n", 5) == 0){
             call_command(SHOW);
         }
-        else if(strcmp(token, "add")==0){
+        else if(strncmp(token, "add\n", 4) == 0){
             call_command(ADD);
         }
-        else if(strcmp(token, "del")==0){
+        else if(strncmp(token, "del\n", 4) == 0){
             call_command(DEL);
         }
-        else if(strcmp(token, "save")==0){
+        else if(strncmp(token, "save\n", 5) == 0){
             call_command(SAVE);
         }
         else{

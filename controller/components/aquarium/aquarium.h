@@ -1,8 +1,10 @@
 #ifndef AQUARIUM_H
 #define AQUARIUM_H
+
 #include"../view/view.h"
 #include "../fish/fish.h"
 #include "../../parser/parser.h"
+
 #define MAX_VIEWS 15
 #define MAX_FISHES 15
 struct aquarium{

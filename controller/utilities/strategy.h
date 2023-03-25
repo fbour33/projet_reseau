@@ -1,6 +1,7 @@
 #ifndef AQUARIUM_FISH_STRATEGY
 #define AQUARIUM_FISH_STRATEGY
 
+#include "../components/fish/fish.h"
 
 enum STRATEGY{
     HORIZONTAL, VERTICAL, RANDOM, UNREGISTERED
