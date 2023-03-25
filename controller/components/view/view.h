@@ -7,4 +7,5 @@ struct view{
     struct position p;
 };
 
+struct view * create_view(int id, int x, int y, int width, int height);
 #endif

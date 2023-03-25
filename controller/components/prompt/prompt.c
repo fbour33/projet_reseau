@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "prompt.h"
+#include "../../utilities/mutex.h"
 #include "../../global.h"
 #define MAX_COMMAND_LENGTH 32
 
@@ -27,8 +28,11 @@ void * main_prompt_menu(void *args){
 int handle_command_line(char *command_line){
     char *token;
     char *delim = " ";
+    if (strncmp(command_line, "quit",4)==0 || strncmp(command_line, "exit",4)==0){
+        printf("\t->bye\n");
+        return 0;
+    }
     token = strtok(command_line, delim);
-
     if (token == NULL){
         return 0;
     }else{
@@ -85,8 +89,10 @@ int call_command(enum COMMAND command){
  * @return 1 on success, 0 on failure
  */
 int command_load_aquarium(){
-    global_aquarium = create_aquarium(); // pour le moment j'initialise l'aquarium ici
+    pthread_mutex_lock(&mutex_aquarium);
+    global_aquarium = create_aquarium();
     load_aquarium(global_aquarium);
+    pthread_mutex_unlock(&mutex_aquarium);
 }
 
 /**
@@ -123,7 +129,9 @@ int command_add_aquarium(){
         view->d.width=atoi(width);
         view->p.x=atoi(x);
         view->p.y=atoi(y);
+        pthread_mutex_lock(&mutex_aquarium);
         add_view_aquarium(global_aquarium,view);
+        pthread_mutex_unlock(&mutex_aquarium);
     }
     
 }
@@ -138,7 +146,9 @@ int command_del_aquarium(){
     char *id;
     id = strtok(NULL, " ");
     int num = atoi(id+1);
+    pthread_mutex_lock(&mutex_aquarium);
     del_view_aquarium(global_aquarium,num);
+    pthread_mutex_unlock(&mutex_aquarium);
 }
 
 /**

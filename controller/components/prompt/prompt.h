@@ -3,7 +3,7 @@
 #define GREENBOLD "\e[32;1m"
 
 enum COMMAND{
-    LOAD, SHOW, ADD, DEL, SAVE
+    LOAD, SHOW, ADD, DEL, SAVE,EXIT
 };
 
 /**
