@@ -1,5 +1,6 @@
 #ifndef AQUARIUM_FISH_H
 #define AQUARIUM_FISH_H
+
 #include "../../utilities/fish_type.h"
 #include "../../utilities/strategy.h"
 #include "../../utilities/tools.h"
@@ -25,7 +26,7 @@ struct fish{
  * @param height    the height of the fish
  * @return          the adress of the strcuture fish created
  */
-struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY strategy,int x,int y,int width,int height)
+struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY strategy,int x,int y,int width,int height);
 
 /**
  * @fn          free_fish
@@ -33,4 +34,5 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY st
  *  @param fish a pointer to a fish structure
  */
 void free_fish(struct fish * fish);
+
 #endif

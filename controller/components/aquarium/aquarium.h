@@ -7,6 +7,7 @@
 
 #define MAX_VIEWS 15
 #define MAX_FISHES 15
+
 struct aquarium{
     struct dimension dimension;
     int num_aquarium_views;

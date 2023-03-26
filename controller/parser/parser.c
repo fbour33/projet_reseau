@@ -11,6 +11,7 @@
  * @param timeout  the adress of the variable containing the display-timeout value
  * @param interval the adress of the variable containing the fish-update-interval value
 **/
+
 void parser_controller_config_file(const char *file, int *port, int *timeout, int *interval){
     FILE *config_file;
     char line[MAX_LENGTH];

@@ -31,10 +31,10 @@ test_parser.o: tests/test_parser.c
 test_aquarium: test_aquarium.o aquarium.o parser.o
 	$(CC) -o $@ $^
 
-test_parser: parser.o
-	$(CC) -o $@ parser.o
+test_parser: test_parser.o parser.o aquarium.o
+	$(CC) -o $@ $^
 
 
 ############################ CLEAN ########################
 clean: 
-	rm -f *.o controller
+	rm -f *.o controller test_aquarium test_parser
