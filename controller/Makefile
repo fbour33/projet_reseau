@@ -39,4 +39,4 @@ test_parser: test_parser.o parser.o aquarium.o
 
 ############################ CLEAN ########################
 clean: 
-	rm *.o controller test_aquarium test_parser
+	rm -f *.o controller test_aquarium test_parser
