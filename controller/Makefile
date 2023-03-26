@@ -1,5 +1,5 @@
 CC=gcc
-objets = parser.o aquarium.o prompt.o controller.o
+objets = parser.o aquarium.o prompt.o controller.o mutex.o 
 
 all: controller
 
@@ -14,6 +14,8 @@ aquarium.o: components/aquarium/aquarium.c
 parser.o: parser/parser.c
 	$(CC) -c parser/parser.c
 
+mutex.o: utilities/mutex.c
+	$(CC) -c utilities/mutex.c
 controller.o: controller.c
 	$(CC) -c controller.c
 
@@ -37,4 +39,4 @@ test_parser: test_parser.o parser.o aquarium.o
 
 ############################ CLEAN ########################
 clean: 
-	rm -f *.o controller test_aquarium test_parser
+	rm *.o controller test_aquarium test_parser

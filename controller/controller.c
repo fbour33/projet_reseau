@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "utilities/mutex.h"
 #include "components/prompt/prompt.h"
-
-
 pthread_t thread_prompt;
 
 int main(){
@@ -12,5 +11,6 @@ int main(){
         printf("error creating thread for the prompt\n");
     }
     pthread_join(thread_prompt, NULL);
+    pthread_mutex_destroy(&mutex_aquarium);
     return 1;
 }
