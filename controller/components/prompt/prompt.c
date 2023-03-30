@@ -95,7 +95,7 @@ int command_load_aquarium(){
         printf("\t-> you need to load something\n");
         return 0;
     }
-    if(strcmp(string,"aquarium")!=0){
+    if(strncmp(string,"aquarium", 8)!=0){
         printf("\t-> invalid string after load command\n");
         return 0;
     }
@@ -120,35 +120,30 @@ int command_show_aquarium(){
 int command_add_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
-    printf("%s\n", string);
     if(string==NULL){
         printf("\t-> you need to add something\n");
         return 0;
     }
-    else{
-
-        char *id,*x,*y,*width,*height;
-        id = strtok(NULL, " ");
-        if(id==NULL){
-            printf("\t->Invalid command\n");
-            return 0;
-        }
-        int num = atoi(id+1);
-        x = strtok(NULL, "x");
-        y = strtok(NULL, "+");
-        width = strtok(NULL, "+");
-        height = strtok(NULL, "+");
-        struct view *view = malloc(sizeof(struct view));
-        view->id=num;
-        view->d.height=atoi(height);
-        view->d.width=atoi(width);
-        view->p.x=atoi(x);
-        view->p.y=atoi(y);
-        pthread_mutex_lock(&mutex_aquarium);
-        add_view_aquarium(global_aquarium,view);
-        pthread_mutex_unlock(&mutex_aquarium);
+    char *id,*x,*y,*width,*height;
+    id = strtok(NULL, delim);
+    if(id==NULL){
+        printf("\t->Invalid command\n");
+        return 0;
     }
-    
+    int num = atoi(id+1);
+    x = strtok(NULL, delim);
+    y = strtok(NULL, delim);
+    width = strtok(NULL, delim);
+    height = strtok(NULL, delim);
+    struct view *view = malloc(sizeof(struct view));
+    view->id=num;
+    view->d.height=atoi(height);
+    view->d.width=atoi(width);
+    view->p.x=atoi(x);
+    view->p.y=atoi(y);
+    pthread_mutex_lock(&mutex_aquarium);
+    add_view_aquarium(global_aquarium,view);
+    pthread_mutex_unlock(&mutex_aquarium);  
 }
 
 /**
@@ -158,8 +153,16 @@ int command_add_aquarium(){
 int command_del_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
+    if(string==NULL){
+        printf("\t-> you need to load something\n");
+        return 0;
+    }
     char *id;
-    id = strtok(NULL, " ");
+    id = strtok(NULL, delim);
+    if(id==NULL){
+        printf("\t->Invalid command\n");
+        return 0;
+    }
     int num = atoi(id+1);
     pthread_mutex_lock(&mutex_aquarium);
     del_view_aquarium(global_aquarium,num);
