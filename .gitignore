@@ -1,9 +1,10 @@
-javafx-sdk-20
 # Ignore Gradle project-specific cache directory
 .gradle
+.vscode
 
 # Ignore Gradle build output directory
 build
 
 .vscode/
 app/bin/
+javafx-sdk-20
