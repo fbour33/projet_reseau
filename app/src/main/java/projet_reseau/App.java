@@ -3,34 +3,9 @@
  */
 package projet_reseau;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import java.lang.String;
 
 public class App {
-
-    /*@Override
-    public void start(Stage primaryStage) {
-        // Crée un label avec le texte "Hello World!"
-        Label label = new Label("Hello World!");
-
-        // Ajoute le label à une pile
-        StackPane root = new StackPane();
-        root.getChildren().add(label);
-
-        // Crée une scène avec la pile comme nœud racine
-        Scene scene = new Scene(root, 300, 250);
-
-        // Définit la scène sur le stage et l'affiche
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-    
-    public static void main(String[] args) {
-        launch(args);
-    }*/
     public String getGreeting() {
         return "Hello World!";
     }

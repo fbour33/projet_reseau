@@ -124,12 +124,16 @@ int command_add_aquarium(){
         printf("\t-> you need to add something\n");
         return 0;
     }
-    char *id,*x,*y,*width,*height;
-    id = strtok(NULL, delim);
-    if(id==NULL){
-        printf("\t->Invalid command\n");
+    if (strncmp(string, "view", 4) != 0) {
+        printf("\t-> you have to had a view\n");
         return 0;
     }
+    char *id = strtok(NULL, delim);
+    if(id==NULL){
+        printf("\t-> invalid command\n");
+        return 0;
+    }
+    char *x,*y,*width,*height;
     int num = atoi(id+1);
     x = strtok(NULL, delim);
     y = strtok(NULL, delim);
@@ -154,13 +158,16 @@ int command_del_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
     if(string==NULL){
-        printf("\t-> you need to load something\n");
+        printf("\t-> you need to add something\n");
         return 0;
     }
-    char *id;
-    id = strtok(NULL, delim);
+    if (strncmp(string, "view", 4) != 0) {
+        printf("\t-> you have to had a view\n");
+        return 0;
+    }
+    char *id = strtok(NULL, delim);
     if(id==NULL){
-        printf("\t->Invalid command\n");
+        printf("\t-> invalid command\n");
         return 0;
     }
     int num = atoi(id+1);
