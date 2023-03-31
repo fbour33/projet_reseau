@@ -5,6 +5,10 @@
     #define SERV_PORT "5000"
     #define SERV_ADDR "localhost"
 
+    enum RESPONSE {
+        HELLO
+    };
+
     void echo_server(int sockfd);
 
     int handle_bind();

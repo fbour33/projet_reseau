@@ -18,11 +18,10 @@ void echo_server(int sockfd) {
 		if (recv(sockfd, buff, MSG_LEN, 0) <= 0) {
 			break;
 		}
-		printf("Received: %s", buff);
-		// Sending message (ECHO)
-		if (send(sockfd, buff, strlen(buff), 0) <= 0) {
+		if (handle_message(buff, sockfd) == -1) {
 			break;
 		}
+		printf("Received: %s", buff);
 		printf("Message sent!\n");
 	}
 }
@@ -55,4 +54,74 @@ int handle_bind() {
 	}
 	freeaddrinfo(result);
 	return sfd;
+}
+
+/**
+ * @brief function for handling the client message
+ * @return 0 on success, -1 on failure
+ */
+int handle_message(char buffer[MSG_LEN], int sockfd) {
+	char *token;
+    char *delim = " ";
+	token = strtok(buffer, delim);
+
+	if (token == NULL) {
+		return 0;
+	} else {
+		if (strncmp(token, "hello", 5) == 0) {
+			return call_response(HELLO, sockfd);
+		}
+		else {
+			if (send(sockfd, "NOK", 3, 0) <= 0) {
+				return -1;
+			}
+		}
+	}
+	return 0;
+}
+
+/**
+ * @brief Secondary function for handling the client message
+ * @return 0 on success, -1 on failure
+ */
+int call_response(enum RESPONSE resp, int sockfd) {
+	switch (resp) {
+		case HELLO :
+			return response_hello(sockfd); 
+		default :
+			return -1;
+	}
+}
+
+/**
+ * @brief function called when a hello message is received
+ * @return 0 on success, -1 on failure
+ */
+int response_hello(int sockfd) {
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if (next == NULL) {
+		//attribuer un identifiant libre
+		/*if (send(sockfd, "N**", 3, 0) <= 0) {
+				return -1;
+		}*/
+		return 0;
+	}
+	else if (strncmp(next, "in", 2) == 0 
+			&& strncmp(strtok(NULL, delim), "as", 2) == 0){
+		printf("next : %s\n", next);
+		next = strtok(NULL, delim);
+		//attribuer l'identifiant next au client 
+		if (send(sockfd, strcat("greeting", next), 3, 0) <= 0) {
+				return -1;
+		}
+		return 0;
+	}
+	else {
+		if (send(sockfd, "no greeting", 11, 0) <= 0) {
+				return -1;
+		}
+		return 0;
+	}
+	return -1;
 }
