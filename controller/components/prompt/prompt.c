@@ -15,7 +15,7 @@ void * main_prompt_menu(void *args){
     while (1) {
         printf(GREENBOLD"aquarium: $ ");
         fgets(command, MAX_COMMAND_LENGTH, stdin);
-        if (!handle_command_line(command)) {
+        if (handle_command_line(command)==1) {
             break;
         }
     }
@@ -23,115 +23,116 @@ void * main_prompt_menu(void *args){
 
 /**
  * @brief function for handling the prompt entry
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure, 1 for exit
  */
 int handle_command_line(char *command_line){
     char *token;
     char *delim = " ";
     if (strncmp(command_line, "quit",4)==0 || strncmp(command_line, "exit",4)==0){
-        printf("\t->bye\n");
-        return 0;
+        printf("\t-> bye\n");
+        return 1;
     }
     token = strtok(command_line, delim);
-    if (token == NULL){
-        return 0;
-    }else{
-        if(strncmp(token, "load",4) == 0){
-            call_command(LOAD);
-        }
-        else if(strncmp(token, "show",4) == 0){
-            call_command(SHOW);
-        }
-        else if(strncmp(token, "add",3) == 0){
-            call_command(ADD);
-        }
-        else if(strncmp(token, "del",3) == 0){
-            call_command(DEL);
-        }
-        else if(strncmp(token, "save\n",4) == 0){
-            call_command(SAVE);
-        }
-        else{
-            printf("\t-> Invalid command\n");
-        }
+
+    if(strncmp(token, "load",4) == 0){
+        call_command(LOAD);
     }
-    return 1;
+    else if(strncmp(token, "show",4) == 0){
+        call_command(SHOW);
+    }
+    else if(strncmp(token, "add",3) == 0){
+        call_command(ADD);
+    }
+    else if(strncmp(token, "del",3) == 0){
+        call_command(DEL);
+    }
+    else if(strncmp(token, "save\n",4) == 0){
+        call_command(SAVE);
+    }
+    else{
+        printf("\t-> Invalid command\n");
+    }
 }
 
 /**
  * @brief function for calling the right callback function
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int call_command(enum COMMAND command){
     if(global_aquarium==NULL && command!=LOAD){
         printf("\t-> Impossible to execute a command on non-existing aquarium\n");
+        return -1;
     }
-    else{
-        switch (command){
-        case LOAD:
-            return command_load_aquarium();
-        case SHOW:
-            return command_show_aquarium();
-        case ADD:
-            return command_add_aquarium();
-        case DEL:
-            return command_del_aquarium();
-        case SAVE:
-            return command_save_aquarium();
-        default:
-            break;
-        }
+    
+    switch (command){
+    case LOAD:
+        return command_load_aquarium();
+    case SHOW:
+        return command_show_aquarium();
+    case ADD:
+        return command_add_aquarium();
+    case DEL:
+        return command_del_aquarium();
+    case SAVE:
+        return command_save_aquarium();
+    default:
+        break;
     }
+
+    return -1;
 }
 
 /**
  * @brief function called when a load command is received
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int command_load_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to load something\n");
-        return 0;
+        return -1;
     }
     if(strncmp(string,"aquarium", 8)!=0){
         printf("\t-> invalid string after load command\n");
-        return 0;
+        return -1;
     }
     pthread_mutex_lock(&mutex_aquarium);
     global_aquarium = create_aquarium();
     load_aquarium(global_aquarium);
     pthread_mutex_unlock(&mutex_aquarium);
+    return 0;
+    
 }
 
 /**
  * @brief function called when the show command is received
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int command_show_aquarium(){
     show_aquarium(global_aquarium);
+    return 0;
 }
 
 /**
  * @brief function called when the add command is received
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int command_add_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to add something\n");
-        return 0;
+        return -1;
     }
     if (strncmp(string, "view", 4) != 0) {
         printf("\t-> you have to had a view\n");
-        return 0;
+        return -1;
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
         printf("\t-> invalid command\n");
-        return 0;
+        return -1;
     }
     char *x,*y,*width,*height;
     int num = atoi(id+1);
@@ -147,39 +148,42 @@ int command_add_aquarium(){
     view->p.y=atoi(y);
     pthread_mutex_lock(&mutex_aquarium);
     add_view_aquarium(global_aquarium,view);
-    pthread_mutex_unlock(&mutex_aquarium);  
+    pthread_mutex_unlock(&mutex_aquarium);
+    return 0;
 }
 
 /**
  * @brief function called when the delete command is received
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int command_del_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to add something\n");
-        return 0;
+        return -1;
     }
     if (strncmp(string, "view", 4) != 0) {
         printf("\t-> you have to had a view\n");
-        return 0;
+        return -1;
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
         printf("\t-> invalid command\n");
-        return 0;
+        return -1;
     }
     int num = atoi(id+1);
     pthread_mutex_lock(&mutex_aquarium);
     del_view_aquarium(global_aquarium,num);
     pthread_mutex_unlock(&mutex_aquarium);
+    return 0;
 }
 
 /**
  * @brief function called when the save command is received
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure
  */
 int command_save_aquarium(){
     save_aquarium(global_aquarium);
+    return 0;
 }
