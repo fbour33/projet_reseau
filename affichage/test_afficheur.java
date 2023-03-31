@@ -20,7 +20,7 @@ public class test_afficheur {
              // Envoi du message de connexion au serveur
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("hello in as N1");
+            writer.println("hello in as N2");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();
@@ -28,7 +28,7 @@ public class test_afficheur {
             String response = reader.readLine();
             System.out.println("Server response: " + response);
             
-            for(int i=0; i<10;i++){
+            for(int i=0; i<5;i++){
                 
 
                 // Envoi d'un message au serveur
