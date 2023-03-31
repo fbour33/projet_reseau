@@ -8,26 +8,39 @@ public class test_afficheur {
         int port = 5000;
 
         try {
+            
             // Établissement de la connexion avec le serveur
             Socket socket = new Socket(serverAddress, port);
 
-            // Envoi d'un message au serveur
-            OutputStream outputStream = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(outputStream, true);
-            writer.println("comment ca mon reuf");
+            OutputStream outputStream = null;
+            PrintWriter writer = null;
+            InputStream inputStream = null;
+            BufferedReader reader = null;
+            
+            for(int i=0; i<10;i++){
+                
 
-            // Lecture de la réponse du serveur
-            InputStream inputStream = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String response = reader.readLine();
-            System.out.println("Server response: " + response);
+                // Envoi d'un message au serveur
+                outputStream = socket.getOutputStream();
+                writer = new PrintWriter(outputStream, true);
+                writer.println("Message n"+i);
 
-            // Fermeture du socket et des flux d'entrée/sortie
+                // Lecture de la réponse du serveur
+                inputStream = socket.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String response = reader.readLine();
+                System.out.println("Server response: " + response);
+
+            }
+
             reader.close();
-            writer.close();
             outputStream.close();
+            writer.close();
             inputStream.close();
             socket.close();
+            
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
