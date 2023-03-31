@@ -1,10 +1,12 @@
 CC=gcc
-CFLAGS=-Wall #-Wextra
+CFLAGS=-pthread -Wall #-Wextra
 objets = parser.o aquarium.o prompt.o controller.o mutex.o
 
-all: controller
+all: controller server
 
 test: test_aquarium test_parser
+
+#################### CONTROLLER #####################
 
 prompt.o: components/prompt/prompt.c
 	$(CC) $(CFLAGS)-c components/prompt/prompt.c
@@ -23,6 +25,16 @@ controller.o: controller.c
 controller: $(objets)
 	$(CC) $(CFLAGS) -o $@ $^
 
+####################### SERVER #######################
+
+server_handler.o : components/server/server_handler.c
+	$(CC) $(CFLAGS)-c components/server/server_handler.c
+
+server.o : components/server/server.c
+	$(CC) $(CFLAGS)-c components/server/server.c
+
+server: server.o server_handler.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 ####################### TESTS ########################
 
@@ -40,4 +52,4 @@ test_parser: test_parser.o parser.o aquarium.o
 
 ############################ CLEAN ########################
 clean: 
-	rm -f *.o controller test_aquarium test_parser
+	rm -f *.o controller server test_aquarium test_parser
