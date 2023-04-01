@@ -4,7 +4,7 @@ CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
 OBJ_DIR=build
 
 objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/controller.o $(OBJ_DIR)/mutex.o
-test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o
+test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o 
 
 
 
@@ -40,7 +40,7 @@ $(OBJ_DIR)/server_handler.o : components/server/server_handler.c
 $(OBJ_DIR)/server.o : components/server/server.c
 	$(CC) $(CFLAGS) -c components/server/server.c -o $@
 
-server: $(OBJ_DIR)/server.o $(OBJ_DIR)/server_handler.o
+server: $(OBJ_DIR)/server.o $(OBJ_DIR)/server_handler.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
 ####################### TESTS ########################

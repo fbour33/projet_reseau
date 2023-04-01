@@ -142,19 +142,18 @@ void echo_server(int sockfd) {
 		}
 		printf("Message sent!\n");
 	}
-}
+}        
 
 FILE* init_log_f(char* log_dir) {
 	FILE *fp;
 
 	strcat(log_dir, "/log.txt");
-	printf("%s\n", log_dir);
     fp = fopen(log_dir, "w"); // ouvrir le fichier en mode écriture pour l'effacer
     fclose(fp);
 
     fp = fopen(log_dir, "a"); // ouvrir le fichier en mode ajout
     if (fp == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
+        perror("fopen() failled");
         exit(EXIT_FAILURE);
     }
 

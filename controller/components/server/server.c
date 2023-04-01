@@ -9,6 +9,7 @@
 #include <sys/select.h>
 
 #include "server_handler.h"
+#include "../prompt/prompt.h"
 
 #ifndef LOG_DIR
 	#define LOG_DIR "aled"
@@ -39,7 +40,6 @@ int main() {
 
 	//initialise le fichier log ou pas
 	char log_dir[MSG_LEN] = LOG_DIR;
-	printf("%s\n", log_dir);
 	log_f = init_log_f(log_dir);
 	
 	if ((listen(sfd, SOMAXCONN)) != 0) {
@@ -49,9 +49,11 @@ int main() {
 	}
 
 	char buff[MSG_LEN];
-
+	printf(GREENBOLD"aquarium: $ ");
+	fflush(STDIN_FILENO);
 	// main loop
 	while (1) {
+
 		active_fds = read_fds;
 		// Cleaning memory
 		memset(buff, 0, MSG_LEN);
@@ -105,6 +107,7 @@ int main() {
 
                     // handle message and response
                     if (handle_message(buff, client_sockets[i]) == -1) {
+						fprintf(log_f, "handle_message of client message (socket : %d) error\n", client_sockets[i]);
 						break;
 					}
 					fprintf(log_f, "Response sent!\n");
@@ -119,8 +122,18 @@ int main() {
 			if(read(STDIN_FILENO, buff, MSG_LEN) == -1){
 				fprintf(log_f, "read() failed\n");
 			}
-			//handle prompt message
 			fprintf(log_f, "received from prompt : %s", buff);
+			int ret = handle_command_line(buff);
+			if (ret == -1) {
+				fprintf(log_f, "handle_command_line of prompt error\n");
+				break;
+			};
+			if (ret == 1) {
+				fprintf(log_f, "Exit the program\n");
+				break;
+			}
+			printf(GREENBOLD"aquarium: $ ");
+			fflush(STDIN_FILENO);
 		}
 
 		fflush(log_f);

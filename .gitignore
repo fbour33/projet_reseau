@@ -9,5 +9,6 @@ build
 app/bin/
 javafx-sdk-20
 
-# Ignore .o files
+# Ignore build files
 *.o
+*.class

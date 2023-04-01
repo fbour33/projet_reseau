@@ -15,12 +15,6 @@ Response sent!
 Received (socket fd 5): Message n3
 
 Response sent!
-Received (socket fd 5): Message n4
-
-Response sent!
-Received (socket fd 5): Message n5
-
-Response sent!
 New connection : socket 6
 Received (socket fd 6): hello in as N2
 
@@ -28,38 +22,44 @@ Response sent!
 Received (socket fd 6): Message n0
 
 Response sent!
-Received (socket fd 5): Message n6
+Received (socket fd 5): Message n4
 
 Response sent!
 Received (socket fd 6): Message n1
 
 Response sent!
-Received (socket fd 5): Message n7
+Received (socket fd 5): Message n5
 
 Response sent!
 Received (socket fd 6): Message n2
 
 Response sent!
-Received (socket fd 5): Message n8
+Received (socket fd 5): Message n6
 
 Response sent!
 Received (socket fd 6): Message n3
 
 Response sent!
-Received (socket fd 5): Message n9
+Received (socket fd 5): Message n7
 
 Response sent!
 Received (socket fd 6): Message n4
 
 Response sent!
-Client disconnected, socket fd is 5
+Received (socket fd 5): Message n8
+
+Response sent!
+received from prompt : hello
 Received (socket fd 6): Message n5
+
+Response sent!
+Received (socket fd 5): Message n9
 
 Response sent!
 Received (socket fd 6): Message n6
 
 Response sent!
-received from prompt : coucou
+Client disconnected, socket fd is 5
 Received (socket fd 6): Message n7
 
 Response sent!
@@ -70,6 +70,5 @@ Received (socket fd 6): Message n9
 
 Response sent!
 Client disconnected, socket fd is 6
-received from prompt : ca va ?
 received from prompt : exit
-received from prompt : q
+Exit the program
