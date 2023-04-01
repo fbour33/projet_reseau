@@ -17,5 +17,5 @@ enum STRATEGY get_strategy_from_string(char *strategy);
  * @brief    implement fish random move strategy
  * @param fish the string strategy to use for the fish get from the client
  */
-void RandomWayPoint(struct fish *fish);
+//void RandomWayPoint(struct fish *fish);
 #endif

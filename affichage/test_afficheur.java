@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.lang.Thread;
 
 public class test_afficheur {
 
@@ -28,7 +29,7 @@ public class test_afficheur {
             String response = reader.readLine();
             System.out.println("Server response: " + response);
             
-            for(int i=0; i<5;i++){
+            for(int i=0; i<10;i++){
                 
 
                 // Envoi d'un message au serveur
@@ -42,6 +43,13 @@ public class test_afficheur {
                 response = reader.readLine();
                 System.out.println("Server response: " + response);
 
+                try{
+                    Thread.sleep(1000);
+                } catch(Exception e) {
+           
+                    // catching the exception
+                    System.out.println(e);
+                }
             }
 
             reader.close();

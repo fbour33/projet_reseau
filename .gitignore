@@ -8,3 +8,6 @@ build
 .vscode/
 app/bin/
 javafx-sdk-20
+
+# Ignore .o files
+*.o

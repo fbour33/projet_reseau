@@ -1,9 +1,12 @@
 CC=gcc
-CFLAGS=-pthread -Wall #-Wextra
+LOG_DIR=$(shell pwd)
+CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
 OBJ_DIR=build
 
 objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/controller.o $(OBJ_DIR)/mutex.o
 test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o
+
+
 
 all: controller server
 

@@ -13,4 +13,8 @@
 
     int handle_bind();
 
+    int handle_message(char buffer[MSG_LEN], int sockfd);
+
+    FILE* init_log_f(char* log_dir);
+
 #endif
