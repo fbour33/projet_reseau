@@ -90,6 +90,27 @@ int response_hello(int sockfd) {
 	return -1;
 }
 
+int response_ping(int sockfd) {
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if (next == NULL) {
+		if (send(sockfd, "No value for ping\n", 19, 0) <= 0) {
+				return -1;
+		}
+		return 0;
+	}
+	else {
+		char resp[64] = "pong ";
+		strcat(resp, next);
+		strcat(resp, "\n");
+		if (send(sockfd, resp, strlen(resp), 0) <= 0) {
+				return -1;
+		}
+		return 0;
+	}
+	return -1;
+}
+
 /**
  * @brief Secondary function for handling the client message
  * @return 0 on success, -1 on failure
@@ -97,7 +118,9 @@ int response_hello(int sockfd) {
 int call_response(enum RESPONSE resp, int sockfd) {
 	switch (resp) {
 		case HELLO :
-			return response_hello(sockfd); 
+			return response_hello(sockfd);
+		case PING :
+			return response_ping(sockfd);
 		default :
 			return -1;
 	}
@@ -117,6 +140,9 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 	} else {
 		if (strncmp(token, "hello", 5) == 0) {
 			return call_response(HELLO, sockfd);
+		}
+		if (strncmp(token, "ping", 4) == 0) {
+			return call_response(PING, sockfd);
 		}
 		else {
 			if (send(sockfd, "NOK\n", 5, 0) <= 0) {

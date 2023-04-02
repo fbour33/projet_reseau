@@ -35,7 +35,7 @@ public class test_afficheur {
                 // Envoi d'un message au serveur
                 outputStream = socket.getOutputStream();
                 writer = new PrintWriter(outputStream, true);
-                writer.println("Message n"+i);
+                writer.println("ping "+i);
 
                 // Lecture de la réponse du serveur
                 inputStream = socket.getInputStream();
