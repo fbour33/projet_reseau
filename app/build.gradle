@@ -8,9 +8,9 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-    id 'application'
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 repositories {
@@ -19,17 +19,29 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation 'junit:junit:4.13.2'
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
     // This dependency is used by the application.
-    //implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'org.openjfx:javafx-controls:11.0.2:mac'
-    implementation 'org.openjfx:javafx-graphics:11.0.2:mac'
-    implementation 'org.openjfx:javafx-fxml:11.0.2:mac'
+    implementation 'com.google.guava:guava:31.1-jre'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_20 // Spécifie la version de Java
+    targetCompatibility = JavaVersion.VERSION_20 // Spécifie la version de Java
+}
+
+javafx {
+    version = "20"
+    modules = [ 'javafx.controls' ]
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'projet_reseau.App'
+    mainClass = 'projet_reseau.HelloFX'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
 }

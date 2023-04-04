@@ -14,7 +14,7 @@ void * main_prompt_menu(void *args);
 
 /**
  * @brief function for handling the prompt entry
- * @return 1 on success, 0 on failure
+ * @return 0 on success, -1 on failure, 1 for exit
  */
 int handle_command_line(char *command_line);
 

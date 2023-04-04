@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.lang.Thread;
 
 public class test_afficheur {
 
@@ -16,6 +17,17 @@ public class test_afficheur {
             PrintWriter writer = null;
             InputStream inputStream = null;
             BufferedReader reader = null;
+
+             // Envoi du message de connexion au serveur
+            outputStream = socket.getOutputStream();
+            writer = new PrintWriter(outputStream, true);
+            writer.println("hello in as N2");
+
+            // Lecture de la réponse du serveur
+            inputStream = socket.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String response = reader.readLine();
+            System.out.println("Server response: " + response);
             
             for(int i=0; i<10;i++){
                 
@@ -23,14 +35,21 @@ public class test_afficheur {
                 // Envoi d'un message au serveur
                 outputStream = socket.getOutputStream();
                 writer = new PrintWriter(outputStream, true);
-                writer.println("Message n"+i);
+                writer.println("ping "+i);
 
                 // Lecture de la réponse du serveur
                 inputStream = socket.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-                String response = reader.readLine();
+                response = reader.readLine();
                 System.out.println("Server response: " + response);
 
+                try{
+                    Thread.sleep(1000);
+                } catch(Exception e) {
+           
+                    // catching the exception
+                    System.out.println(e);
+                }
             }
 
             reader.close();

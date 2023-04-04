@@ -4,7 +4,7 @@ AFFICHAGE_DIR = affichage
 CONTROLLER_DIR = controller
 CC = gcc
 JAVA = java
-CFLAGS = -Wall -std=c99
+CFLAGS = -Wall -Wextra
 JFLAGS = 
 
 EXT = a
@@ -15,8 +15,8 @@ ifeq ($(EXT),c)
 else
 	CONTROLLER_SRCS := $(shell find . -name "*.c")
 	CONTROLLER_OBJS := $(CONTROLLER_SRCS:.c=.o)
-	AFFICHAGE_SRCS := $(shell find . -name "*.java")
-	AFFICHAGE_CLASSES := $(AFFICHAGE_SRCS:.java=.class)
+#	AFFICHAGE_SRCS := $(shell find . -name "*.java")
+#	AFFICHAGE_CLASSES := $(AFFICHAGE_SRCS:.java=.class)
 endif
 
 ####################### OPTIONS ##################
