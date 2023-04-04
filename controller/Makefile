@@ -1,5 +1,5 @@
-CC=gcc
-objets = parser.o aquarium.o prompt.o controller.o mutex.o 
+CC=gcc -D _GNU_SOURCE
+objets = parser.o aquarium.o prompt.o controller.o mutex.o client.o server_new.o 
 
 all: controller
 
