@@ -12,7 +12,7 @@
 #include "../prompt/prompt.h"
 
 #ifndef LOG_DIR
-	#define LOG_DIR "aled"
+#define LOG_DIR "aled"
 #endif
 
 #define MAX_CLIENTS 5

@@ -128,7 +128,7 @@ int command_add_aquarium(){
         return -1;
     }
     if (strncmp(string, "view", 4) != 0) {
-        printf("\t-> you have to had a view\n");
+        printf("\t-> you have to add a view\n");
         return -1;
     }
     char *id = strtok(NULL, delim);
@@ -162,11 +162,11 @@ int command_del_aquarium(){
     char *delim = " ";
     char *string = strtok(NULL, delim);
     if(string==NULL){
-        printf("\t-> you need to add something\n");
+        printf("\t-> you need to delete something\n");
         return -1;
     }
     if (strncmp(string, "view", 4) != 0) {
-        printf("\t-> you have to had a view\n");
+        printf("\t-> you have to delete a view\n");
         return -1;
     }
     char *id = strtok(NULL, delim);
