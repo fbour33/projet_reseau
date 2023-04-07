@@ -63,6 +63,20 @@ struct fish* get_fishes(struct view* view) {
     return view->fishes;
 }
 
+void status(struct view* view) {
+    // vérifier qu'on est connécter en premier !
+    int cpt = 0;
+    while(view->fishes[cpt] != NULL) {
+        ++cpt;
+    }
+    printf("\tOK : Connecté au contrôleur, %d poissons trouvés\n", cpt);
+    for(int i = 0; i<cpt; ++i) {
+        struct fish tmp = view->fishes[i];
+        printf("\n");
+        printf("Fish %s at %d*%d,%d*%d\n", tmp->name, tmp->position.x, tmp->position.y, 
+                tmp->rectangle.width, tmp->rectangle.height);
+    }
+}
 
 void free_view(struct view* view) {
     for(int i = 0; i < MAX_FISHES; ++i) {
