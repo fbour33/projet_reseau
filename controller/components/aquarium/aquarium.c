@@ -13,9 +13,6 @@ struct aquarium *create_aquarium(){
     for (int i = 0; i < MAX_VIEWS; i++) {
         aquarium->aquarium_views[i] = malloc(sizeof(struct view));
     }
-    for (int i = 0; i < MAX_FISHES; i++) {
-        aquarium->aquarium_fishes[i] = malloc(sizeof(struct fish));
-    }
     return aquarium;
 }
 
@@ -105,11 +102,6 @@ void free_aquarium(struct aquarium * aquarium){
     // free view array
     for(int i=0; i<MAX_VIEWS;i++){
         free(aquarium->aquarium_views[i]);
-    }
-
-    // free fish array
-    for(int i=0; i<MAX_FISHES;i++){
-        free(aquarium->aquarium_fishes[i]);
     }
 
     // free aquarium

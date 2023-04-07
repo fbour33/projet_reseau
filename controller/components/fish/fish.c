@@ -18,6 +18,8 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type,enum STRATEGY str
     return fish;
 }
 
+int add_fish(struct aquarium* aquarium, )
+
 void free_fish(struct fish *fish){
     free(fish);
 }
