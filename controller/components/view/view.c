@@ -50,6 +50,20 @@ int delete_fish(struct view* view, char* name){
     printf("\t-> view N%d deleted\n",status);
 }
 
+struct fish* get_fishes(struct view* view) {
+    int index = 0;
+    printf("list ");
+    while(view->fishes[index] != NULL) {
+        struct fish* tmp = view->fishes[index];
+        // vérifier les paramètres car je ne savais quoi mettre ni dans quel ordre
+        printf("[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
+                tmp->rectangle.width, tmp->rectangle.height);
+        ++index;
+    }
+    return view->fishes;
+}
+
+
 void free_view(struct view* view) {
     for(int i = 0; i < MAX_FISHES; ++i) {
         if (view->fishes[i] != NULL) {

@@ -17,6 +17,10 @@ int add_fish(struct view* view, struct fish* fish);
 
 int delete_fish(struct view*, char*);
 
+struct fish* get_fishes(struct view*);
+
+void status(struct view*);
+
 struct view * create_view(int id, int x, int y, int width, int height);
 
 void free_view(struct view*);
