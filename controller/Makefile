@@ -1,58 +1,55 @@
 CC=gcc
-CFLAGS=-Wall
-controller_objets = parser.o aquarium.o prompt.o controller.o mutex.o
-server_objects= server.o server_handler.o prompt.o aquarium.o mutex.o
+LOG_DIR=$(shell pwd)
+CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
+OBJ_DIR=build
 
-all: controller server
+objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/mutex.o
+test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o 
+
+
+
+all: server
 
 test: test_aquarium test_parser
 
-#################### CONTROLLER #####################
-
-$(OBJ_DIR)/prompt.o: components/prompt/prompt.c
-	$(CC) $(CFLAGS) -c $^
-
-$(OBJ_DIR)/aquarium.o: components/aquarium/aquarium.c
-	$(CC) $(CFLAGS) -c $^
-
-$(OBJ_DIR)/parser.o: parser/parser.c
-	$(CC) $(CFLAGS) -c $^
-
-$(OBJ_DIR)/mutex.o: utilities/mutex.c
-	$(CC) $(CFLAGS) -c $^
-
-$(OBJ_DIR)/controller.o: controller.c
-	$(CC) $(CFLAGS) -c $^
-
-controller: $(controller_objets)
-	$(CC) $(CFLAGS) -o $@ $^
-
 ####################### SERVER #######################
 
+$(OBJ_DIR)/prompt.o: components/prompt/prompt.c
+	$(CC) $(CFLAGS) -c components/prompt/prompt.c -o $@
+
+$(OBJ_DIR)/aquarium.o: components/aquarium/aquarium.c
+	$(CC) $(CFLAGS) -c components/aquarium/aquarium.c -o $@
+
+$(OBJ_DIR)/parser.o: parser/parser.c
+	$(CC) $(CFLAGS) -c parser/parser.c -o $@
+
+$(OBJ_DIR)/mutex.o: utilities/mutex.c
+	$(CC) $(CFLAGS) -c utilities/mutex.c -o $@
+
 $(OBJ_DIR)/server_handler.o : components/server/server_handler.c
-	$(CC) $(CFLAGS) -c components/server/server_handler.c
+	$(CC) $(CFLAGS) -c components/server/server_handler.c -o $@
 
 $(OBJ_DIR)/server.o : components/server/server.c
-	$(CC) $(CFLAGS) -c components/server/server.c
+	$(CC) $(CFLAGS) -c components/server/server.c -o $@
 
-server: $(server_objects)
+server: $(OBJ_DIR)/server.o $(OBJ_DIR)/server_handler.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
 ####################### TESTS ########################
 
 $(OBJ_DIR)/test_aquarium.o: tests/test_aquarium.c
-	$(CC) $(CFLAGS) -c tests/test_aquarium.c
+	$(CC) $(CFLAGS) -c tests/test_aquarium.c -o $@
 
 $(OBJ_DIR)/test_parser.o: tests/test_parser.c
-	$(CC) $(CFLAGS) -c tests/test_parser.c
+	$(CC) $(CFLAGS) -c tests/test_parser.c -o $@
 
-test_aquarium: $(test_objects) aquarium.o parser.o
+test_aquarium: $(test_objects) $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-test_parser: $(test_objects) parser.o aquarium.o
+test_parser: $(test_objects) $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 
 ############################ CLEAN ########################
 clean:
-	rm -f $(OBJ_DIR)/*.o controller server test_aquarium test_parser
+	rm -f $(OBJ_DIR)/*.o server test_aquarium test_parser
