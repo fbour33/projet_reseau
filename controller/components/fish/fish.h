@@ -35,4 +35,10 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY st
  */
 void free_fish(struct fish * fish);
 
+/**
+ * @brief    implement fish random move strategy
+ * @param fish the string strategy to use for the fish get from the client
+ */
+void RandomWayPoint(struct fish *fish);
+
 #endif

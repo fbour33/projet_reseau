@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "../parser/parser.h"
+#include "../utilities/tools.h"
 #include "../components/aquarium/aquarium.h"
 
 void test_parser_load_aquarium() {
@@ -12,8 +13,7 @@ void test_parser_load_aquarium() {
     for (int i = 0; i < MAX_VIEWS; i++) {
         aquarium->aquarium_views[i] = malloc(sizeof(struct view));
     }
-    parser_load_aquarium("../../aquarium.load",aquarium);
-
+    parser_load_aquarium("./tests/aquarium.load.test",aquarium);
     assert(aquarium->num_aquarium_views==4);
     assert(aquarium->dimension.width==1000);
     assert(aquarium->dimension.height==1000);

@@ -1,9 +1,9 @@
 #ifndef AQUARIUM_H
 #define AQUARIUM_H
-
+#define MAX_LENGTH 25
 #include"../view/view.h"
 #include "../fish/fish.h"
-#include "../../parser/parser.h"
+
 
 #define MAX_VIEWS 15
 #define MAX_FISHES 15
@@ -72,4 +72,20 @@ void save_aquarium(struct aquarium* aquarium);
  *  @param aquarium a pointer to a aquarium
  */
 void free_aquarium(struct aquarium * aquarium);
+
+/** 
+ * @fn             parser_load_aquarium
+ * @brief          enable to get data from aquarium.load file to initialize the aquarium
+ * @param file     the path to the aquarium.load
+ * @param aquarium the adress of the aquarium
+**/
+void parser_load_aquarium(char *file,struct aquarium *aquarium);
+
+/** 
+ * @fn             parser_save_aquarium
+ * @brief          write data to aquarium.load file
+ * @param file     the path to the aquarium.load
+ * @param aquarium the adress of the aquarium
+**/
+void parser_save_aquarium(char *file,struct aquarium *aquarium);
 #endif
