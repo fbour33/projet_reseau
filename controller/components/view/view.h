@@ -7,6 +7,7 @@ struct view{
     int id;
     struct dimension d;
     struct position p;
+    int free;
 };
 
 struct view * create_view(int id, int x, int y, int width, int height);

@@ -1,5 +1,8 @@
 #ifndef AQUARIUM_PROMPT_H
 #define AQUARIUM_PROMPT_H
+
+#include "../../global.h"
+
 #define GREENBOLD "\e[32;1m"
 
 enum COMMAND{

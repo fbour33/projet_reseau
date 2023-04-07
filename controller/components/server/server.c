@@ -22,6 +22,8 @@ int main() {
 	fd_set read_fds, active_fds;
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
+	global_aquarium = NULL;
+	struct client* clients[MAX_CLIENTS];
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
@@ -75,7 +77,7 @@ int main() {
                 exit(EXIT_FAILURE);
             }
            fprintf(log_f, "New connection : socket %d\n", cfd);
-
+		   
             // add client socket to the set
             for (int i = 0; i < MAX_CLIENTS; i++) {
                 if (client_sockets[i] == -1) {
@@ -126,7 +128,6 @@ int main() {
 			int ret = handle_command_line(buff);
 			if (ret == -1) {
 				fprintf(log_f, "handle_command_line of prompt error\n");
-				break;
 			};
 			if (ret == 1) {
 				fprintf(log_f, "Exit the program\n");
@@ -139,6 +140,9 @@ int main() {
 		fflush(log_f);
 	}
 
+	if (global_aquarium != NULL){
+		free_aquarium(global_aquarium);
+	}
 	close(sfd);
 	fclose(log_f);
 	return EXIT_SUCCESS;
