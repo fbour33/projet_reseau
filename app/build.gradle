@@ -38,7 +38,7 @@ javafx {
 
 application {
     // Define the main class for the application.
-    mainClass = 'projet_reseau.HelloFX'
+    mainClass = 'projet_reseau.Aquarium'
 }
 
 tasks.named('test') {
