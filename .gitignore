@@ -4,10 +4,12 @@
 
 # Ignore Gradle build output directory
 build
+build.gradle
 
 .vscode/
 app/bin/
 javafx-sdk-20
+app/build.gradle
 
 # Ignore build files
 *.o
