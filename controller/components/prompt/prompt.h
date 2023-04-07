@@ -7,12 +7,6 @@ enum COMMAND{
 };
 
 /**
- * @brief main function of the prompt
- * @note it is the function which will be given to the thread
- */
-void * main_prompt_menu(void *args);
-
-/**
  * @brief function for handling the prompt entry
  * @return 0 on success, -1 on failure, 1 for exit
  */

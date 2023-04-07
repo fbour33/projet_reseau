@@ -3,7 +3,7 @@ LOG_DIR=$(shell pwd)
 CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
 OBJ_DIR=build
 
-objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/mutex.o
+objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o 
 test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o 
 
 
@@ -22,9 +22,6 @@ $(OBJ_DIR)/aquarium.o: components/aquarium/aquarium.c
 
 $(OBJ_DIR)/parser.o: parser/parser.c
 	$(CC) $(CFLAGS) -c parser/parser.c -o $@
-
-$(OBJ_DIR)/mutex.o: utilities/mutex.c
-	$(CC) $(CFLAGS) -c utilities/mutex.c -o $@
 
 $(OBJ_DIR)/server_handler.o : components/server/server_handler.c
 	$(CC) $(CFLAGS) -c components/server/server_handler.c -o $@

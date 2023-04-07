@@ -2,24 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "prompt.h"
-#include "../../utilities/mutex.h"
 #include "../../global.h"
 #define MAX_COMMAND_LENGTH 32
-
-/**
- * @brief main function of the prompt
- * @note it is the function which will be given to the thread
- */
-void * main_prompt_menu(void *args){
-    char command[MAX_COMMAND_LENGTH];
-    while (1) {
-        printf(GREENBOLD"aquarium: $ ");
-        fgets(command, MAX_COMMAND_LENGTH, stdin);
-        if (handle_command_line(command)==1) {
-            break;
-        }
-    }
-}
 
 /**
  * @brief function for handling the prompt entry
@@ -99,10 +83,8 @@ int command_load_aquarium(){
         printf("\t-> invalid string after load command\n");
         return 0;
     }
-    pthread_mutex_lock(&mutex_aquarium);
     global_aquarium = create_aquarium();
     load_aquarium(global_aquarium);
-    pthread_mutex_unlock(&mutex_aquarium);
     return 0;
     
 }
@@ -148,9 +130,7 @@ int command_add_aquarium(){
     view->d.width=atoi(width);
     view->p.x=atoi(x);
     view->p.y=atoi(y);
-    pthread_mutex_lock(&mutex_aquarium);
     add_view_aquarium(global_aquarium,view);
-    pthread_mutex_unlock(&mutex_aquarium);
     return 0;
 }
 
@@ -175,9 +155,8 @@ int command_del_aquarium(){
         return -1;
     }
     int num = atoi(id+1);
-    pthread_mutex_lock(&mutex_aquarium);
     del_view_aquarium(global_aquarium,num);
-    pthread_mutex_unlock(&mutex_aquarium);
+
     return 0;
 }
 
