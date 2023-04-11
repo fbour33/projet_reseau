@@ -11,15 +11,15 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type,enum STRATEGY str
     strcpy(fish->name,name);
     fish->strategy=strategy;
     fish->type=fish_type;
-    fish->position=_position(x,y);
+    fish->position.x=x;
+    fish->position.y=y;
     fish->rectangle.width=width;
     fish->rectangle.height=height;
 
     return fish;
 }
 
-int add_fish(struct aquarium* aquarium, )
-
 void free_fish(struct fish *fish){
+    free(fish->name);
     free(fish);
 }
