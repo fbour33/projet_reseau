@@ -39,6 +39,11 @@ void test_get_status_fish() {
     get_fishes(v1);
     status(v1);
 
+    assert(delete_fish(v1, "Alex") == 0);
+
+    get_fishes(v1);
+    status(v1);    
+    
     free_view(v1);
     printf("\n\tOK\n");
 }
