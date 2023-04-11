@@ -56,6 +56,7 @@ struct fish** get_fishes(struct view* view) {
         printf("[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
     }
+    printf("\n");
     return view->fishes;
 }
 
@@ -64,11 +65,11 @@ int status(struct view* view) {
         return -1;
     }
 
-    printf("\tOK : Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes+1);
+    printf("\tOK : Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
     for(int i = 0; i<view->nb_fishes; ++i) {
         struct fish* tmp = view->fishes[i];
         printf("\n");
-        printf("Fish %s at %d*%d,%d*%d\n", tmp->name, tmp->position.x, tmp->position.y, 
+        printf("Fish %s at %d*%d,%d*%d", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
     }
     return 0;
