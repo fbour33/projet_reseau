@@ -14,21 +14,18 @@ plugins {
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
-
-    // This dependency is used by the application.
+    implementation files('src/main/java/Fish')
     implementation 'com.google.guava:guava:31.1-jre'
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_20 // Spécifie la version de Java
-    targetCompatibility = JavaVersion.VERSION_20 // Spécifie la version de Java
+    sourceCompatibility = '17.0.6' // Spécifie la version de Java
+    targetCompatibility = '17.0.6' // Spécifie la version de Java
 }
 
 javafx {
@@ -37,11 +34,9 @@ javafx {
 }
 
 application {
-    // Define the main class for the application.
     mainClass = 'projet_reseau.Aquarium'
 }
 
 tasks.named('test') {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
