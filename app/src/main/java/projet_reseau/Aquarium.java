@@ -22,6 +22,7 @@ public class Aquarium extends Application {
     private static final int FISH_SPEED = 5;
 
     private ImageView ImageFish; 
+    private Fish myFish;
 
     private int dx = FISH_SPEED;
     private int dy = FISH_SPEED;
@@ -31,11 +32,8 @@ public class Aquarium extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        ImageFish = new ImageView(new Image(new FileInputStream("/Users/florianbour/Desktop/ENSEIRB/2A/S8/projet_reseau/app/src/main/images/blobfish.png")));
-        ImageFish.setFitHeight(150);
-        ImageFish.setFitWidth(150);
-        ImageFish.setPreserveRatio(true);
-        Group fish1 = new Group(ImageFish);
+        myFish = new Fish("/Users/florianbour/Desktop/ENSEIRB/2A/S8/projet_reseau/app/src/main/images/blobfish.png");
+        Group fish1 = myFish.addGroupFish();
         fish1.setLayoutX(random.nextInt(WIDTH));
         fish1.setLayoutY(random.nextInt(HEIGHT));
 
