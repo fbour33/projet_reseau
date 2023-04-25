@@ -19,6 +19,8 @@ void free_client(struct client* client){
 int disconnect_client(int cfd){
     for(int i=0; i<MAX_CLIENTS; i++){
         if (NULL != clients[i] && clients[i]->cfd == cfd){
+            int view_idx = get_idx_from_id(clients[i]->view_id);
+            global_aquarium->aquarium_views[view_idx]->free = 1;
             free(clients[i]);
             clients[i] = NULL;
             return 0;

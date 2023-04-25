@@ -124,9 +124,9 @@ int main() {
 							fprintf(log_f, "Client disconnected, socket fd is %d\n", client_sockets[i]);
 						}
 					}
+					FD_CLR(client_sockets[i], &read_fds);
 					close(client_sockets[i]);
 					client_sockets[i] = -1;
-                    FD_CLR(client_sockets[i], &read_fds);
 					
                 } else {
                     // print received data
