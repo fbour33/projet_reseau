@@ -5,7 +5,8 @@
 #include "../../utilities/strategy.h"
 #include "../../utilities/tools.h"
 
-#define MAX_FISHES 100
+#define MAX_FISHES 15
+
 struct fish{
     char* name;
     int running;

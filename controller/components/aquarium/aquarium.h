@@ -4,7 +4,6 @@
 #include"../view/view.h"
 #include "../fish/fish.h"
 
-#define MAX_FISHES 15
 #define MAX_CLIENTS 5
 
 struct aquarium{
