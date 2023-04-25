@@ -20,8 +20,7 @@ public class Aquarium extends Application {
     private static final int HEIGHT = 600;
     private static final int FISH_RADIUS = 25;
     private static final int FISH_SPEED = 5;
-
-    private ImageView ImageFish; 
+    
     private Fish myFish;
 
     private int dx = FISH_SPEED;
