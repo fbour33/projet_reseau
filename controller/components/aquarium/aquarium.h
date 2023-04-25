@@ -91,4 +91,11 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium);
  * @param aquarium the adress of the aquarium
 **/
 void parser_save_aquarium(char *file,struct aquarium *aquarium);
+
+/** 
+ * @brief get idx of a view in global_aquarium->aquarium_views array according to view id
+ * @return the view idx 
+**/
+int get_idx_from_id(int id);
+
 #endif

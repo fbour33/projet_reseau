@@ -164,3 +164,12 @@ void parser_save_aquarium(char *file,struct aquarium *aquarium){
     }
     fclose(aquarium_load_file);
 }
+
+int get_idx_from_id(int id){
+    for(int i=0; i<MAX_CLIENTS;i++){
+        if(id == global_aquarium->aquarium_views[i]->id){
+            return i;
+        }
+    }
+    return -1;
+}
