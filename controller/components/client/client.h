@@ -2,14 +2,16 @@
 #define CLIENT_H
 
 #include "../aquarium/aquarium.h"
-#include "../../global.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 struct client{
     int cfd;
     int view_id;    
 };
 
-struct client* clients[MAX_CLIENTS];
+extern struct client* clients[MAX_CLIENTS];
 
 /**
  * @brief Create a client

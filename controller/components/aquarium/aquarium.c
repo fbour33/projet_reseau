@@ -1,7 +1,7 @@
 #include "aquarium.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+struct aquarium *global_aquarium;
+
 /**
  * @fn      create aquarium 
  * @brief   create a aquarium 

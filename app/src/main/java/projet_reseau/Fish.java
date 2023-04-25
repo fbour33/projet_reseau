@@ -24,6 +24,7 @@ public class Fish {
         myFish = new ImageView(new Image(new FileInputStream(image))); 
         myFish.setFitWidth(WIDTH); 
         myFish.setFitHeight(HEIGHT); 
+        //myFish = new Group(myFish)
     }
 
     Group addGroupFish(){
