@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <sys/select.h>
+#include <time.h>
 
 #include "server_handler.h"
 #include "../prompt/prompt.h"
@@ -23,6 +24,9 @@ int main() {
 	fd_set read_fds, active_fds;
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
+
+	// t0
+	clock_t t0 = clock();
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
@@ -61,6 +65,12 @@ int main() {
 	fflush(STDIN_FILENO);
 	// main loop
 	while (1) {
+		// time check for actualisation
+		clock_t tmp = clock();
+		if((tmp-t0)/CLOCKS_PER_SEC >= 1) {
+			// actualisation des positiond des poissons
+			t0 = tmp;
+		}
 
 		active_fds = read_fds;
 		// Cleaning memory

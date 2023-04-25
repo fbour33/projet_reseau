@@ -4,13 +4,13 @@ CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
 OBJ_DIR=build
 
 objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/client.o $(OBJ_DIR)/view.o $(OBJ_DIR)/tools.o
-test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o 
+test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o $(OBJ_DIR)/test_view.o
 
 
 
 all: server
 
-test: test_aquarium test_parser
+test: test_aquarium test_parser test_view
 
 ####################### SERVER #######################
 
@@ -38,6 +38,12 @@ $(OBJ_DIR)/server.o : components/server/server.c
 $(OBJ_DIR)/client.o : components/client/client.c
 	$(CC) $(CFLAGS) -c components/client/client.c -o $@
 
+$(OBJ_DIR)/view.o: components/view/view.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/fish.o: components/fish/fish.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
 server: $(OBJ_DIR)/server.o $(OBJ_DIR)/server_handler.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
@@ -49,13 +55,18 @@ $(OBJ_DIR)/test_aquarium.o: tests/test_aquarium.c
 $(OBJ_DIR)/test_parser.o: tests/test_parser.c
 	$(CC) $(CFLAGS) -c tests/test_parser.c -o $@
 
-test_aquarium: $(test_objects) $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/parser.o
+$(OBJ_DIR)/test_view.o: tests/test_view.c
+	$(CC) $(CFLAGS) -c tests/test_view.c -o $@
+
+test_aquarium: $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-test_parser: $(test_objects) $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o
+test_parser: $(OBJ_DIR)/test_parser.o $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o
 	$(CC) $(CFLAGS) -o $@ $^
 
+test_view: $(OBJ_DIR)/test_view.o $(OBJ_DIR)/view.o $(OBJ_DIR)/fish.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 ############################ CLEAN ########################
 clean:
-	rm -f $(OBJ_DIR)/*.o server test_aquarium test_parser
+	rm -f $(OBJ_DIR)/*.o server test_aquarium test_parser test_view
