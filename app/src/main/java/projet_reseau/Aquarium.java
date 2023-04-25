@@ -20,7 +20,7 @@ public class Aquarium extends Application {
     private static final int HEIGHT = 600;
     private static final int FISH_RADIUS = 25;
     private static final int FISH_SPEED = 5;
-    
+    private Console console;
     private Fish myFish;
 
     private int dx = FISH_SPEED;
@@ -30,8 +30,9 @@ public class Aquarium extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        myFish = new Fish("/Users/florianbour/Desktop/ENSEIRB/2A/S8/projet_reseau/app/src/main/images/blobfish.png");
+        console = new Console(this,400, 400);
+        console.show();
+        myFish = new Fish("/home/brice/Projet_Reseau/projet_reseau/app/src/main/images/blobfish.png");
         Group fish1 = myFish.addGroupFish();
         fish1.setLayoutX(random.nextInt(WIDTH));
         fish1.setLayoutY(random.nextInt(HEIGHT));
