@@ -1,4 +1,7 @@
+#include <stdlib.h>
+
 #include "view.h"
+#include "../../utilities/tools.h"
 
 struct view *create_view(int id, int x, int y, int width, int height){
     struct view * view = malloc(sizeof(struct view));
@@ -8,4 +11,5 @@ struct view *create_view(int id, int x, int y, int width, int height){
     view->d.width = width;
     view->d.height = height;
     view->free = 1; //1 if free 0 if not
+    return view;
 }

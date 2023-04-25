@@ -10,7 +10,7 @@ void test_parser_load_aquarium() {
 
     struct aquarium *aquarium = malloc(sizeof(struct aquarium));
     aquarium->num_aquarium_views=0;
-    for (int i = 0; i < MAX_VIEWS; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         aquarium->aquarium_views[i] = malloc(sizeof(struct view));
     }
     parser_load_aquarium("./tests/aquarium.load.test",aquarium);
@@ -46,7 +46,7 @@ void test_parser_load_aquarium() {
     assert(aquarium->aquarium_views[3]->d.width==500);
     assert(aquarium->aquarium_views[3]->d.height==500);
 
-    for (int i = 0; i < MAX_VIEWS; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         free(aquarium->aquarium_views[i]);
     }
     free(aquarium);

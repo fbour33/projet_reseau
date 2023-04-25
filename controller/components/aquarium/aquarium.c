@@ -10,7 +10,7 @@
 struct aquarium *create_aquarium(){
     struct aquarium *aquarium = malloc(sizeof(struct aquarium));
     aquarium->num_aquarium_views=0;
-    for (int i = 0; i < MAX_VIEWS; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         aquarium->aquarium_views[i] = malloc(sizeof(struct view));
     }
     for (int i = 0; i < MAX_FISHES; i++) {
@@ -75,11 +75,11 @@ void del_view_aquarium(struct aquarium* aquarium, int view_id){
         return ;
     }
     free(aquarium->aquarium_views[index]);
-    for(int i=index;i<MAX_VIEWS-1; i++){
+    for(int i=index;i<MAX_CLIENTS-1; i++){
         aquarium->aquarium_views[i]=aquarium->aquarium_views[i+1];
     }
     struct view *view = malloc(sizeof(struct view));
-    aquarium->aquarium_views[MAX_VIEWS-1]= view;
+    aquarium->aquarium_views[MAX_CLIENTS-1]= view;
     aquarium->num_aquarium_views--;
     printf("\t-> view N%d deleted\n",view_id);
 }
@@ -103,7 +103,7 @@ void save_aquarium(struct aquarium* aquarium){
  */
 void free_aquarium(struct aquarium * aquarium){
     // free view array
-    for(int i=0; i<MAX_VIEWS;i++){
+    for(int i=0; i<MAX_CLIENTS;i++){
         free(aquarium->aquarium_views[i]);
     }
 
@@ -144,6 +144,7 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium){
                     printf("Error reading line: %s", line);
                     return;
                 }
+                aquarium->aquarium_views[aquarium->num_aquarium_views]->free = 1;
                 aquarium->num_aquarium_views++;
             }
         i++;

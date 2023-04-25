@@ -17,6 +17,10 @@
 
     int handle_message(char buffer[MSG_LEN], int sockfd);
 
+    /**
+ * @brief Clean and open the log file 
+ * @return the log file descriptor
+ */
     FILE* init_log_f(char* log_dir);
 
 #endif

@@ -10,25 +10,25 @@
 
 #include "server_handler.h"
 #include "../prompt/prompt.h"
+#include "../client/client.h"
 
 #ifndef LOG_DIR
 #define LOG_DIR "aled"
 #endif
 
-#define MAX_CLIENTS 5
+
 
 int main() {
 	struct sockaddr cli;
 	fd_set read_fds, active_fds;
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
-	global_aquarium = NULL;
-	struct client* clients[MAX_CLIENTS];
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
 	for (int i = 0; i < MAX_CLIENTS; i++){
 		client_sockets[i] = -1;
+		clients[i] = NULL;
 	}
 
 	//configure the server socket
@@ -43,6 +43,12 @@ int main() {
 	//initialise le fichier log ou pas
 	char log_dir[MSG_LEN] = LOG_DIR;
 	log_f = init_log_f(log_dir);
+
+	//Charge l'aquarium
+	global_aquarium = create_aquarium();
+	fprintf(log_f, "Loading aquarium ...\n");
+	load_aquarium(global_aquarium);
+	fprintf(log_f, "Aquarium loaded !\n");
 	
 	if ((listen(sfd, SOMAXCONN)) != 0) {
 		fprintf(log_f, "listen() error\n");
@@ -64,7 +70,7 @@ int main() {
         if (select(max_sockfd + 1, &active_fds, NULL, NULL, NULL) < 0) {
             fprintf(log_f, "select failed\n");
 			fflush(log_f);
-            exit(EXIT_FAILURE);
+            break;
         }
 
 		// check for activity on server socket
@@ -77,7 +83,7 @@ int main() {
                 exit(EXIT_FAILURE);
             }
            fprintf(log_f, "New connection : socket %d\n", cfd);
-		   
+
             // add client socket to the set
             for (int i = 0; i < MAX_CLIENTS; i++) {
                 if (client_sockets[i] == -1) {
@@ -99,10 +105,19 @@ int main() {
                 // receive data from client
                 if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
                     // client disconnected
-                    fprintf(log_f, "Client disconnected, socket fd is %d\n", client_sockets[i]);
-                    close(client_sockets[i]);
+					if(is_client(client_sockets[i])){
+						if (disconnect_client(client_sockets[i]) != 0){
+							fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
+							break;
+						}
+						else {
+							fprintf(log_f, "Client disconnected, socket fd is %d\n", client_sockets[i]);
+						}
+					}
+					close(client_sockets[i]);
+					client_sockets[i] = -1;
                     FD_CLR(client_sockets[i], &read_fds);
-                    client_sockets[i] = -1;
+					
                 } else {
                     // print received data
                     fprintf(log_f, "Received (socket fd %d): %s\n", client_sockets[i], buff);
@@ -142,6 +157,9 @@ int main() {
 
 	if (global_aquarium != NULL){
 		free_aquarium(global_aquarium);
+	}
+	for(int i=0; i < MAX_CLIENTS; i++){
+		free_client(clients[i]);
 	}
 	close(sfd);
 	fclose(log_f);

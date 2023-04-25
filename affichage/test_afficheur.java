@@ -21,7 +21,7 @@ public class test_afficheur {
              // Envoi du message de connexion au serveur
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("hello in as N2");
+            writer.println("hello");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();

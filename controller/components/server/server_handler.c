@@ -6,8 +6,10 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include "server_handler.h"
+#include "../client/client.h"
 
 int handle_bind() {
 	struct addrinfo hints, *result, *rp;
@@ -40,11 +42,24 @@ int handle_bind() {
 }
 
 /**
- * @brief temporary function to check if an idea is valid 
- * @return 1
+ * @brief check if an id is valid 
+ * @return 1 on success 0 on failure
  */
-int is_valid_ID(char* msg){
-	return 1;
+int is_valid_ID(char* id){
+	if(strlen(id) <= 2){
+		return 0;
+	}
+	if(id[0] == 'N') {
+		for(int i =1; i< strlen(id)-1; i++){
+			if(!isdigit(id[i])){
+				return 0;
+			}
+		}
+		if(id[strlen(id)-1] == '\n'){
+			return 1;
+		}
+	}
+	return 0;
 }
 
 /**
@@ -56,7 +71,16 @@ int response_hello(int sockfd) {
     char *next = strtok(NULL, delim);
 	if (next == NULL) {
 		//attribuer un identifiant libre
-		if (send(sockfd, "greeting N**\n", 14, 0) <= 0) {
+		int view_id = linked_client(sockfd, -1);
+		if(view_id == -1){
+			if (send(sockfd, "no greeting\n", 13, 0) <= 0) {
+				return -1;
+			}
+			return 0;
+		}
+		char msg[MSG_LEN];
+		sprintf(msg, "greeting N%d\n", view_id);
+		if (send(sockfd, msg, strlen(msg), 0) <= 0) {
 				return -1;
 		}
 		return 0;
@@ -67,6 +91,7 @@ int response_hello(int sockfd) {
 		next = strtok(NULL, delim);
 		if (is_valid_ID(next)) {
 			//attribuer l'identifiant next au client
+			linked_client(sockfd, atoi(next+1));
 			char msg[MSG_LEN];
 			sprintf(msg, "greeting %s\n", next);
 			if (send(sockfd, msg, strlen(msg), 0) <= 0) {
@@ -77,7 +102,7 @@ int response_hello(int sockfd) {
 		else {
 			if (send(sockfd, "no greeting\n", 13, 0) <= 0) {
 				return -1;
-		}
+			}
 		return 0;
 		}
 	}
@@ -134,14 +159,15 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 	char *token;
     char *delim = " ";
 	token = strtok(buffer, delim);
+	int is_cli = is_client(sockfd);
 
 	if (token == NULL) {
 		return 0;
 	} else {
-		if (strncmp(token, "hello", 5) == 0) {
+		if (strncmp(token, "hello", 5) == 0 && !is_cli) {
 			return call_response(HELLO, sockfd);
 		}
-		if (strncmp(token, "ping", 4) == 0) {
+		if (strncmp(token, "ping", 4) == 0 && is_cli) {
 			return call_response(PING, sockfd);
 		}
 		else {
@@ -183,7 +209,6 @@ FILE* init_log_f(char* log_dir) {
         exit(EXIT_FAILURE);
     }
 
-    // écrire plusieurs lignes dans le fichier
     fprintf(fp, "------ LOGS ------ \n");
 	fflush(fp);
 
