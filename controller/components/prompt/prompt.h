@@ -1,9 +1,14 @@
 #ifndef AQUARIUM_PROMPT_H
 #define AQUARIUM_PROMPT_H
 
-#include "../../global.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "../aquarium/aquarium.h"
 
 #define GREENBOLD "\e[32;1m"
+#define MAX_COMMAND_LENGTH 32
 
 enum COMMAND{
     LOAD, SHOW, ADD, DEL, SAVE,EXIT

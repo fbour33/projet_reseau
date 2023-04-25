@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../utilities/tools.h"
 #include "../fish/fish.h"
 
 struct view{

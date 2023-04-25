@@ -1,11 +1,17 @@
 #ifndef AQUARIUM_FISH_H
 #define AQUARIUM_FISH_H
 
-#include "../../utilities/fish_type.h"
-#include "../../utilities/strategy.h"
 #include "../../utilities/tools.h"
 
 #define MAX_FISHES 15
+
+enum STRATEGY{
+    HORIZONTAL, VERTICAL, RANDOM, UNREGISTERED
+};
+
+enum FISH_TYPE{
+    REDFISH,CLOWNFISH
+};
 
 struct fish{
     char* name;

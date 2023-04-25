@@ -1,8 +1,11 @@
 #ifndef AQUARIUM_H
 #define AQUARIUM_H
 #define MAX_LENGTH 25
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include"../view/view.h"
-#include "../fish/fish.h"
 
 #define MAX_CLIENTS 5
 
@@ -12,6 +15,8 @@ struct aquarium{
     struct view *aquarium_views[MAX_CLIENTS];
     struct fish *aquarium_fishes[MAX_FISHES];
 };
+
+extern struct aquarium *global_aquarium;
 
 /**
  * @fn      create_aquarium 

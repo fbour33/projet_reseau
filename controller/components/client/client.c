@@ -1,9 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "client.h"
 
-
+struct client* clients[MAX_CLIENTS];
 
 struct client* create_client(int cfd, int view_id){
     struct client *cli = malloc(sizeof(struct client));

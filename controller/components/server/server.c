@@ -11,7 +11,6 @@
 
 #include "server_handler.h"
 #include "../prompt/prompt.h"
-#include "../client/client.h"
 
 #ifndef LOG_DIR
 #define LOG_DIR "aled"

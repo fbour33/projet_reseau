@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "prompt.h"
-#include "../../global.h"
-
-#define MAX_COMMAND_LENGTH 32
 
 /**
  * @brief function for handling the prompt entry
