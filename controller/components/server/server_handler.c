@@ -127,7 +127,6 @@ int response_getFishesContinously(int sockfd){
 }
 
 int response_addFish(int sockfd){
-	struct client* cli = get_cli_from_sock(sockfd);
 	char *delim = " ";
     char *name = strtok(NULL, delim);
 	if(strcmp(strtok(NULL, delim), "at") != 0){
@@ -174,6 +173,7 @@ int response_addFish(int sockfd){
 	}
 
 	struct fish* new = create_fish(name, type, strat, atoi(x), atoi(y), atoi(w), atoi(h));
+	struct client* cli = get_cli_from_sock(sockfd);
 	if(add_fish(global_aquarium->aquarium_views[cli->view_idx], new) == -1){
 		free_fish(new);
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
@@ -188,6 +188,19 @@ int response_addFish(int sockfd){
 }
 
 int response_delFish(int sockfd){
+	char *delim = " ";
+    char *name = strtok(NULL, delim);
+	name[strlen(name)-1] = '\0';
+	struct client* cli = get_cli_from_sock(sockfd);
+	if(delete_fish(global_aquarium->aquarium_views[cli->view_idx], name) == -1){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	if (send(sockfd, "OK\n", 4, 0) <= 0) {
+			return -1;
+	}
 	return 0;
 }
 

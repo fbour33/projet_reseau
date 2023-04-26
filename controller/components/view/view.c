@@ -41,26 +41,28 @@ int add_fish(struct view* view, struct fish* fish) {
 
 // the fish is overwrited
 int delete_fish(struct view* view, char* name){
-    int status = 0;
-    int index = 0;
+    printf("deleting\n");
+    int index = -1;
     for(int i=0; i<view->nb_fishes; i++){
-        if (strncmp(view->fishes[index]->name, name, strlen(name)) == 0){
+        if (strcmp(view->fishes[i]->name, name) == 0){
             index=i;
-            status++;
             break;
         }
     }
 
-    if(status == 0) {
-        // printf("\t-> Your id doesn't exist\n");
+    if(index == -1) {
+        printf("\t-> Fish doesn't exist\n");
         return -1;
     }
     free_fish(view->fishes[index]);
+    view->fishes[index] = NULL;
     for(int i=index;i<MAX_FISHES-1; i++){
-        view->fishes[i]=view->fishes[i+1];
+        if(view->fishes[i+1] != NULL && view->fishes[i] == NULL){
+            view->fishes[i] = view->fishes[i+1];
+            view->fishes[i+1] = NULL;
+        }
     }
     view->nb_fishes--;
-    printf("\t-> view N%d deleted\n",status);
     return 0;
 }
 
