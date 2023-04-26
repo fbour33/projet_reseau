@@ -6,10 +6,8 @@
     #include <netdb.h>
     #include <netinet/in.h>
     #include <stdlib.h>
-    #include <string.h>
     #include <sys/socket.h>
     #include <unistd.h>
-    #include <ctype.h>
     #include "../client/client.h"
 
     #define MSG_LEN 1024

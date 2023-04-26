@@ -9,14 +9,29 @@ struct view *create_view(int id, int x, int y, int width, int height){
     view->d.width = width;
     view->d.height = height;
     view->free = 1; //1 if free 0 if not
-    return view;
     view->nb_fishes = 0;
+    for(int i=0; i<MAX_FISHES; i++){
+        view->fishes[i] = NULL;
+    }
     return view;
+}
+
+int already_exists(struct view* view, struct fish* fish){
+    for (int i=0;i<view->nb_fishes;i++){
+        if(view->fishes[i] != NULL && strcmp(view->fishes[i]->name, fish->name) == 0){
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int add_fish(struct view* view, struct fish* fish) {
     if (view->nb_fishes == MAX_FISHES-1) {
-        printf("There is no more space in this aquarium !\n");
+        //printf("There is no more space in this aquarium !\n");
+        return -1;
+    }
+    if (already_exists(view, fish)){
+        //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }
     view->fishes[view->nb_fishes] = fish;
@@ -49,17 +64,18 @@ int delete_fish(struct view* view, char* name){
     return 0;
 }
 
-char* get_fishes(struct view* view, char *resp) {
+int get_fishes(struct view* view, char *resp) {
     char msg[1024] = "list ";
-    for(int i = 0; i< view->nb_fishes; ++i) {
+    for(int i = 0; i< view->nb_fishes; i++) {
         struct fish* tmp = view->fishes[i];
-        // vérifier les paramètres car je ne savais quoi mettre ni dans quel ordre
-        sprintf(msg, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
+        char temp[64];
+        sprintf(temp, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
+        strcat(msg, temp);
     }
     strcat(msg, "\n");
     strcpy(resp, msg);
-    return resp;
+    return 0;
 }
 
 int status(struct view* view) {
@@ -78,8 +94,10 @@ int status(struct view* view) {
 }
 
 void free_view(struct view* view) {
-    for(int i = 0; i < view->nb_fishes; ++i) {
-        free_fish(view->fishes[i]);
+    for(int i = 0; i < MAX_FISHES; ++i) {
+        if(view->fishes[i] != NULL){
+            free_fish(view->fishes[i]);
+        }
     }
     free(view);
 }

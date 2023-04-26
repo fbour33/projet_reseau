@@ -8,7 +8,7 @@
 
 struct client{
     int cfd;
-    int view_id;    
+    int view_idx;    
 };
 
 extern struct client* clients[MAX_CLIENTS];
@@ -16,7 +16,7 @@ extern struct client* clients[MAX_CLIENTS];
 /**
  * @brief Create a client
  */
-struct client* create_client(int cfd, int view_id);
+struct client* create_client(int cfd, int view_idx);
 
 /**
  * @brief Free a client 

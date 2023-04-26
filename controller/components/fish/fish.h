@@ -6,12 +6,16 @@
 #define MAX_FISHES 15
 
 enum STRATEGY{
-    HORIZONTAL, VERTICAL, RANDOM, UNREGISTERED
+    UNREGISTERED, HORIZONTAL, VERTICAL, RANDOMWAYPOINT
 };
 
+enum STRATEGY string_to_strategy(char* str);
+
 enum FISH_TYPE{
-    REDFISH,CLOWNFISH
+    INVALID, REDFISH,CLOWNFISH
 };
+
+enum FISH_TYPE string_to_fish_type(char* str);
 
 struct fish{
     char* name;

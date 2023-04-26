@@ -2,10 +2,10 @@
 
 struct client* clients[MAX_CLIENTS];
 
-struct client* create_client(int cfd, int view_id){
+struct client* create_client(int cfd, int view_idx){
     struct client *cli = malloc(sizeof(struct client));
     cli->cfd = cfd;
-    cli->view_id = view_id;
+    cli->view_idx = view_idx;
     return cli;
 }   
 
@@ -16,8 +16,11 @@ void free_client(struct client* client){
 int disconnect_client(int cfd){
     for(int i=0; i<MAX_CLIENTS; i++){
         if (NULL != clients[i] && clients[i]->cfd == cfd){
-            int view_idx = get_idx_from_id(clients[i]->view_id);
-            global_aquarium->aquarium_views[view_idx]->free = 1;
+            global_aquarium->aquarium_views[clients[i]->view_idx]->free = 1;
+            for(int j = 0; j <= global_aquarium->aquarium_views[clients[i]->view_idx]->nb_fishes; j++){
+                free_fish(global_aquarium->aquarium_views[clients[i]->view_idx]->fishes[j]);
+                global_aquarium->aquarium_views[clients[i]->view_idx]->fishes[j] = NULL;
+            }
             free(clients[i]);
             clients[i] = NULL;
             return 0;
@@ -53,7 +56,7 @@ int linked_client(int cfd, int view_id){
         return -1;  
     }
 
-    struct client* cli = create_client(cfd, view_id);
+    struct client* cli = create_client(cfd, view_idx);
     int ok = -1;
     for(int i=0; i<MAX_CLIENTS; i++){
         if(clients[i] == NULL){

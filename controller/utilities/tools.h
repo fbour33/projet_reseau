@@ -1,6 +1,9 @@
 #ifndef AQUARIUM_TOOLS_H
 #define AQUARIUM_TOOLS_H
 
+#include <ctype.h>
+#include <string.h>
+
 /********** STRUCT POSITION *************/ 
 struct position{
     int x;
@@ -19,5 +22,17 @@ struct dimension{
     int width;
     int height;
 };
+
+/**
+ * @brief check if an id is valid 
+ * @return 1 on success 0 on failure
+ */
+int is_valid_ID(char* id);
+
+/**
+ * @brief check if an string is a number 
+ * @return 1 on success 0 on failure
+ */
+int is_number(char* txt);
 
 #endif

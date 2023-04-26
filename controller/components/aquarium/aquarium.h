@@ -7,7 +7,7 @@
 #include <string.h>
 #include"../view/view.h"
 
-#define MAX_CLIENTS 5
+#define MAX_CLIENTS 8
 
 struct aquarium{
     struct dimension dimension;

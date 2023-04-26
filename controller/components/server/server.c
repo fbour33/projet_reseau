@@ -26,7 +26,6 @@ int main() {
 
 	// Time handle
 	time_t t0 = time(NULL);
-	printf("%ld\n", t0);
 	unsigned long t = 0;
 
 	//storage for clients socket

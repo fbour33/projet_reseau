@@ -31,27 +31,6 @@ int handle_bind() {
 }
 
 /**
- * @brief check if an id is valid 
- * @return 1 on success 0 on failure
- */
-int is_valid_ID(char* id){
-	if(strlen(id) <= 2){
-		return 0;
-	}
-	if(id[0] == 'N') {
-		for(int i =1; i< strlen(id)-1; i++){
-			if(!isdigit(id[i])){
-				return 0;
-			}
-		}
-		if(id[strlen(id)-1] == '\n'){
-			return 1;
-		}
-	}
-	return 0;
-}
-
-/**
  * @brief function called when a hello message is received
  * @return 0 on success, -1 on failure
  */
@@ -132,8 +111,7 @@ int response_getFishes(int sockfd){
 	}
 	struct client* cli = get_cli_from_sock(sockfd);
 	char resp[1024];
-	get_fishes(global_aquarium->aquarium_views[cli->view_id], resp);
-	printf("resp : %s\n", resp);
+	get_fishes(global_aquarium->aquarium_views[cli->view_idx], resp);
 	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
 				return -1;
 	}
@@ -149,6 +127,63 @@ int response_getFishesContinously(int sockfd){
 }
 
 int response_addFish(int sockfd){
+	struct client* cli = get_cli_from_sock(sockfd);
+	char *delim = " ";
+    char *name = strtok(NULL, delim);
+	if(strcmp(strtok(NULL, delim), "at") != 0){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	delim = "x";
+	char* x = strtok(NULL, delim);
+	delim=",";
+	char* y = strtok(NULL, delim);
+	delim="x";
+	char* w = strtok(NULL,delim);
+	delim=",";
+	char* h = strtok(NULL, delim);
+	if(!is_number(x) || !is_number(y) || !is_number(w) || !is_number(h)){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	delim = " ";
+	char *move = strtok(NULL, delim);
+	move[strlen(move)-1] = '\0';
+	enum STRATEGY strat = string_to_strategy(move);
+	if(strat == UNREGISTERED){
+		if (send(sockfd, "NOK : Modèle non supporté\n", 29, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+
+	delim = "_";
+	char tmp[32];
+	strcpy(tmp, name);
+	char *type_str = strtok(tmp, delim);
+	enum FISH_TYPE type = string_to_fish_type(type_str);
+	if(type == INVALID){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+
+	struct fish* new = create_fish(name, type, strat, atoi(x), atoi(y), atoi(w), atoi(h));
+	if(add_fish(global_aquarium->aquarium_views[cli->view_idx], new) == -1){
+		free_fish(new);
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	if (send(sockfd, "OK\n", 4, 0) <= 0) {
+			return -1;
+	}
 	return 0;
 }
 
