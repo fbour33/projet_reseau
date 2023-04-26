@@ -185,7 +185,11 @@ int command_del_aquarium(){
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
-        printf("\t-> invalid command\n");
+        printf("\t-> invalid id\n");
+        return ERROR;
+    }
+    if(global_aquarium->num_aquarium_views == 0) {
+        printf("\t-> There is no more view\n");
         return ERROR;
     }
     int num = atoi(id+1);
