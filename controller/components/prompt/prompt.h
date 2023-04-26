@@ -10,6 +10,10 @@ enum COMMAND{
     LOAD, SHOW, ADD, DEL, SAVE,EXIT
 };
 
+enum RETURN_VALUE{
+    ERROR=-1, SUCCESS, EXIT_VALUE
+};
+
 /**
  * @brief function for handling the prompt entry
  * @return 0 on success, -1 on failure, 1 for exit

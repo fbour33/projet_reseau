@@ -9,7 +9,7 @@ int handle_command_line(char *command_line){
     char *delim = " ";
     if (strncmp(command_line, "quit",4)==0 || strncmp(command_line, "exit",4)==0){
         printf("\t-> bye\n");
-        return 1;
+        return EXIT_VALUE;
     }
     token = strtok(command_line, delim);
 
@@ -30,9 +30,9 @@ int handle_command_line(char *command_line){
     }
     else{
         printf("\t-> Invalid command\n");
-        return 0;
+        return SUCCESS;
     }
-    return -1;
+    return ERROR;
 }
 
 /**
@@ -42,7 +42,7 @@ int handle_command_line(char *command_line){
 int call_command(enum COMMAND command){
     if(global_aquarium==NULL && command!=LOAD){
         printf("\t-> Impossible to execute a command on non-existing aquarium\n");
-        return -1;
+        return ERROR;
     }
     
     switch (command){
@@ -60,7 +60,7 @@ int call_command(enum COMMAND command){
         break;
     }
 
-    return -1;
+    return ERROR;
 }
 
 /**
@@ -72,15 +72,15 @@ int command_load_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to load something\n");
-        return 0;
+        return SUCCESS;
     }
     if(strncmp(string,"aquarium", 8)!=0){
         printf("\t-> invalid string after load command\n");
-        return 0;
+        return SUCCESS;
     }
     global_aquarium = create_aquarium();
     load_aquarium(global_aquarium);
-    return 0;
+    return ERROR;
     
 }
 
@@ -90,7 +90,7 @@ int command_load_aquarium(){
  */
 int command_show_aquarium(){
     show_aquarium(global_aquarium);
-    return 0;
+    return SUCCESS;
 }
 
 /**
@@ -102,16 +102,16 @@ int command_add_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to add a view\n");
-        return -1;
+        return ERROR;
     }
     if (strncmp(string, "view", 4) != 0) {
         printf("\t-> you need to add a view\n");
-        return -1;
+        return ERROR;
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
         printf("\t-> invalid id\n");
-        return -1;
+        return ERROR;
     }
     char *x,*y,*width,*height;
     int num = atoi(id+1);
@@ -126,7 +126,7 @@ int command_add_aquarium(){
     view->p.x=atoi(x);
     view->p.y=atoi(y);
     add_view_aquarium(global_aquarium,view);
-    return 0;
+    return SUCCESS;
 }
 
 /**
@@ -138,21 +138,21 @@ int command_del_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to delete something\n");
-        return -1;
+        return ERROR;
     }
     if (strncmp(string, "view", 4) != 0) {
         printf("\t-> you have to delete a view\n");
-        return -1;
+        return ERROR;
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
         printf("\t-> invalid command\n");
-        return -1;
+        return ERROR;
     }
     int num = atoi(id+1);
     del_view_aquarium(global_aquarium,num);
 
-    return 0;
+    return SUCCESS;
 }
 
 /**
@@ -161,5 +161,5 @@ int command_del_aquarium(){
  */
 int command_save_aquarium(){
     save_aquarium(global_aquarium);
-    return 0;
+    return SUCCESS;
 }
