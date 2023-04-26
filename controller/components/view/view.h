@@ -20,7 +20,7 @@ int add_fish(struct view* view, struct fish* fish);
 
 int delete_fish(struct view*, char*);
 
-struct fish** get_fishes(struct view*);
+char* get_fishes(struct view*, char *resp);
 
 int status(struct view*);
 
