@@ -31,27 +31,6 @@ int handle_bind() {
 }
 
 /**
- * @brief check if an id is valid 
- * @return 1 on success 0 on failure
- */
-int is_valid_ID(char* id){
-	if(strlen(id) <= 2){
-		return 0;
-	}
-	if(id[0] == 'N') {
-		for(int i =1; i< strlen(id)-1; i++){
-			if(!isdigit(id[i])){
-				return 0;
-			}
-		}
-		if(id[strlen(id)-1] == '\n'){
-			return 1;
-		}
-	}
-	return 0;
-}
-
-/**
  * @brief function called when a hello message is received
  * @return 0 on success, -1 on failure
  */
