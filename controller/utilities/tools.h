@@ -18,6 +18,8 @@
  */
 int is_valid_ID(char* id);
 
+int is_valid_number(char* number);
+
 /********** STRUCT POSITION *************/ 
 struct position{
     int x;

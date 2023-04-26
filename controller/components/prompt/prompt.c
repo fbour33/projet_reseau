@@ -72,15 +72,15 @@ int command_load_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         printf("\t-> you need to load something\n");
-        return SUCCESS;
+        return ERROR;
     }
     if(strncmp(string,"aquarium", 8)!=0){
         printf("\t-> invalid string after load command\n");
-        return SUCCESS;
+        return ERROR;
     }
     global_aquarium = create_aquarium();
     load_aquarium(global_aquarium);
-    return ERROR;
+    return SUCCESS;
     
 }
 
@@ -108,17 +108,29 @@ int command_add_aquarium(){
         printf("\t-> you need to add a view\n");
         return ERROR;
     }
+
     char *id = strtok(NULL, delim);
-    if(id==NULL){
+    if(id==NULL || !is_valid_ID(id)){
         printf("\t-> invalid id\n");
         return ERROR;
     }
+
     char *x,*y,*width,*height;
     int num = atoi(id+1);
     x = strtok(NULL, delim);
     y = strtok(NULL, delim);
     width = strtok(NULL, delim);
     height = strtok(NULL, delim);
+
+    if(x ==NULL || y == NULL || width ==NULL || height == NULL) {
+        printf("\t-> 4 parameters needed\n");
+        return ERROR;
+    }
+    if(is_valid_number(x) && is_valid_number(y) && is_valid_number(width) && is_valid_number(height) == 0) {
+        printf("\t-> your paramters must be integer\n");
+        return ERROR;
+    }
+
     struct view *view = malloc(sizeof(struct view));
     view->id=num;
     view->d.height=atoi(height);
