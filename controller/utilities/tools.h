@@ -1,8 +1,16 @@
 #ifndef AQUARIUM_TOOLS_H
 #define AQUARIUM_TOOLS_H
 
-#include <ctype.h>
+#include <stdio.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <stddef.h>
 
 /**
  * @brief check if an id is valid 

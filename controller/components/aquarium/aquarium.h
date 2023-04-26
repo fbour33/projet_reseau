@@ -2,9 +2,6 @@
 #define AQUARIUM_H
 #define MAX_LENGTH 25
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include"../view/view.h"
 
 #define MAX_CLIENTS 5

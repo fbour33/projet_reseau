@@ -1,10 +1,6 @@
 #ifndef AQUARIUM_PROMPT_H
 #define AQUARIUM_PROMPT_H
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
 #include "../aquarium/aquarium.h"
 
 #define GREENBOLD "\e[32;1m"

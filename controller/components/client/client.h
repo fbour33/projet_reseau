@@ -3,9 +3,6 @@
 
 #include "../aquarium/aquarium.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-
 struct client{
     int cfd;
     int view_id;    
