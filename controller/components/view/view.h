@@ -1,10 +1,6 @@
 #ifndef AQUARIUM_VIEW_H
 #define AQUARIUM_VIEW_H
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "../fish/fish.h"
 
 struct view{

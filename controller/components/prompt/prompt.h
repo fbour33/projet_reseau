@@ -1,10 +1,6 @@
 #ifndef AQUARIUM_PROMPT_H
 #define AQUARIUM_PROMPT_H
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
 #include "../aquarium/aquarium.h"
 
 #define GREENBOLD "\e[32;1m"
@@ -13,6 +9,16 @@
 enum COMMAND{
     LOAD, SHOW, ADD, DEL, SAVE,EXIT
 };
+
+enum RETURN_VALUE{
+    ERROR=-1, SUCCESS, EXIT_VALUE
+};
+
+/**
+ * @brief check if an id is new (view)
+ * @return 1 on success 0 on failure
+ */
+int is_new_id(char* id);
 
 /**
  * @brief function for handling the prompt entry
