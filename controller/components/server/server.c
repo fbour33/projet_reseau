@@ -64,6 +64,7 @@ int main() {
 	fflush(STDIN_FILENO);
 	// main loop
 	while (1) {
+		
 		// time check for actualisation
 		clock_t tmp = clock();
 		if((tmp-t0)/CLOCKS_PER_SEC >= 1) {

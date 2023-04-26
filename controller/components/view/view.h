@@ -11,7 +11,7 @@ struct view{
     int id;
     struct dimension d;
     struct position p;
-    int free;
+    int free;   
     struct fish* fishes[MAX_FISHES];
     int nb_fishes; // 0->MAX_FISHES-1, first index NULL
 };
