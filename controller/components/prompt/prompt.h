@@ -15,6 +15,12 @@ enum RETURN_VALUE{
 };
 
 /**
+ * @brief check if an id is new (view)
+ * @return 1 on success 0 on failure
+ */
+int is_new_id(char* id);
+
+/**
  * @brief function for handling the prompt entry
  * @return 0 on success, -1 on failure, 1 for exit
  */

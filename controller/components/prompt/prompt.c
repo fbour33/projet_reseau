@@ -1,5 +1,14 @@
 #include "prompt.h"
 
+int is_new_id(char* id) {
+    for(int i = 0; i < global_aquarium->num_aquarium_views; ++i) {
+        if(global_aquarium->aquarium_views[i]->id == atoi(id+1)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 /**
  * @brief function for handling the prompt entry
  * @return 0 on success, -1 on failure, 1 for exit
@@ -115,6 +124,16 @@ int command_add_aquarium(){
         return ERROR;
     }
 
+    if(!is_new_id(id)) {
+        printf("\t-> this id already exist\n");
+        return ERROR;
+    }
+
+    if(global_aquarium->num_aquarium_views == MAX_CLIENTS) {
+        printf("\t-> View count limit reached\n");
+        return ERROR;
+    }
+
     char *x,*y,*width,*height;
     int num = atoi(id+1);
     x = strtok(NULL, delim);
@@ -128,6 +147,14 @@ int command_add_aquarium(){
     }
     if(is_valid_number(x) && is_valid_number(y) && is_valid_number(width) && is_valid_number(height) == 0) {
         printf("\t-> your paramters must be integer\n");
+        return ERROR;
+    }
+    if(atoi(x) < 0 || atoi(x) > 100) {
+        printf("\t-> x must be between 0 and 100\n");
+        return ERROR;
+    }
+    if(atoi(y) < 0 || atoi(y) > 100) {
+        printf("\t-> y must be between 0 and 100\n");
         return ERROR;
     }
 

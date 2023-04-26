@@ -18,7 +18,17 @@
  */
 int is_valid_ID(char* id);
 
+/**
+ * @brief check if a number is valid 
+ * @return 1 on success 0 on failure
+ */
 int is_valid_number(char* number);
+
+/**
+ * @brief check if an id is new (view)
+ * @return 1 on success 0 on failure
+ */
+int is_new_id(char* id);
 
 /********** STRUCT POSITION *************/ 
 struct position{
