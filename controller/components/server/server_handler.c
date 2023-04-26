@@ -125,6 +125,18 @@ int response_ping(int sockfd) {
 	return -1;
 }
 
+int response_getFishes(int sockfd){
+	return 0;
+}
+
+int response_ls(int sockfd){
+	return 0;
+}
+
+int response_getFishesContinously(int sockfd){
+	return 0;
+}
+
 /**
  * @brief Secondary function for handling the client message
  * @return 0 on success, -1 on failure
@@ -135,6 +147,12 @@ int call_response(enum RESPONSE resp, int sockfd) {
 			return response_hello(sockfd);
 		case PING :
 			return response_ping(sockfd);
+		case GETFISHES :
+			return response_getFishes(sockfd);
+		case LS :
+			return response_ls(sockfd);
+		case GETFISHESCONTINOUSLY :
+			return response_getFishesContinously(sockfd);
 		default :
 			return -1;
 	}
@@ -150,20 +168,25 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 	token = strtok(buffer, delim);
 	int is_cli = is_client(sockfd);
 
-	if (token == NULL) {
-		return 0;
-	} else {
-		if (strncmp(token, "hello", 5) == 0 && !is_cli) {
+	if (token != NULL) {
+		if (!is_cli && strncmp(token, "hello", 5) == 0) {
 			return call_response(HELLO, sockfd);
 		}
-		if (strncmp(token, "ping", 4) == 0 && is_cli) {
+		if (is_cli && strncmp(token, "ping", 4) == 0) {
 			return call_response(PING, sockfd);
 		}
-		else {
-			if (send(sockfd, "NOK\n", 5, 0) <= 0) {
-				return -1;
-			}
+		if (is_cli && strncmp(token, "getFishes", 9) == 0){
+			return call_response(GETFISHES, sockfd);
 		}
+		if (is_cli && strncmp(token, "ls", 2) == 0 && is_cli){
+			return call_response(LS, sockfd);
+		}
+		if (is_cli && strncmp(token, "getFishesContinuously", 21) == 0 && is_cli){
+			return call_response(GETFISHESCONTINOUSLY, sockfd);
+		}
+	}
+	if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+		return -1;
 	}
 	return 0;
 }
