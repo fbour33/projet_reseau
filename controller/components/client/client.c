@@ -65,3 +65,12 @@ int linked_client(int cfd, int view_id){
     global_aquarium->aquarium_views[view_idx]->free = 0;
     return ok;
 }
+
+struct client* get_cli_from_sock(int sockfd){
+    for(int i=0; i <MAX_CLIENTS; i++){
+        if (clients[i] != NULL && clients[i]->cfd == sockfd){
+            return clients[i];
+        }
+    }
+    return NULL;
+}

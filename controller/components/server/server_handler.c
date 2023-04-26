@@ -126,6 +126,17 @@ int response_ping(int sockfd) {
 }
 
 int response_getFishes(int sockfd){
+	char *delim = " ";
+    if (strtok(NULL, delim) != NULL){
+		return -1;
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	char resp[1024];
+	get_fishes(global_aquarium->aquarium_views[cli->view_id], resp);
+	printf("resp : %s\n", resp);
+	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
+				return -1;
+	}
 	return 0;
 }
 
@@ -134,6 +145,18 @@ int response_ls(int sockfd){
 }
 
 int response_getFishesContinously(int sockfd){
+	return 0;
+}
+
+int response_addFish(int sockfd){
+	return 0;
+}
+
+int response_delFish(int sockfd){
+	return 0;
+}
+
+int response_startFish(int sockfd){
 	return 0;
 }
 
@@ -153,6 +176,12 @@ int call_response(enum RESPONSE resp, int sockfd) {
 			return response_ls(sockfd);
 		case GETFISHESCONTINOUSLY :
 			return response_getFishesContinously(sockfd);
+		case ADDFISH :
+			return response_addFish(sockfd);
+		case DELFISH :
+			return response_delFish(sockfd);
+		case STARTFISH :
+			return response_startFish(sockfd);
 		default :
 			return -1;
 	}
@@ -178,11 +207,20 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 		if (is_cli && strncmp(token, "getFishes", 9) == 0){
 			return call_response(GETFISHES, sockfd);
 		}
-		if (is_cli && strncmp(token, "ls", 2) == 0 && is_cli){
+		if (is_cli && strncmp(token, "ls", 2) == 0){
 			return call_response(LS, sockfd);
 		}
-		if (is_cli && strncmp(token, "getFishesContinuously", 21) == 0 && is_cli){
+		if (is_cli && strncmp(token, "getFishesContinuously", 21) == 0 ){
 			return call_response(GETFISHESCONTINOUSLY, sockfd);
+		}
+		if (is_cli && strncmp(token, "addFish", 7) == 0 ){
+			return call_response(ADDFISH, sockfd);
+		}
+		if (is_cli && strncmp(token, "delFish", 7) == 0 ){
+			return call_response(DELFISH, sockfd);
+		}
+		if (is_cli && strncmp(token, "startFish", 9) == 0 ){
+			return call_response(STARTFISH, sockfd);
 		}
 	}
 	if (send(sockfd, "NOK\n", 5, 0) <= 0) {

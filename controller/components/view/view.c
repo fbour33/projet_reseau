@@ -49,16 +49,17 @@ int delete_fish(struct view* view, char* name){
     return 0;
 }
 
-struct fish** get_fishes(struct view* view) {
-    printf("list ");
+char* get_fishes(struct view* view, char *resp) {
+    char msg[1024] = "list ";
     for(int i = 0; i< view->nb_fishes; ++i) {
         struct fish* tmp = view->fishes[i];
         // vérifier les paramètres car je ne savais quoi mettre ni dans quel ordre
-        printf("[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
+        sprintf(msg, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
     }
-    printf("\n");
-    return view->fishes;
+    strcat(msg, "\n");
+    strcpy(resp, msg);
+    return resp;
 }
 
 int status(struct view* view) {

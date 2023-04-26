@@ -41,4 +41,10 @@ int linked_client(int cfd, int view_id);
  */
 int is_client(int cfd);
 
+/**
+ * @brief Get the client pointer from the client socket
+ * @return client pointer on success, NULL on failure
+ */
+struct client* get_cli_from_sock(int sockfd);
+
 #endif

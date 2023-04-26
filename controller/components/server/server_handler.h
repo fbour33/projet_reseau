@@ -17,7 +17,7 @@
     #define SERV_ADDR "localhost"
 
     enum RESPONSE {
-        HELLO, PING, GETFISHES, LS, GETFISHESCONTINOUSLY
+        HELLO, PING, ADDFISH, DELFISH, STARTFISH, GETFISHES, LS, GETFISHESCONTINOUSLY
     };
 
     void echo_server(int sockfd);
