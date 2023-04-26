@@ -16,6 +16,7 @@ import java.io.*;
 
 public class Aquarium extends Application {
 
+    private static final String chemin = System.getProperty("user.dir");
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final int FISH_RADIUS = 25;
@@ -32,7 +33,7 @@ public class Aquarium extends Application {
     public void start(Stage primaryStage) throws Exception {
         console = new Console(this,400, 400);
         console.show();
-        myFish = new Fish("/home/brice/Projet_Reseau/projet_reseau/app/src/main/images/blobfish.png");
+        myFish = new Fish(chemin + "/src/main/images/blobfish.png");
         Group fish1 = myFish.addGroupFish();
         fish1.setLayoutX(random.nextInt(WIDTH));
         fish1.setLayoutY(random.nextInt(HEIGHT));
