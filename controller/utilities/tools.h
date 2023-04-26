@@ -3,6 +3,14 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 
 /********** STRUCT POSITION *************/ 
 struct position{

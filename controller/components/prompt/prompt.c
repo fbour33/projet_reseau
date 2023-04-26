@@ -145,7 +145,7 @@ int command_add_aquarium(){
         printf("\t-> 4 parameters needed\n");
         return ERROR;
     }
-    if(is_valid_number(x) && is_valid_number(y) && is_valid_number(width) && is_valid_number(height) == 0) {
+    if(is_number(x) && is_number(y) && is_number(width) && is_number(height) == 0) {
         printf("\t-> your paramters must be integer\n");
         return ERROR;
     }
