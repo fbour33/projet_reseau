@@ -34,6 +34,7 @@ struct fish{
     enum STRATEGY strategy;
     struct position position;
     struct dimension rectangle;
+    int wps_nb;
     struct waypoint *waypoints[MAX_WAYPOINT];
 };
 
@@ -63,5 +64,7 @@ void free_fish(struct fish * fish);
  * @return  0 on success, -1 on failure
  */
 int RandomWayPoint(struct fish *fish);
+
+int run(struct fish* fish);
 
 #endif

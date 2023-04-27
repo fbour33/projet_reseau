@@ -197,12 +197,25 @@ int response_delFish(int sockfd){
 		return 0;
 	}
 	if (send(sockfd, "OK\n", 4, 0) <= 0) {
-			return -1;
+		return -1;
 	}
 	return 0;
 }
 
 int response_startFish(int sockfd){
+	char *delim = " ";
+    char *name = strtok(NULL, delim);
+	name[strlen(name)-1] = '\0';
+	struct client* cli = get_cli_from_sock(sockfd);
+	if(start_fish(global_aquarium->aquarium_views[cli->view_idx], name) == -1){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	if (send(sockfd, "OK\n", 4, 0) <= 0) {
+		return -1;
+	}
 	return 0;
 }
 

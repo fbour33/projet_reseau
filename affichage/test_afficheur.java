@@ -44,7 +44,7 @@ public class test_afficheur {
             // Envoi du message d'ajout d'un poisson
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("addFish ClownFish at 40x30,10x3, RandomWaypoint");
+            writer.println("addFish CloWNFish at 40x30,10x3, RandomWaypoint");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();
@@ -84,12 +84,11 @@ public class test_afficheur {
             reader = new BufferedReader(new InputStreamReader(inputStream));
             response = reader.readLine();
             System.out.println("Server response: " + response);
-            
 
-            // Envoi du message d'ajout d'un poisson
+            // Envoi du message démarrage d'un poisson
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("getFishes");
+            writer.println("startFish CloWNFish");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();
@@ -101,10 +100,10 @@ public class test_afficheur {
             for(int i=0; i<10;i++){
                 
 
-                // Envoi d'un message au serveur
+                // Envoi du message d'ajout d'un poisson
                 outputStream = socket.getOutputStream();
                 writer = new PrintWriter(outputStream, true);
-                writer.println("ping "+i);
+                writer.println("getFishes");
 
                 // Lecture de la réponse du serveur
                 inputStream = socket.getInputStream();
