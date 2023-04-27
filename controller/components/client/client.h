@@ -5,7 +5,8 @@
 
 struct client{
     int cfd;
-    int view_idx;    
+    int view_idx;
+    int last_msg_t;
 };
 
 extern struct client* clients[MAX_CLIENTS];

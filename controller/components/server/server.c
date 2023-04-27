@@ -16,17 +16,17 @@
 #define LOG_DIR "aled"
 #endif
 
-
-
 int main() {
 	struct sockaddr cli;
 	fd_set read_fds, active_fds;
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
 
+	//Load the config file
+	parser_controller_config_file("../controller.cfg", &controller_port, &display_timeout, &fish_update_interval);
+
 	// Time handle
 	time_t t0 = time(NULL);
-	unsigned long t = 0;
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
@@ -71,7 +71,7 @@ int main() {
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
 			t += diff;
-			// actualisation des positiond des poissons
+			// évolution poisson
 
 			t0 = tmp;
 		}
@@ -81,7 +81,10 @@ int main() {
 		memset(buff, 0, MSG_LEN);
 
 		// wait for activity on one of the sockets
-        if (select(max_sockfd + 1, &active_fds, NULL, NULL, NULL) < 0) {
+		struct timeval waiting_time;
+		waiting_time.tv_sec = 0;
+		waiting_time.tv_usec = 0;
+        if (select(max_sockfd + 1, &active_fds, NULL, NULL, &waiting_time) < 0) {
             fprintf(log_f, "select failed\n");
 			fflush(log_f);
             break;
@@ -114,23 +117,34 @@ int main() {
 
 		// check for activity on client sockets
         for (int i = 0; i < MAX_CLIENTS; i++) {
-			if (FD_ISSET(client_sockets[i], &active_fds)) {
+			if (client_sockets[i] != -1 && FD_ISSET(client_sockets[i], &active_fds)) {
 				memset(buff, 0, MSG_LEN);
                 // receive data from client
                 if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
-                    // socket disconnected
+                    // inactive socket
 					if(is_client(client_sockets[i])){
-						if (disconnect_client(client_sockets[i]) != 0){
-							fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
-							break;
+						struct client *cli = get_cli_from_sock(client_sockets[i]);
+						if(t-cli->last_msg_t >= display_timeout){
+							if (disconnect_client(client_sockets[i]) != 0){
+								fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
+								break;
+							}
+							else {
+								fprintf(log_f, "Client timeout, socket fd is %d\n", client_sockets[i]);
+								if (send(client_sockets[i], "NOK\n", 5, 0) <= 0) {
+									return -1;
+								}
+								FD_CLR(client_sockets[i], &read_fds);
+								close(client_sockets[i]);
+								client_sockets[i] = -1;
+							}
 						}
-						else {
-							fprintf(log_f, "Client disconnected, socket fd is %d\n", client_sockets[i]);
-						}
+					} else {
+						fprintf(log_f, "Non-client socket fd %d disconnected\n", client_sockets[i]);
+						FD_CLR(client_sockets[i], &read_fds);
+						close(client_sockets[i]);
+						client_sockets[i] = -1;
 					}
-					FD_CLR(client_sockets[i], &read_fds);
-					close(client_sockets[i]);
-					client_sockets[i] = -1;
 					
                 } else {
                     // print received data
@@ -173,7 +187,9 @@ int main() {
 		free_aquarium(global_aquarium);
 	}
 	for(int i=0; i < MAX_CLIENTS; i++){
-		free_client(clients[i]);
+		if(clients[i] != NULL){
+			free_client(clients[i]);
+		}
 	}
 	close(sfd);
 	fclose(log_f);

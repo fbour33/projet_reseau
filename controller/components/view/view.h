@@ -26,4 +26,6 @@ void free_view(struct view*);
 
 int fish_already_exists(struct fish* fish);
 
+int start_fish(struct view*, char* name);
+
 #endif

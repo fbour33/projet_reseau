@@ -60,8 +60,16 @@ int get_fishes(struct view* view, char *resp) {
     for(int i = 0; i< view->nb_fishes; i++) {
         struct fish* tmp = view->fishes[i];
         char temp[64];
-        sprintf(temp, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
-                tmp->rectangle.width, tmp->rectangle.height);
+        int time = 0;
+        int posx = tmp->position.x;
+        int posy = tmp->position.y;
+        if(tmp->running){
+            time = tmp->waypoints[0]->time_left;
+            posx = tmp->waypoints[0]->pos.x;
+            posy = tmp->waypoints[0]->pos.y;
+        }
+        sprintf(temp, "[%s at %dx%d,%dx%d,%d] ", tmp->name, posx, posy, 
+                tmp->rectangle.width, tmp->rectangle.height, time);
         strcat(msg, temp);
     }
     strcat(msg, "\n");
@@ -91,4 +99,21 @@ void free_view(struct view* view) {
         }
     }
     free(view);
+}
+
+int start_fish(struct view* view, char* name){
+    int index = -1;
+    for(int i=0; i<view->nb_fishes; i++){
+        if (strcmp(view->fishes[i]->name, name) == 0){
+            index=i;
+            break;
+        }
+    }
+    if(index == -1){
+        //printf("\t-> Fish doesn't exist\n");
+        return -1;
+    }
+    view->fishes[index]->running = 1;
+    run(view->fishes[index]);
+    return 0;
 }

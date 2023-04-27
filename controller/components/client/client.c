@@ -6,6 +6,7 @@ struct client* create_client(int cfd, int view_idx){
     struct client *cli = malloc(sizeof(struct client));
     cli->cfd = cfd;
     cli->view_idx = view_idx;
+    cli->last_msg_t = 0;
     return cli;
 }   
 

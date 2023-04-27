@@ -13,8 +13,9 @@
 **/
 
 void parser_controller_config_file(const char *file, int *port, int *timeout, int *interval){
+    int max_length=64;
     FILE *config_file;
-    char line[MAX_LENGTH];
+    char line[max_length];
 
     config_file = fopen(file,"r");
     if(config_file==NULL){
@@ -22,7 +23,7 @@ void parser_controller_config_file(const char *file, int *port, int *timeout, in
         return; 
     }
     
-    while(fgets(line,MAX_LENGTH,config_file)!=NULL){
+    while(fgets(line, max_length, config_file)!=NULL){
         if(strlen(line) > 1){
             char* variable = strtok(line, "=");
             char* value = strtok(NULL, "=");
