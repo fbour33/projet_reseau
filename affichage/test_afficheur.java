@@ -21,7 +21,7 @@ public class test_afficheur {
              // Envoi du message de connexion au serveur
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("hello in as N2");
+            writer.println("hello in as N3");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();
@@ -29,8 +29,19 @@ public class test_afficheur {
             String response = reader.readLine();
             System.out.println("Server response: " + response);
 
-
              // Envoi du message d'ajout d'un poisson
+            outputStream = socket.getOutputStream();
+            writer = new PrintWriter(outputStream, true);
+            writer.println("getFishes");
+
+            // Lecture de la réponse du serveur
+            inputStream = socket.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            response = reader.readLine();
+            System.out.println("Server response: " + response);
+
+
+            // Envoi du message d'ajout d'un poisson
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
             writer.println("addFish ClownFish at 40x30,10x3, RandomWaypoint");
@@ -66,7 +77,7 @@ public class test_afficheur {
             // Envoi du message d'ajout d'un poisson
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("delFish ClownFish");
+            writer.println("delFish ClownFish_36");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();

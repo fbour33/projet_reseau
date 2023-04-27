@@ -39,9 +39,8 @@ int delete_fish(struct view* view, char* name){
             break;
         }
     }
-
     if(index == -1) {
-        printf("\t-> Fish doesn't exist\n");
+        //printf("\t-> Fish doesn't exist\n");
         return -1;
     }
     free_fish(view->fishes[index]);

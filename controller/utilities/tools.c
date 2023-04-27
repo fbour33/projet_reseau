@@ -12,7 +12,7 @@ struct position _position(int x, int y){
  * @return 1 on success 0 on failure
  */
 int is_valid_ID(char* id){
-	if(strlen(id) <= 2){
+	if(strlen(id) < 2){
 		return 0;
 	}
 	if(id[0] == 'N') {
