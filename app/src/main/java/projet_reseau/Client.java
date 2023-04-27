@@ -138,7 +138,7 @@ public class Client{
     }
 
     public int handleHello(){
-        String message = "hello";
+        String message = "hello in as " + id;
         send(message);
         try{
             String response = in.readLine();
@@ -190,11 +190,11 @@ public class Client{
                 }
 
             case "addFish":
-                if (args.length == 6) {
-                    Pattern pattern = Pattern.compile("^addFish\\s+(\\w+)\\s+at\\s+(\\d+x\\d+)(?:,\\s+(\\d+x\\d+))?(?:,\\s+(\\w+))?$");
+                if (args.length == 5) {
+                    Pattern pattern = Pattern.compile("^addFish\s+(\\w+)\\s+at\\s+(\\d+x\\d+)(?:,(\\d+x\\d+))?(?:,(\\w+))?$");
                     Matcher matcher = pattern.matcher(inputConsole);
 
-                    if (matcher.matches()) {
+                    if (true) {
                         send(inputConsole);
                         try {
                             response = in.readLine();
