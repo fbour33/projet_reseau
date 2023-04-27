@@ -37,10 +37,12 @@ struct dimension{
  */
 int is_valid_ID(char* id);
 
+int is_valid_id(char* id);
+
 /**
  * @brief check if an string is a number 
  * @return 1 on success 0 on failure
  */
-int is_number(char* txt);
+int is_number(char* number);
 
 #endif
