@@ -3,7 +3,7 @@
 
 #include "../../utilities/tools.h"
 
-#define MAX_FISHES 15
+#define MAX_FISHES 3
 
 enum STRATEGY{
     UNREGISTERED, HORIZONTAL, VERTICAL, RANDOMWAYPOINT

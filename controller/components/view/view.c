@@ -16,21 +16,12 @@ struct view *create_view(int id, int x, int y, int width, int height){
     return view;
 }
 
-int already_exists(struct view* view, struct fish* fish){
-    for (int i=0;i<view->nb_fishes;i++){
-        if(view->fishes[i] != NULL && strcmp(view->fishes[i]->name, fish->name) == 0){
-            return 1;
-        }
-    }
-    return 0;
-}
-
 int add_fish(struct view* view, struct fish* fish) {
     if (view->nb_fishes == MAX_FISHES-1) {
         //printf("There is no more space in this aquarium !\n");
         return -1;
     }
-    if (already_exists(view, fish)){
+    if (fish_already_exists(fish)){
         //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }

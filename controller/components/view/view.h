@@ -24,4 +24,6 @@ struct view * create_view(int id, int x, int y, int width, int height);
 
 void free_view(struct view*);
 
+int fish_already_exists(struct fish* fish);
+
 #endif
