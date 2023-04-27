@@ -27,6 +27,7 @@ void test_add_fish_in_view() {
 }
 
 void test_get_status_fish() {
+    char msg[1024]; 
     printf("test_get_status_fish:\n");
     struct view* v1 = create_view(0, 0, 0, 600, 400);
     struct fish* f1 = create_fish("Alex", REDFISH, HORIZONTAL, 100, 100, 600, 400);
@@ -36,12 +37,14 @@ void test_get_status_fish() {
     assert(add_fish(v1, f1) == 0);
     assert(add_fish(v1, f2) == 0);
 
-    get_fishes(v1);
+    get_fishes(v1, msg);
+    printf("%s", msg);
     status(v1);
 
     assert(delete_fish(v1, "Alex") == 0);
 
-    get_fishes(v1);
+    get_fishes(v1, msg);
+    printf("%s", msg);
     status(v1);    
     
     free_view(v1);

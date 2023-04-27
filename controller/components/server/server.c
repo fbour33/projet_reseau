@@ -24,8 +24,9 @@ int main() {
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
 
-	// t0
-	clock_t t0 = clock();
+	// Time handle
+	time_t t0 = time(NULL);
+	unsigned long t = 0;
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
@@ -64,10 +65,14 @@ int main() {
 	fflush(STDIN_FILENO);
 	// main loop
 	while (1) {
+
 		// time check for actualisation
-		clock_t tmp = clock();
-		if((tmp-t0)/CLOCKS_PER_SEC >= 1) {
+		time_t tmp = time(NULL);
+		int diff = difftime(tmp, t0);
+		if(diff >= 1) {
+			t += diff;
 			// actualisation des positiond des poissons
+
 			t0 = tmp;
 		}
 
@@ -89,7 +94,7 @@ int main() {
             if ((cfd = accept(sfd, (struct sockaddr *)&cli, &cli_len)) < 0) {
                 fprintf(log_f, "accept failed\n");
 				fflush(log_f);
-                exit(EXIT_FAILURE);
+                break;
             }
            fprintf(log_f, "New connection : socket %d\n", cfd);
 
@@ -113,7 +118,7 @@ int main() {
 				memset(buff, 0, MSG_LEN);
                 // receive data from client
                 if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
-                    // client disconnected
+                    // socket disconnected
 					if(is_client(client_sockets[i])){
 						if (disconnect_client(client_sockets[i]) != 0){
 							fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);

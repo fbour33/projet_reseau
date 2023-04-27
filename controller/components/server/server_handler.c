@@ -31,27 +31,6 @@ int handle_bind() {
 }
 
 /**
- * @brief check if an id is valid 
- * @return 1 on success 0 on failure
- */
-int is_valid_ID(char* id){
-	if(strlen(id) <= 2){
-		return 0;
-	}
-	if(id[0] == 'N') {
-		for(int i =1; i< strlen(id)-1; i++){
-			if(!isdigit(id[i])){
-				return 0;
-			}
-		}
-		if(id[strlen(id)-1] == '\n'){
-			return 1;
-		}
-	}
-	return 0;
-}
-
-/**
  * @brief function called when a hello message is received
  * @return 0 on success, -1 on failure
  */
@@ -125,6 +104,110 @@ int response_ping(int sockfd) {
 	return -1;
 }
 
+int response_getFishes(int sockfd){
+	char *delim = " ";
+    if (strtok(NULL, delim) != NULL){
+		return -1;
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	char resp[1024];
+	get_fishes(global_aquarium->aquarium_views[cli->view_idx], resp);
+	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
+				return -1;
+	}
+	return 0;
+}
+
+int response_ls(int sockfd){
+	return 0;
+}
+
+int response_getFishesContinously(int sockfd){
+	return 0;
+}
+
+int response_addFish(int sockfd){
+	char *delim = " ";
+    char *name = strtok(NULL, delim);
+	if(strcmp(strtok(NULL, delim), "at") != 0){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	delim = "x";
+	char* x = strtok(NULL, delim);
+	delim=",";
+	char* y = strtok(NULL, delim);
+	delim="x";
+	char* w = strtok(NULL,delim);
+	delim=",";
+	char* h = strtok(NULL, delim);
+	if(!is_number(x) || !is_number(y) || !is_number(w) || !is_number(h)){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	delim = " ";
+	char *move = strtok(NULL, delim);
+	move[strlen(move)-1] = '\0';
+	enum STRATEGY strat = string_to_strategy(move);
+	if(strat == UNREGISTERED){
+		if (send(sockfd, "NOK : Modèle non supporté\n", 29, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+
+	delim = "_";
+	char tmp[32];
+	strcpy(tmp, name);
+	char *type_str = strtok(tmp, delim);
+	enum FISH_TYPE type = string_to_fish_type(type_str);
+	if(type == INVALID){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+
+	struct fish* new = create_fish(name, type, strat, atoi(x), atoi(y), atoi(w), atoi(h));
+	struct client* cli = get_cli_from_sock(sockfd);
+	if(add_fish(global_aquarium->aquarium_views[cli->view_idx], new) == -1){
+		free_fish(new);
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	if (send(sockfd, "OK\n", 4, 0) <= 0) {
+			return -1;
+	}
+	return 0;
+}
+
+int response_delFish(int sockfd){
+	char *delim = " ";
+    char *name = strtok(NULL, delim);
+	name[strlen(name)-1] = '\0';
+	struct client* cli = get_cli_from_sock(sockfd);
+	if(delete_fish(global_aquarium->aquarium_views[cli->view_idx], name) == -1){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	if (send(sockfd, "OK\n", 4, 0) <= 0) {
+			return -1;
+	}
+	return 0;
+}
+
+int response_startFish(int sockfd){
+	return 0;
+}
+
 /**
  * @brief Secondary function for handling the client message
  * @return 0 on success, -1 on failure
@@ -135,6 +218,18 @@ int call_response(enum RESPONSE resp, int sockfd) {
 			return response_hello(sockfd);
 		case PING :
 			return response_ping(sockfd);
+		case GETFISHES :
+			return response_getFishes(sockfd);
+		case LS :
+			return response_ls(sockfd);
+		case GETFISHESCONTINOUSLY :
+			return response_getFishesContinously(sockfd);
+		case ADDFISH :
+			return response_addFish(sockfd);
+		case DELFISH :
+			return response_delFish(sockfd);
+		case STARTFISH :
+			return response_startFish(sockfd);
 		default :
 			return -1;
 	}
@@ -150,20 +245,34 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 	token = strtok(buffer, delim);
 	int is_cli = is_client(sockfd);
 
-	if (token == NULL) {
-		return 0;
-	} else {
-		if (strncmp(token, "hello", 5) == 0 && !is_cli) {
+	if (token != NULL) {
+		if (!is_cli && strncmp(token, "hello", 5) == 0) {
 			return call_response(HELLO, sockfd);
 		}
-		if (strncmp(token, "ping", 4) == 0 && is_cli) {
+		if (is_cli && strncmp(token, "ping", 4) == 0) {
 			return call_response(PING, sockfd);
 		}
-		else {
-			if (send(sockfd, "NOK\n", 5, 0) <= 0) {
-				return -1;
-			}
+		if (is_cli && strncmp(token, "getFishes", 9) == 0){
+			return call_response(GETFISHES, sockfd);
 		}
+		if (is_cli && strncmp(token, "ls", 2) == 0){
+			return call_response(LS, sockfd);
+		}
+		if (is_cli && strncmp(token, "getFishesContinuously", 21) == 0 ){
+			return call_response(GETFISHESCONTINOUSLY, sockfd);
+		}
+		if (is_cli && strncmp(token, "addFish", 7) == 0 ){
+			return call_response(ADDFISH, sockfd);
+		}
+		if (is_cli && strncmp(token, "delFish", 7) == 0 ){
+			return call_response(DELFISH, sockfd);
+		}
+		if (is_cli && strncmp(token, "startFish", 9) == 0 ){
+			return call_response(STARTFISH, sockfd);
+		}
+	}
+	if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+		return -1;
 	}
 	return 0;
 }

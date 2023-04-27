@@ -2,18 +2,14 @@
 #define AQUARIUM_H
 #define MAX_LENGTH 25
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include"../view/view.h"
 
-#define MAX_CLIENTS 5
+#define MAX_CLIENTS 8
 
 struct aquarium{
     struct dimension dimension;
     int num_aquarium_views;
     struct view *aquarium_views[MAX_CLIENTS];
-    struct fish *aquarium_fishes[MAX_FISHES];
 };
 
 extern struct aquarium *global_aquarium;
@@ -97,5 +93,11 @@ void parser_save_aquarium(char *file,struct aquarium *aquarium);
  * @return the view idx 
 **/
 int get_idx_from_id(int id);
+
+/** 
+ * @brief check if a fish already exists in the aquarium
+ * @return booelan : 1 if fish already exists, 0 if it exists 
+**/
+int fish_already_exists(struct fish* fish);
 
 #endif

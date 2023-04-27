@@ -9,14 +9,20 @@ struct view *create_view(int id, int x, int y, int width, int height){
     view->d.width = width;
     view->d.height = height;
     view->free = 1; //1 if free 0 if not
-    return view;
     view->nb_fishes = 0;
+    for(int i=0; i<MAX_FISHES; i++){
+        view->fishes[i] = NULL;
+    }
     return view;
 }
 
 int add_fish(struct view* view, struct fish* fish) {
     if (view->nb_fishes == MAX_FISHES-1) {
-        printf("There is no more space in this aquarium !\n");
+        //printf("There is no more space in this aquarium !\n");
+        return -1;
+    }
+    if (fish_already_exists(fish)){
+        //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }
     view->fishes[view->nb_fishes] = fish;
@@ -26,39 +32,42 @@ int add_fish(struct view* view, struct fish* fish) {
 
 // the fish is overwrited
 int delete_fish(struct view* view, char* name){
-    int status = 0;
-    int index = 0;
+    int index = -1;
     for(int i=0; i<view->nb_fishes; i++){
-        if (strncmp(view->fishes[index]->name, name, strlen(name)) == 0){
+        if (strcmp(view->fishes[i]->name, name) == 0){
             index=i;
-            status++;
             break;
         }
     }
 
-    if(status == 0) {
-        // printf("\t-> Your id doesn't exist\n");
+    if(index == -1) {
+        printf("\t-> Fish doesn't exist\n");
         return -1;
     }
     free_fish(view->fishes[index]);
+    view->fishes[index] = NULL;
     for(int i=index;i<MAX_FISHES-1; i++){
-        view->fishes[i]=view->fishes[i+1];
+        if(view->fishes[i+1] != NULL && view->fishes[i] == NULL){
+            view->fishes[i] = view->fishes[i+1];
+            view->fishes[i+1] = NULL;
+        }
     }
     view->nb_fishes--;
-    printf("\t-> view N%d deleted\n",status);
     return 0;
 }
 
-struct fish** get_fishes(struct view* view) {
-    printf("list ");
-    for(int i = 0; i< view->nb_fishes; ++i) {
+int get_fishes(struct view* view, char *resp) {
+    char msg[1024] = "list ";
+    for(int i = 0; i< view->nb_fishes; i++) {
         struct fish* tmp = view->fishes[i];
-        // vérifier les paramètres car je ne savais quoi mettre ni dans quel ordre
-        printf("[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
+        char temp[64];
+        sprintf(temp, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
+        strcat(msg, temp);
     }
-    printf("\n");
-    return view->fishes;
+    strcat(msg, "\n");
+    strcpy(resp, msg);
+    return 0;
 }
 
 int status(struct view* view) {
@@ -77,8 +86,10 @@ int status(struct view* view) {
 }
 
 void free_view(struct view* view) {
-    for(int i = 0; i < view->nb_fishes; ++i) {
-        free_fish(view->fishes[i]);
+    for(int i = 0; i < MAX_FISHES; ++i) {
+        if(view->fishes[i] != NULL){
+            free_fish(view->fishes[i]);
+        }
     }
     free(view);
 }

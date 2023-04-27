@@ -11,7 +11,7 @@ struct aquarium *create_aquarium(){
     struct aquarium *aquarium = malloc(sizeof(struct aquarium));
     aquarium->num_aquarium_views=0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        aquarium->aquarium_views[i] = malloc(sizeof(struct view));
+        aquarium->aquarium_views[i] = NULL;
     }
     return aquarium;
 }
@@ -100,11 +100,11 @@ void save_aquarium(struct aquarium* aquarium){
  */
 void free_aquarium(struct aquarium * aquarium){
     // free view array
-    for(int i=0; i<MAX_CLIENTS;i++){
-        free(aquarium->aquarium_views[i]);
+    for(int i=0; i<aquarium->num_aquarium_views;i++){
+        if(aquarium->aquarium_views[i] != NULL){
+            free_view(aquarium->aquarium_views[i]);
+        }
     }
-
-    // free aquarium
     free(aquarium);
 }
 
@@ -132,11 +132,16 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium){
                     return;
                 }
             }else if(i>1){
-                if(sscanf(line, "N%d %dx%d+%d+%d", &aquarium->aquarium_views[aquarium->num_aquarium_views]->id, &aquarium->aquarium_views[aquarium->num_aquarium_views]->p.x, &aquarium->aquarium_views[aquarium->num_aquarium_views]->p.y, &aquarium->aquarium_views[aquarium->num_aquarium_views]->d.width, &aquarium->aquarium_views[aquarium->num_aquarium_views]->d.height)!=5){
+                int id;
+                int x;
+                int y;
+                int w;
+                int h;
+                if(sscanf(line, "N%d %dx%d+%d+%d", &id, &x, &y, &w, &h)!=5){
                     printf("Error reading line: %s", line);
                     return;
                 }
-                aquarium->aquarium_views[aquarium->num_aquarium_views]->free = 1;
+                aquarium->aquarium_views[aquarium->num_aquarium_views] = create_view(id,x,y,w,h);
                 aquarium->num_aquarium_views++;
             }
         i++;
@@ -172,4 +177,16 @@ int get_idx_from_id(int id){
         }
     }
     return -1;
+}
+
+int fish_already_exists(struct fish* fish){
+    for(int j=0;j<MAX_CLIENTS;j++){
+        for (int i=0;i<MAX_FISHES;i++){
+            if( global_aquarium->aquarium_views[j] != NULL && global_aquarium->aquarium_views[j]->fishes[i] != NULL 
+                && strcmp(global_aquarium->aquarium_views[j]->fishes[i]->name, fish->name) == 0){
+                return 1;
+            }
+        }
+    }
+    return 0;
 }

@@ -3,12 +3,9 @@
 
 #include "../aquarium/aquarium.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-
 struct client{
     int cfd;
-    int view_id;    
+    int view_idx;    
 };
 
 extern struct client* clients[MAX_CLIENTS];
@@ -16,7 +13,7 @@ extern struct client* clients[MAX_CLIENTS];
 /**
  * @brief Create a client
  */
-struct client* create_client(int cfd, int view_id);
+struct client* create_client(int cfd, int view_idx);
 
 /**
  * @brief Free a client 
@@ -40,5 +37,11 @@ int linked_client(int cfd, int view_id);
  * @return boolean : 1 on success, 0 on failure
  */
 int is_client(int cfd);
+
+/**
+ * @brief Get the client pointer from the client socket
+ * @return client pointer on success, NULL on failure
+ */
+struct client* get_cli_from_sock(int sockfd);
 
 #endif

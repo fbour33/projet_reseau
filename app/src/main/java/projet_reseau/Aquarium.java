@@ -25,9 +25,10 @@ import java.util.HashSet;
 
 public class Aquarium extends Application {
 
-    private static final int WIDTH = 1000;
-    private static final int HEIGHT = 800;
-    private static Client client;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
+    private static final int FISH_RADIUS = 25;
+    private static final int FISH_SPEED = 5;
     private Console console;
     VBox root;
 
@@ -38,59 +39,15 @@ public class Aquarium extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
-        // Création d'une vbox qui va contenir notre menu et notre vue  
-        root = new VBox();
+        console = new Console(this,400, 400);
+        console.show();
+        myFish = new Fish("/home/brice/Projet_Reseau/projet_reseau/app/src/main/images/blobfish.png");
+        Group fish1 = myFish.addGroupFish();
+        fish1.setLayoutX(random.nextInt(WIDTH));
+        fish1.setLayoutY(random.nextInt(HEIGHT));
 
-        // création du menu et ajout d'item 
-        MenuBar menuBar = new MenuBar();
-        Menu AquariumMenu = new Menu();
-        Label aquariumLabel = new Label("Aquarium Menu");
-        aquariumLabel.setTextFill(Color.BLACK); 
-        aquariumLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 25));
-        AquariumMenu.setGraphic(aquariumLabel);
+        Scene scene = new Scene(fish1, WIDTH, HEIGHT, Color.BLUE);
 
-        MenuItem consoleItem = new MenuItem();
-        Label consoleItemLabel = new Label("Open console");
-        consoleItemLabel.setTextFill(Color.BLACK); 
-        consoleItemLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 15));
-        consoleItem.setGraphic(consoleItemLabel);
-
-        MenuItem logOutItem = new MenuItem();
-        Label logOutItemLabel = new Label("Log out");
-        logOutItemLabel.setTextFill(Color.BLACK); 
-        logOutItemLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 15));
-        logOutItem.setGraphic(logOutItemLabel);
-
-        MenuItem exitItem = new MenuItem();
-        Label exitItemLabel = new Label("Log out and Exit");
-        exitItemLabel.setTextFill(Color.BLACK); 
-        exitItemLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 15));
-        exitItem.setGraphic(exitItemLabel);
-
-        // Ajout des items au menu et du menu à la barre de menu 
-        AquariumMenu.getItems().addAll(consoleItem,logOutItem,exitItem);
-        menuBar.getMenus().addAll(AquariumMenu);
-
-        // création d'un canva et d'un GraphicsContext
-        Canvas canvas = new Canvas(WIDTH,HEIGHT);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        
-        // création d'un panel qui va contenir notre canvas 
-        Pane affichage = new Pane();
-        affichage.getChildren().addAll(canvas);
-
-        // Ajout de la barre de menu et du panel d'affichage à la Vbox
-        root.getChildren().addAll(menuBar,affichage);
-
-        // création de l'image de background
-        File bgfile = new File("bg.png");
-        String bgAbsolutePath = bgfile.getAbsolutePath();
-        bgAbsolutePath = bgAbsolutePath.replace("bg.png", "src/main/images/bg.png");
-        Image backgroundImage = new Image("file:"+bgAbsolutePath);
-
-        // création de la scène et ajout de notre Vbox à la scène
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
 
