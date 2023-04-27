@@ -64,7 +64,6 @@ int linked_client(int cfd, int view_id){
     else {
         view_idx = get_idx_from_id(view_id);
     }
-
     if(view_idx == -1){
             return -1;
     }

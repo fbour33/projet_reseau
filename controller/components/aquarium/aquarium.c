@@ -172,7 +172,7 @@ void parser_save_aquarium(char *file,struct aquarium *aquarium){
 
 int get_idx_from_id(int id){
     for(int i=0; i<MAX_CLIENTS;i++){
-        if(id == global_aquarium->aquarium_views[i]->id){
+        if(global_aquarium->aquarium_views[i] != NULL && id == global_aquarium->aquarium_views[i]->id){
             return i;
         }
     }

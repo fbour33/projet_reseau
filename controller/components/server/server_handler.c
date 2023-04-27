@@ -57,9 +57,7 @@ int response_hello(int sockfd) {
 			&& strncmp(strtok(NULL, delim), "as", 2) == 0){
 
 		next = strtok(NULL, delim);
-		if (is_valid_ID(next)) {
-			//attribuer l'identifiant next au client
-			linked_client(sockfd, atoi(next+1));
+		if (is_valid_ID(next) && linked_client(sockfd, atoi(next+1)) != -1) {//attribuer l'identifiant next au client
 			char msg[MSG_LEN];
 			sprintf(msg, "greeting %s\n", next);
 			if (send(sockfd, msg, strlen(msg), 0) <= 0) {
