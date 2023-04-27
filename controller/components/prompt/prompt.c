@@ -119,7 +119,7 @@ int command_add_aquarium(){
     }
 
     char *id = strtok(NULL, delim);
-    if(id==NULL || !is_valid_ID(id)){
+    if(id==NULL || !is_valid_id(id)){
         printf("\t-> invalid id\n");
         return ERROR;
     }
@@ -129,7 +129,7 @@ int command_add_aquarium(){
         return ERROR;
     }
 
-    if(global_aquarium->num_aquarium_views == MAX_CLIENTS) {
+    if(global_aquarium->num_aquarium_views >= MAX_CLIENTS) {
         printf("\t-> View count limit reached\n");
         return ERROR;
     }
