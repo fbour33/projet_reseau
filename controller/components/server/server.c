@@ -16,8 +16,6 @@
 #define LOG_DIR "aled"
 #endif
 
-
-
 int main() {
 	struct sockaddr cli;
 	fd_set read_fds, active_fds;
@@ -29,7 +27,6 @@ int main() {
 
 	// Time handle
 	time_t t0 = time(NULL);
-	unsigned long t = 0;
 
 	//storage for clients socket
 	int client_sockets[MAX_CLIENTS];
@@ -73,8 +70,9 @@ int main() {
 		time_t tmp = time(NULL);
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
+			printf("%ld\n", t);
 			t += diff;
-			// actualisation des positiond des poissons
+			// évolution poisson
 
 			t0 = tmp;
 		}
@@ -121,19 +119,23 @@ int main() {
 				memset(buff, 0, MSG_LEN);
                 // receive data from client
                 if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
-                    // socket disconnected
+                    // inactive socket
 					if(is_client(client_sockets[i])){
-						if (disconnect_client(client_sockets[i]) != 0){
-							fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
-							break;
-						}
-						else {
-							fprintf(log_f, "Client disconnected, socket fd is %d\n", client_sockets[i]);
+						struct client *cli = get_cli_from_sock(client_sockets[i]);
+						printf("here socket %d\n", client_sockets[i]);
+						if(t-cli->last_msg_t >= display_timeout){
+							if (disconnect_client(client_sockets[i]) != 0){
+								fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
+								break;
+							}
+							else {
+								fprintf(log_f, "Client timeout, socket fd is %d\n", client_sockets[i]);
+								FD_CLR(client_sockets[i], &read_fds);
+								close(client_sockets[i]);
+								client_sockets[i] = -1;
+							}
 						}
 					}
-					FD_CLR(client_sockets[i], &read_fds);
-					close(client_sockets[i]);
-					client_sockets[i] = -1;
 					
                 } else {
                     // print received data
@@ -176,7 +178,9 @@ int main() {
 		free_aquarium(global_aquarium);
 	}
 	for(int i=0; i < MAX_CLIENTS; i++){
-		free_client(clients[i]);
+		if(clients[i] != NULL){
+			free_client(clients[i]);
+		}
 	}
 	close(sfd);
 	fclose(log_f);

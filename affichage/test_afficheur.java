@@ -119,6 +119,17 @@ public class test_afficheur {
                     System.out.println(e);
                 }
             }
+            /*
+             // Envoi du message de deconnection
+            outputStream = socket.getOutputStream();
+            writer = new PrintWriter(outputStream, true);
+            writer.println("log out");
+
+            // Lecture de la réponse du serveur
+            inputStream = socket.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            response = reader.readLine();
+            System.out.println("Server response: " + response);*/
 
             reader.close();
             outputStream.close();

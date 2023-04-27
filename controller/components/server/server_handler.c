@@ -1,5 +1,7 @@
 #include "server_handler.h"
 
+unsigned long t = 0;
+
 int handle_bind() {
 	struct addrinfo hints, *result, *rp;
 	int sfd;
@@ -219,12 +221,30 @@ int response_startFish(int sockfd){
 	return 0;
 }
 
+int response_logout(int sockfd){
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if (strncmp(next, "out\n", 4) == 0){
+		disconnect_client(sockfd);
+		if (send(sockfd, "bye\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+	else {
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+		return 0;
+	}
+}
+
 /**
  * @brief Secondary function for handling the client message
  * @return 0 on success, -1 on failure
  */
 int call_response(enum RESPONSE resp, int sockfd) {
-	switch (resp) {
+	switch (resp) {  // REFACTO A FAIRE FONCTION INUTILE
 		case HELLO :
 			return response_hello(sockfd);
 		case PING :
@@ -241,6 +261,8 @@ int call_response(enum RESPONSE resp, int sockfd) {
 			return response_delFish(sockfd);
 		case STARTFISH :
 			return response_startFish(sockfd);
+		case LOGOUT :
+			return response_logout(sockfd);
 		default :
 			return -1;
 	}
@@ -254,32 +276,38 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 	char *token;
     char *delim = " ";
 	token = strtok(buffer, delim);
-	int is_cli = is_client(sockfd);
+	struct client* cli = get_cli_from_sock(sockfd); //REFACTO A FAIRE : METTRE LE CLIENT EN ARGUMENT DES RESPONSES
+	if(cli != NULL){
+		cli->last_msg_t = t;
+	}
 
 	if (token != NULL) {
-		if (!is_cli && strncmp(token, "hello", 5) == 0) {
+		if (cli == NULL && strncmp(token, "hello", 5) == 0) {
 			return call_response(HELLO, sockfd);
 		}
-		if (is_cli && strncmp(token, "ping", 4) == 0) {
+		if (cli != NULL && strncmp(token, "ping", 4) == 0) {
 			return call_response(PING, sockfd);
 		}
-		if (is_cli && strncmp(token, "getFishes", 9) == 0){
+		if (cli != NULL && strncmp(token, "getFishes", 9) == 0){
 			return call_response(GETFISHES, sockfd);
 		}
-		if (is_cli && strncmp(token, "ls", 2) == 0){
+		if (cli != NULL&& strncmp(token, "ls", 2) == 0){
 			return call_response(LS, sockfd);
 		}
-		if (is_cli && strncmp(token, "getFishesContinuously", 21) == 0 ){
+		if (cli != NULL && strncmp(token, "getFishesContinuously", 21) == 0 ){
 			return call_response(GETFISHESCONTINOUSLY, sockfd);
 		}
-		if (is_cli && strncmp(token, "addFish", 7) == 0 ){
+		if (cli != NULL && strncmp(token, "addFish", 7) == 0 ){
 			return call_response(ADDFISH, sockfd);
 		}
-		if (is_cli && strncmp(token, "delFish", 7) == 0 ){
+		if (cli != NULL&& strncmp(token, "delFish", 7) == 0 ){
 			return call_response(DELFISH, sockfd);
 		}
-		if (is_cli && strncmp(token, "startFish", 9) == 0 ){
+		if (cli != NULL && strncmp(token, "startFish", 9) == 0 ){
 			return call_response(STARTFISH, sockfd);
+		}
+		if (cli != NULL && strncmp(token, "log", 3) == 0){
+			return call_response(LOGOUT, sockfd);
 		}
 	}
 	if (send(sockfd, "NOK\n", 5, 0) <= 0) {
