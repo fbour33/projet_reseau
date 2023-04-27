@@ -13,9 +13,6 @@ struct aquarium *create_aquarium(){
     for (int i = 0; i < MAX_CLIENTS; i++) {
         aquarium->aquarium_views[i] = NULL;
     }
-    for (int i = 0; i < MAX_FISHES; i++) {
-        aquarium->aquarium_fishes[i] = NULL;
-    }
     return aquarium;
 }
 
@@ -180,4 +177,16 @@ int get_idx_from_id(int id){
         }
     }
     return -1;
+}
+
+int fish_already_exists(struct fish* fish){
+    for(int j=0;j<MAX_CLIENTS;j++){
+        for (int i=0;i<MAX_FISHES;i++){
+            if( global_aquarium->aquarium_views[j] != NULL && global_aquarium->aquarium_views[j]->fishes[i] != NULL 
+                && strcmp(global_aquarium->aquarium_views[j]->fishes[i]->name, fish->name) == 0){
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
