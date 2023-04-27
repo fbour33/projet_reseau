@@ -70,7 +70,6 @@ int main() {
 		time_t tmp = time(NULL);
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
-			printf("%ld\n", t);
 			t += diff;
 			// évolution poisson
 
@@ -82,7 +81,10 @@ int main() {
 		memset(buff, 0, MSG_LEN);
 
 		// wait for activity on one of the sockets
-        if (select(max_sockfd + 1, &active_fds, NULL, NULL, NULL) < 0) {
+		struct timeval waiting_time;
+		waiting_time.tv_sec = 0;
+		waiting_time.tv_usec = 0;
+        if (select(max_sockfd + 1, &active_fds, NULL, NULL, &waiting_time) < 0) {
             fprintf(log_f, "select failed\n");
 			fflush(log_f);
             break;
@@ -115,7 +117,7 @@ int main() {
 
 		// check for activity on client sockets
         for (int i = 0; i < MAX_CLIENTS; i++) {
-			if (FD_ISSET(client_sockets[i], &active_fds)) {
+			if (client_sockets[i] != -1 && FD_ISSET(client_sockets[i], &active_fds)) {
 				memset(buff, 0, MSG_LEN);
                 // receive data from client
                 if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
@@ -129,11 +131,19 @@ int main() {
 							}
 							else {
 								fprintf(log_f, "Client timeout, socket fd is %d\n", client_sockets[i]);
+								if (send(client_sockets[i], "NOK\n", 5, 0) <= 0) {
+									return -1;
+								}
 								FD_CLR(client_sockets[i], &read_fds);
 								close(client_sockets[i]);
 								client_sockets[i] = -1;
 							}
 						}
+					} else {
+						fprintf(log_f, "Non-client socket fd %d disconnected\n", client_sockets[i]);
+						FD_CLR(client_sockets[i], &read_fds);
+						close(client_sockets[i]);
+						client_sockets[i] = -1;
 					}
 					
                 } else {

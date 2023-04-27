@@ -118,9 +118,18 @@ public class test_afficheur {
                     // catching the exception
                     System.out.println(e);
                 }
-            }
-            /*
-             // Envoi du message de deconnection
+            }/*
+            while(true){
+                // Lecture de la réponse du serveur
+                inputStream = socket.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                response = reader.readLine();
+                System.out.println("Server response: " + response);
+                if(response == "bye\n"){
+                    break;
+                }
+            }*/
+            //Envoi du message de deconnection
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
             writer.println("log out");
@@ -129,7 +138,7 @@ public class test_afficheur {
             inputStream = socket.getInputStream();
             reader = new BufferedReader(new InputStreamReader(inputStream));
             response = reader.readLine();
-            System.out.println("Server response: " + response);*/
+            System.out.println("Server response: " + response);
 
             reader.close();
             outputStream.close();
