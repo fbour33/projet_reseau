@@ -16,6 +16,9 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type,enum STRATEGY str
     fish->rectangle.width=width;
     fish->rectangle.height=height;
     fish->running = 0;
+    for(int i=0; i<MAX_WAYPOINT;i++){
+        fish->waypoints[i] = NULL;
+    }
 
     return fish;
 }
@@ -23,6 +26,11 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type,enum STRATEGY str
 void free_fish(struct fish *fish){
     if(fish != NULL){
         free(fish->name);
+        for(int i=0; i<MAX_WAYPOINT; i++){
+            if(fish->waypoints[i] != NULL){
+                free(fish->waypoints[i]);
+            }
+        }
         free(fish);
     }
 }
@@ -50,6 +58,22 @@ enum STRATEGY string_to_strategy(char* str){
     return UNREGISTERED;
 }
 
-void RandomWayPoint(struct fish *fish){
-    return;
+struct waypoint *create_waypoint(int x, int y, int time){
+    struct waypoint *wp = malloc(sizeof(struct waypoint));
+    wp->pos.x = x;
+    wp->pos.y = y;
+    wp->time_left = time;
+    wp->total_time = time;
+    return wp;
+}
+
+int RandomWayPoint(struct fish *fish){
+    for(int i=0; i<MAX_WAYPOINT; i++){
+        if(fish->waypoints[i] == NULL){
+            struct waypoint *wp = create_waypoint(rand()%101, rand()%101, rand()%10);
+            fish->waypoints[i] = wp;
+            return 0;
+        }
+    }
+    return -1;
 }

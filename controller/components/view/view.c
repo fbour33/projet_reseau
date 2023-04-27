@@ -60,7 +60,7 @@ int get_fishes(struct view* view, char *resp) {
     for(int i = 0; i< view->nb_fishes; i++) {
         struct fish* tmp = view->fishes[i];
         char temp[64];
-        sprintf(temp, "[%s at %d*%d, %d*%d] ", tmp->name, tmp->position.x, tmp->position.y, 
+        sprintf(temp, "[%s at %dx%d,%dx%d,0] ", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
         strcat(msg, temp);
     }

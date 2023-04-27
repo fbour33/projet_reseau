@@ -4,6 +4,7 @@
 #include "../../utilities/tools.h"
 
 #define MAX_FISHES 3
+#define MAX_WAYPOINT 5
 
 enum STRATEGY{
     UNREGISTERED, HORIZONTAL, VERTICAL, RANDOMWAYPOINT
@@ -17,6 +18,15 @@ enum FISH_TYPE{
 
 enum FISH_TYPE string_to_fish_type(char* str);
 
+struct waypoint{
+    struct position pos;
+    int total_time;
+    int time_left;
+};
+
+struct waypoint *create_waypoint(int x, int y, int time);
+
+//Aouter un temps de vie pour pouvoir calculer une position lorsque changement de vue
 struct fish{
     char* name;
     int running;
@@ -24,6 +34,7 @@ struct fish{
     enum STRATEGY strategy;
     struct position position;
     struct dimension rectangle;
+    struct waypoint *waypoints[MAX_WAYPOINT];
 };
 
 /**
@@ -47,9 +58,10 @@ struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY st
 void free_fish(struct fish * fish);
 
 /**
- * @brief    implement fish random move strategy
+ * @brief    add a Randomwaypoint to fish waypoints
  * @param fish the string strategy to use for the fish get from the client
+ * @return  0 on success, -1 on failure
  */
-void RandomWayPoint(struct fish *fish);
+int RandomWayPoint(struct fish *fish);
 
 #endif
