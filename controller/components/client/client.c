@@ -48,9 +48,13 @@ int linked_client(int cfd, int view_id){
                 break;
             }
         }
-        if(view_id == -1){
+    }
+    else {
+        view_idx = get_idx_from_id(view_id);
+    }
+    
+    if(view_idx == -1){
             return -1;
-        }
     }
     if(global_aquarium->aquarium_views[view_idx]->free == 0){
         return -1;  

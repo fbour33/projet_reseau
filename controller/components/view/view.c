@@ -41,7 +41,6 @@ int add_fish(struct view* view, struct fish* fish) {
 
 // the fish is overwrited
 int delete_fish(struct view* view, char* name){
-    printf("deleting\n");
     int index = -1;
     for(int i=0; i<view->nb_fishes; i++){
         if (strcmp(view->fishes[i]->name, name) == 0){
