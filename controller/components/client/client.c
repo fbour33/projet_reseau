@@ -13,19 +13,31 @@ void free_client(struct client* client){
     free(client);
 }
 
+struct client* get_cli_from_sock(int sockfd){
+    for(int i=0; i <MAX_CLIENTS; i++){
+        if (clients[i] != NULL && clients[i]->cfd == sockfd){
+            return clients[i];
+        }
+    }
+    return NULL;
+}
+
 int disconnect_client(int cfd){
-    for(int i=0; i<MAX_CLIENTS; i++){
-        if (NULL != clients[i] && clients[i]->cfd == cfd){
-            global_aquarium->aquarium_views[clients[i]->view_idx]->free = 1;
-            for(int j = 0; j <= global_aquarium->aquarium_views[clients[i]->view_idx]->nb_fishes; j++){
-                free_fish(global_aquarium->aquarium_views[clients[i]->view_idx]->fishes[j]);
-                global_aquarium->aquarium_views[clients[i]->view_idx]->fishes[j] = NULL;
-            }
+    struct client* cli = get_cli_from_sock(cfd);
+    global_aquarium->aquarium_views[cli->view_idx]->free = 1;
+    for(int j = 0; j <= global_aquarium->aquarium_views[cli->view_idx]->nb_fishes; j++){
+        free_fish(global_aquarium->aquarium_views[cli->view_idx]->fishes[j]);
+        global_aquarium->aquarium_views[cli->view_idx]->fishes[j] = NULL;
+    }
+    global_aquarium->aquarium_views[cli->view_idx]->nb_fishes = 0;
+    for(int i = 0; i <MAX_CLIENTS;i++){
+        if(cli == clients[i]){
             free(clients[i]);
             clients[i] = NULL;
             return 0;
         }
     }
+
     return -1;
 }
 
@@ -52,7 +64,7 @@ int linked_client(int cfd, int view_id){
     else {
         view_idx = get_idx_from_id(view_id);
     }
-    
+
     if(view_idx == -1){
             return -1;
     }
@@ -71,13 +83,4 @@ int linked_client(int cfd, int view_id){
     }
     global_aquarium->aquarium_views[view_idx]->free = 0;
     return ok;
-}
-
-struct client* get_cli_from_sock(int sockfd){
-    for(int i=0; i <MAX_CLIENTS; i++){
-        if (clients[i] != NULL && clients[i]->cfd == sockfd){
-            return clients[i];
-        }
-    }
-    return NULL;
 }

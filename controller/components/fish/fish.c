@@ -49,3 +49,7 @@ enum STRATEGY string_to_strategy(char* str){
     }
     return UNREGISTERED;
 }
+
+void RandomWayPoint(struct fish *fish){
+    return;
+}
