@@ -122,7 +122,6 @@ int main() {
                     // inactive socket
 					if(is_client(client_sockets[i])){
 						struct client *cli = get_cli_from_sock(client_sockets[i]);
-						printf("here socket %d\n", client_sockets[i]);
 						if(t-cli->last_msg_t >= display_timeout){
 							if (disconnect_client(client_sockets[i]) != 0){
 								fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
