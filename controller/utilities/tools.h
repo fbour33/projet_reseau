@@ -11,6 +11,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+int controller_port;
+int display_timeout;
+int fish_update_interval;
+
 
 /********** STRUCT POSITION *************/ 
 struct position{
