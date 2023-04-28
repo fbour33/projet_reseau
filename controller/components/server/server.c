@@ -71,7 +71,11 @@ int main() {
 		if(diff >= 1) {
 			t += diff;
 			//printf("%ld\n", t);
-			printf("response update_fish : %d\n", update_fishes());
+			if(update_fishes() == -1){
+				fprintf(log_f, "Error updating fishes, exit\n");
+				fflush(log_f);
+				break;
+			} 
 			t0 = tmp;
 		}
 
@@ -85,7 +89,7 @@ int main() {
 		waiting_time.tv_sec = 0;
 		waiting_time.tv_usec = 0;
         if (select(max_sockfd + 1, &active_fds, &write_fds, NULL, &waiting_time) < 0) {
-            fprintf(log_f, "select failed\n");
+            fprintf(log_f, "select failed, exit\n");
 			fflush(log_f);
             break;
         }
