@@ -11,9 +11,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-int controller_port;
-int display_timeout;
-int fish_update_interval;
+extern int controller_port;
+extern int display_timeout;
+extern int fish_update_interval;
 
 
 /********** STRUCT POSITION *************/ 

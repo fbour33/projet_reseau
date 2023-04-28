@@ -1,5 +1,10 @@
 #include "tools.h"
 
+int controller_port;
+int display_timeout;
+int fish_update_interval;
+
+
 /******* STRUCT POSITION*******/
 
 struct position _position(int x, int y){
