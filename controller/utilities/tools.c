@@ -4,6 +4,7 @@ int controller_port;
 int display_timeout;
 int fish_update_interval;
 
+FILE* log_f;
 
 /******* STRUCT POSITION*******/
 
