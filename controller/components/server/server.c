@@ -18,7 +18,7 @@
 
 int main() {
 	struct sockaddr cli;
-	fd_set read_fds, active_fds;
+	fd_set read_fds, active_fds, write_fds;
 	int sfd, cfd, max_sockfd;
 	FILE *log_f;
 
@@ -71,12 +71,13 @@ int main() {
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
 			t += diff;
-			// évolution poisson
-
+			//printf("%ld\n", t);
+			//update_fishes();
 			t0 = tmp;
 		}
 
 		active_fds = read_fds;
+		write_fds = read_fds;
 		// Cleaning memory
 		memset(buff, 0, MSG_LEN);
 
@@ -84,7 +85,7 @@ int main() {
 		struct timeval waiting_time;
 		waiting_time.tv_sec = 0;
 		waiting_time.tv_usec = 0;
-        if (select(max_sockfd + 1, &active_fds, NULL, NULL, &waiting_time) < 0) {
+        if (select(max_sockfd + 1, &active_fds, &write_fds, NULL, &waiting_time) < 0) {
             fprintf(log_f, "select failed\n");
 			fflush(log_f);
             break;
@@ -117,12 +118,31 @@ int main() {
 
 		// check for activity on client sockets
         for (int i = 0; i < MAX_CLIENTS; i++) {
+			if(client_sockets[i] != -1 && FD_ISSET(client_sockets[i], &write_fds)) {
+				struct client *cli = get_cli_from_sock(client_sockets[i]);
+				if(cli != NULL && t-cli->last_msg_t >= display_timeout){
+					if (disconnect_client(client_sockets[i]) != 0){
+							fprintf(log_f, "Can't disconnect the client, socket fd is %d, exit\n", client_sockets[i]);
+							break;
+					}
+					else {
+							fprintf(log_f, "Client timeout, socket fd is %d\n", client_sockets[i]);
+							if (send(client_sockets[i], "bye\n", 5, 0) <= 0) {
+								return -1;
+							}
+							FD_CLR(client_sockets[i], &read_fds);
+							close(client_sockets[i]);
+							client_sockets[i] = -1;
+					}
+				}
+			}
 			if (client_sockets[i] != -1 && FD_ISSET(client_sockets[i], &active_fds)) {
 				memset(buff, 0, MSG_LEN);
                 // receive data from client
-                if ((recv(client_sockets[i], buff, MSG_LEN, 0)) <= 0) {
+                if ((recv(client_sockets[i], buff, MSG_LEN, MSG_DONTWAIT)) <= 0) {
                     // inactive socket
 					if(is_client(client_sockets[i])){
+						printf("here socket %d\n", client_sockets[i]);
 						struct client *cli = get_cli_from_sock(client_sockets[i]);
 						if(t-cli->last_msg_t >= display_timeout){
 							if (disconnect_client(client_sockets[i]) != 0){
@@ -131,7 +151,7 @@ int main() {
 							}
 							else {
 								fprintf(log_f, "Client timeout, socket fd is %d\n", client_sockets[i]);
-								if (send(client_sockets[i], "NOK\n", 5, 0) <= 0) {
+								if (send(client_sockets[i], "bye\n", 5, 0) <= 0) {
 									return -1;
 								}
 								FD_CLR(client_sockets[i], &read_fds);
