@@ -6,6 +6,7 @@ int fish_update_interval;
 
 unsigned long t = 0;
 
+FILE* log_f;
 
 /******* STRUCT POSITION*******/
 

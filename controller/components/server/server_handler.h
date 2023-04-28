@@ -6,11 +6,7 @@
 
     #define MSG_LEN 1024
     #define SERV_PORT "5000"
-    #define SERV_ADDR "localhost"
-
-    enum RESPONSE {
-        HELLO, PING, ADDFISH, DELFISH, STARTFISH, GETFISHES, LS, GETFISHESCONTINOUSLY, LOGOUT
-    };
+    #define SERV_ADDR "147.210.204.186"
 
     void echo_server(int sockfd);
 

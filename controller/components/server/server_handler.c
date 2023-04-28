@@ -238,35 +238,6 @@ int response_logout(int sockfd){
 }
 
 /**
- * @brief Secondary function for handling the client message
- * @return 0 on success, -1 on failure
- */
-int call_response(enum RESPONSE resp, int sockfd) {
-	switch (resp) {  // REFACTO A FAIRE FONCTION INUTILE
-		case HELLO :
-			return response_hello(sockfd);
-		case PING :
-			return response_ping(sockfd);
-		case GETFISHES :
-			return response_getFishes(sockfd);
-		case LS :
-			return response_ls(sockfd);
-		case GETFISHESCONTINOUSLY :
-			return response_getFishesContinously(sockfd);
-		case ADDFISH :
-			return response_addFish(sockfd);
-		case DELFISH :
-			return response_delFish(sockfd);
-		case STARTFISH :
-			return response_startFish(sockfd);
-		case LOGOUT :
-			return response_logout(sockfd);
-		default :
-			return -1;
-	}
-}
-
-/**
  * @brief function for handling the client message
  * @return 0 on success, -1 on failure
  */
@@ -281,31 +252,31 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 
 	if (token != NULL) {
 		if (cli == NULL && strncmp(token, "hello", 5) == 0) {
-			return call_response(HELLO, sockfd);
+			return response_hello(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "ping", 4) == 0) {
-			return call_response(PING, sockfd);
+			return response_ping(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "getFishes", 9) == 0){
-			return call_response(GETFISHES, sockfd);
+			return response_getFishes(sockfd);
 		}
 		if (cli != NULL&& strncmp(token, "ls", 2) == 0){
-			return call_response(LS, sockfd);
+			return response_ls(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "getFishesContinuously", 21) == 0 ){
-			return call_response(GETFISHESCONTINOUSLY, sockfd);
+			return response_getFishesContinously(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "addFish", 7) == 0 ){
-			return call_response(ADDFISH, sockfd);
+			return response_addFish(sockfd);
 		}
 		if (cli != NULL&& strncmp(token, "delFish", 7) == 0 ){
-			return call_response(DELFISH, sockfd);
+			return response_delFish(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "startFish", 9) == 0 ){
-			return call_response(STARTFISH, sockfd);
+			return response_startFish(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "log", 3) == 0){
-			return call_response(LOGOUT, sockfd);
+			return response_logout(sockfd);
 		}
 	}
 	if (send(sockfd, "NOK\n", 5, 0) <= 0) {
