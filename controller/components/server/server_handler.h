@@ -8,8 +8,6 @@
     #define SERV_PORT "5000"
     #define SERV_ADDR "localhost"
 
-    extern unsigned long t;
-
     enum RESPONSE {
         HELLO, PING, ADDFISH, DELFISH, STARTFISH, GETFISHES, LS, GETFISHESCONTINOUSLY, LOGOUT
     };

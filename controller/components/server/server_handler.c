@@ -1,7 +1,5 @@
 #include "server_handler.h"
 
-unsigned long t = 0;
-
 int handle_bind() {
 	struct addrinfo hints, *result, *rp;
 	int sfd;
