@@ -20,15 +20,13 @@ public class Console extends Stage{
     HBox hbox;
     private TextField input;
     protected TextArea output;
-    private int width;
-    private int height;
-    public Aquarium aquarium;
-    protected Parser parser;
-    public Console(Aquarium aquarium,int w, int h){
-        width = w;
-        height = h;
+    private int width=600;
+    private int height=500;
+    private static Client client;
+
+    public Console(Client client){
+        this.client = client;
         initDisplay();
-        parser = new Parser(this, output);
     }
 
     private void initDisplay(){
@@ -73,7 +71,9 @@ public class Console extends Stage{
     }
 
     private void executeCommand(String command) {
-        // Écrire ici votre code pour exécuter la commande saisie
-        parser.parserAction(command);
+        output.clear();
+        System.out.println(command);
+        String response = client.handleCommand(command);
+        output.setText(response);
     }
 }
