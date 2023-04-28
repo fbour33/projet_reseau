@@ -23,6 +23,7 @@ struct aquarium *create_aquarium(){
 void load_aquarium(struct aquarium *aquarium){
     parser_load_aquarium("../aquarium.load",aquarium);
     fprintf(log_f, "\t-> aquarium loaded (%d display views) !\n",aquarium->num_aquarium_views);
+    printf("\t-> aquarium loaded (%d display views) !\n",aquarium->num_aquarium_views);
 }
 
 /**
@@ -32,8 +33,10 @@ void load_aquarium(struct aquarium *aquarium){
  */
 void show_aquarium(struct aquarium *aquarium){
     fprintf(log_f, "%dx%d\n",aquarium->dimension.width,aquarium->dimension.height);
+    printf("%dx%d\n",aquarium->dimension.width,aquarium->dimension.height);
     for(int i=0;i<aquarium->num_aquarium_views;i++){
         fprintf(log_f, "N%d %dx%d+%d+%d\n",aquarium->aquarium_views[i]->id, aquarium->aquarium_views[i]->p.x, aquarium->aquarium_views[i]->p.y, aquarium->aquarium_views[i]->d.width, aquarium->aquarium_views[i]->d.height);
+        printf("N%d %dx%d+%d+%d\n",aquarium->aquarium_views[i]->id, aquarium->aquarium_views[i]->p.x, aquarium->aquarium_views[i]->p.y, aquarium->aquarium_views[i]->d.width, aquarium->aquarium_views[i]->d.height);
     }
 }
 
@@ -47,6 +50,7 @@ void add_view_aquarium(struct aquarium* aquarium, struct view* view){
     aquarium->aquarium_views[aquarium->num_aquarium_views]=view;
     aquarium->num_aquarium_views++;
     fprintf(log_f, "\t-> view added\n");
+    printf("\t-> view added\n");
 }
 
 /**
@@ -69,6 +73,7 @@ void del_view_aquarium(struct aquarium* aquarium, int view_id){
 
     if(status == 0) {
         fprintf(log_f, "\t-> Your id doesn't exist\n");
+        printf("\t-> Your id doesn't exist\n");
         return ;
     }
     free(aquarium->aquarium_views[index]);
@@ -79,6 +84,7 @@ void del_view_aquarium(struct aquarium* aquarium, int view_id){
     aquarium->aquarium_views[MAX_CLIENTS-1]= view;
     aquarium->num_aquarium_views--;
     fprintf(log_f, "\t-> view N%d deleted\n",view_id);
+    printf("\t-> view N%d deleted\n",view_id);
 }
 
 /**
@@ -91,6 +97,7 @@ void del_view_aquarium(struct aquarium* aquarium, int view_id){
 void save_aquarium(struct aquarium* aquarium){
     parser_save_aquarium("../aquarium.load",aquarium);
     fprintf(log_f, "\t-> aquarium saved !(%d display views)\n",aquarium->num_aquarium_views);
+    printf("\t-> aquarium saved !(%d display views)\n",aquarium->num_aquarium_views);
 }
 
 /**
@@ -122,6 +129,7 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium){
     aquarium_load_file = fopen(file,"r");
     if(aquarium_load_file==NULL){
         fprintf(log_f, "Couldn't open aquarium load file");
+        printf("Couldn't open aquarium load file");
         return; 
     }
     while(fgets(line,MAX_LENGTH,aquarium_load_file)!=NULL){
@@ -129,6 +137,7 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium){
             if(i==1){
                 if (sscanf(line, "%dx%d", &aquarium->dimension.width, &aquarium->dimension.height) != 2) {
                     fprintf(log_f, "Error reading aquarium size\n");
+                    printf("Error reading aquarium size\n");
                     return;
                 }
             }else if(i>1){
@@ -139,6 +148,7 @@ void parser_load_aquarium(char *file,struct aquarium *aquarium){
                 int h;
                 if(sscanf(line, "N%d %dx%d+%d+%d", &id, &x, &y, &w, &h)!=5){
                     fprintf(log_f, "Error reading line: %s", line);
+                    printf("Error reading line: %s", line);
                     return;
                 }
                 aquarium->aquarium_views[aquarium->num_aquarium_views] = create_view(id,x,y,w,h);
@@ -161,6 +171,7 @@ void parser_save_aquarium(char *file,struct aquarium *aquarium){
     aquarium_load_file = fopen(file,"w");
     if(aquarium_load_file==NULL){
         fprintf(log_f, "Couldn't open aquarium load file");
+        printf("Couldn't open aquarium load file");
         return; 
     }
     fprintf(aquarium_load_file,"%dx%d\n",aquarium->dimension.width,aquarium->dimension.height);
