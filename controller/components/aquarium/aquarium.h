@@ -100,4 +100,10 @@ int get_idx_from_id(int id);
 **/
 int fish_already_exists(struct fish* fish);
 
+/** 
+ * @brief  update fishes in the aquarium 
+ * @return 0 on success, -1 on failure
+**/
+int update_fishes();
+
 #endif

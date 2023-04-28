@@ -8,8 +8,6 @@
     #define SERV_PORT "5000"
     #define SERV_ADDR "147.210.204.186"
 
-    extern unsigned long t;
-
     void echo_server(int sockfd);
 
     int handle_bind();

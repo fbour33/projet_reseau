@@ -70,7 +70,7 @@ int main() {
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
 			t += diff;
-			//printf("%ld\n", t);
+			printf("%ld\n", t);
 			//update_fishes();
 			t0 = tmp;
 		}
@@ -141,7 +141,6 @@ int main() {
                 if ((recv(client_sockets[i], buff, MSG_LEN, MSG_DONTWAIT)) <= 0) {
                     // inactive socket
 					if(is_client(client_sockets[i])){
-						printf("here socket %d\n", client_sockets[i]);
 						struct client *cli = get_cli_from_sock(client_sockets[i]);
 						if(t-cli->last_msg_t >= display_timeout){
 							if (disconnect_client(client_sockets[i]) != 0){

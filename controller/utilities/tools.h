@@ -15,6 +15,7 @@ extern int controller_port;
 extern int display_timeout;
 extern int fish_update_interval;
 
+extern unsigned long t;
 extern FILE *log_f;
 
 /********** STRUCT POSITION *************/ 
