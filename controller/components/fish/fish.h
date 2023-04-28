@@ -67,4 +67,6 @@ int RandomWayPoint(struct fish *fish);
 
 int run(struct fish* fish);
 
+int end_waypoint(struct fish *fish);
+
 #endif

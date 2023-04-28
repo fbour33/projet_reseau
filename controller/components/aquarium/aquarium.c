@@ -203,6 +203,21 @@ int fish_already_exists(struct fish* fish){
 }
 
 int update_fishes(){
-    for(int i=0; i < global_aquarium->num_aquarium_views; i++){}
+    for(int i=0; i < global_aquarium->num_aquarium_views; i++){
+        struct view* v = global_aquarium->aquarium_views[i];
+        for(int f=0; f <v->nb_fishes;f++){
+            if(v->fishes[f] != NULL && v->fishes[f]->running){
+                v->fishes[f]->waypoints[0]->time_left--;
+                if(v->fishes[f]->waypoints[0]->time_left <=0){
+                    if(end_waypoint(v->fishes[f]) != 0){
+                        return -1;
+                    }
+                    if(v->fishes[f]->wps_nb < 3){
+                        run(v->fishes[f]);
+                    }
+                }
+            }
+        }
+    }
     return 0;
 }

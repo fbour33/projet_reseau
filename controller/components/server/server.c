@@ -70,8 +70,8 @@ int main() {
 		int diff = difftime(tmp, t0);
 		if(diff >= 1) {
 			t += diff;
-			printf("%ld\n", t);
-			//update_fishes();
+			//printf("%ld\n", t);
+			printf("response update_fish : %d\n", update_fishes());
 			t0 = tmp;
 		}
 
