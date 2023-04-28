@@ -190,3 +190,8 @@ int fish_already_exists(struct fish* fish){
     }
     return 0;
 }
+
+int update_fishes(){
+    for(int i=0; i < global_aquarium->num_aquarium_views; i++){}
+    return 0;
+}
