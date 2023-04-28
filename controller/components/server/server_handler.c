@@ -237,6 +237,18 @@ int response_logout(int sockfd){
 	}
 }
 
+int response_status(int sockfd) {
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if(next != NULL) {
+		fprintf(log_f, "Status command don't need arguments\n");
+		send(sockfd, "NOK\n", 5, 0);
+		return -1;
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	return status(global_aquarium->aquarium_views[cli->view_idx]);
+}
+
 /**
  * @brief function for handling the client message
  * @return 0 on success, -1 on failure
@@ -277,6 +289,9 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 		}
 		if (cli != NULL && strncmp(token, "log", 3) == 0){
 			return response_logout(sockfd);
+		}
+		if (cli != NULL && strncmp(token, "status", 6) == 0){
+			return response_status(sockfd);
 		}
 	}
 	if (send(sockfd, "NOK\n", 5, 0) <= 0) {

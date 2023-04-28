@@ -18,6 +18,7 @@ int handle_command_line(char *command_line){
     char *delim = " ";
     if (strncmp(command_line, "quit",4)==0 || strncmp(command_line, "exit",4)==0){
         fprintf(log_f, "\t-> bye\n");
+        printf("\t-> bye\n");
         return EXIT_VALUE;
     }
     token = strtok(command_line, delim);
@@ -39,6 +40,7 @@ int handle_command_line(char *command_line){
     }
     else{
         fprintf(log_f, "\t-> Invalid command\n");
+        printf("\t-> Invalid command\n");
         return SUCCESS;
     }
     return ERROR;
@@ -51,6 +53,7 @@ int handle_command_line(char *command_line){
 int call_command(enum COMMAND command){
     if(global_aquarium==NULL && command!=LOAD){
         fprintf(log_f, "\t-> Impossible to execute a command on non-existing aquarium\n");
+        printf("\t-> Impossible to execute a command on non-existing aquarium\n");
         return ERROR;
     }
     
@@ -81,10 +84,12 @@ int command_load_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         fprintf(log_f, "\t-> you need to load something\n");
+        printf("\t-> you need to load something\n");
         return ERROR;
     }
     if(strncmp(string,"aquarium", 8)!=0){
         fprintf(log_f, "\t-> invalid string after load command\n");
+        printf("\t-> invalid string after load command\n");
         return ERROR;
     }
     global_aquarium = create_aquarium();
@@ -111,26 +116,31 @@ int command_add_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         fprintf(log_f, "\t-> you need to add a view\n");
+        printf("\t-> you need to add a view\n");
         return ERROR;
     }
     if (strncmp(string, "view", 4) != 0) {
         fprintf(log_f, "\t-> you need to add a view\n");
+        printf("\t-> you need to add a view\n");
         return ERROR;
     }
 
     char *id = strtok(NULL, delim);
     if(id==NULL || !is_valid_id(id)){
         fprintf(log_f, "\t-> invalid id\n");
+        printf("\t-> invalid id\n");
         return ERROR;
     }
 
     if(!is_new_id(id)) {
         fprintf(log_f, "\t-> this id already exist\n");
+        printf("\t-> this id already exist\n");
         return ERROR;
     }
 
     if(global_aquarium->num_aquarium_views >= MAX_CLIENTS) {
         fprintf(log_f, "\t-> View count limit reached\n");
+        printf("\t-> View count limit reached\n");
         return ERROR;
     }
 
@@ -143,18 +153,22 @@ int command_add_aquarium(){
 
     if(x ==NULL || y == NULL || width ==NULL || height == NULL) {
         fprintf(log_f, "\t-> 4 parameters needed\n");
+        printf("\t-> 4 parameters needed\n");
         return ERROR;
     }
     if(is_number(x) && is_number(y) && is_number(width) && is_number(height) == 0) {
         fprintf(log_f, "\t-> your paramters must be integer\n");
+        printf("\t-> your paramters must be integer\n");
         return ERROR;
     }
     if(atoi(x) < 0 || atoi(x) > 100) {
         fprintf(log_f, "\t-> x must be between 0 and 100\n");
+        printf("\t-> x must be between 0 and 100\n");
         return ERROR;
     }
     if(atoi(y) < 0 || atoi(y) > 100) {
         fprintf(log_f, "\t-> y must be between 0 and 100\n");
+        printf("\t-> y must be between 0 and 100\n");
         return ERROR;
     }
 
@@ -172,19 +186,23 @@ int command_del_aquarium(){
     char *string = strtok(NULL, delim);
     if(string==NULL){
         fprintf(log_f, "\t-> you need to delete something\n");
+        printf("\t-> you need to delete something\n");
         return ERROR;
     }
     if (strncmp(string, "view", 4) != 0) {
         fprintf(log_f, "\t-> you have to delete a view\n");
+        printf("\t-> you have to delete a view\n");
         return ERROR;
     }
     char *id = strtok(NULL, delim);
     if(id==NULL){
         fprintf(log_f, "\t-> invalid id\n");
+        printf("\t-> invalid id\n");
         return ERROR;
     }
     if(global_aquarium->num_aquarium_views == 0) {
         fprintf(log_f, "\t-> There is no more view\n");
+        printf("\t-> There is no more view\n");
         return ERROR;
     }
     int num = atoi(id+1);
