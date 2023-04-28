@@ -287,4 +287,5 @@ public class Client{
     public ArrayList<Fish> getFishs() {
         return fishList;
     }
+
 }
