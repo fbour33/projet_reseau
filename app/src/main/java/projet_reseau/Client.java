@@ -65,12 +65,21 @@ public class Client{
     /**
      * buffer de lecture des reponses du serveur
      */
-    protected BufferedReader in;
+    private BufferedReader in;
+    /**
+     * buffer d'écriture des reponses du serveur
+     */
+    private PrintWriter out;
     /**
      * mutex pour l'écriture dans le socket du serveur
      */
     private Lock socketLock = new ReentrantLock();
 
+
+
+    /**
+     * constructeur ddu client 
+     */
     public Client(){
         config();
         handleConnection();
@@ -94,7 +103,7 @@ public class Client{
                         String pong = null;
                         try {
                             socketLock.lock();
-                            PrintWriter out = new PrintWriter(socket.getOutputStream());
+                            out = new PrintWriter(socket.getOutputStream());
                             out.print("ping 12345");
                             out.flush();
                             pong = in.readLine();
@@ -155,6 +164,12 @@ public class Client{
         }
     }
 
+    public void close() throws IOException {
+        socket.close();
+        in.close();
+        out.close();
+    }
+
     /**
      * Gestion de la commande Hello pour l'authentification du client
      * auprès du serveur
@@ -184,7 +199,7 @@ public class Client{
         if (socketIsConnected()) {
             try {
                 socketLock.lock();
-                PrintWriter out =  new PrintWriter(socket.getOutputStream());
+                out =  new PrintWriter(socket.getOutputStream());
                 out.println(command);
                 out.flush();
             } catch (IOException e) {
@@ -195,6 +210,11 @@ public class Client{
         }
         if (command.equals("disconnect")) {
             connected = false;
+            try{
+                close();
+            }catch(IOException e){
+                System.out.println("Couldn't close");
+            }
         }
         if (command.equals("log out")) {
             authenticated = false;

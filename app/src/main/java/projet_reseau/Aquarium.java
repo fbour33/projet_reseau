@@ -20,14 +20,11 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class Aquarium extends Application {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
     private static Client client;
-
     private Console console;
     VBox root;
 
@@ -124,7 +121,7 @@ public class Aquarium extends Application {
                         f.getWidth() * canvas.getWidth() / 100,
                         f.getHeight() * canvas.getHeight() / 100);
                     if(f.isRunning()){
-                        f.moveFish(WIDTH,HEIGHT,gc);   
+                        f.moveFish(WIDTH,HEIGHT);   
                     }
                 }
             }

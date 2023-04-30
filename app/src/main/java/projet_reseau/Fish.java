@@ -1,22 +1,13 @@
 package projet_reseau;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.scene.*;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.stage.Stage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
-import java.util.Collection; 
 import java.io.*;
 
-public class Fish {
-
-    private ImageView myFish; 
+public class Fish { 
     private Image myFishImage; 
     private int WIDTH; 
     private int HEIGHT; 
@@ -27,13 +18,15 @@ public class Fish {
     private double yGoal;
     private boolean running;
     private int timeToGetGoal;
-    private String strategy;
-
+    
+    /**
+     * Conctructeur du poisson 
+     */
     public Fish(String fishName, double posX, double posY, int width, int height, int time) {
-        initFishImageView(fishName);
+        initFishImage(fishName);
         setPosition(posX, posY);
         name = fishName;
-        running = false;
+        running = true;
         xGoal = -1;
         yGoal = -1;
         WIDTH = width;
@@ -41,10 +34,110 @@ public class Fish {
         timeToGetGoal = time;
     }
 
-    private void initFishImageView(String fishName){
-        String imageName = fishName;
-        int underscoreIndex = imageName.indexOf("_");
-        imageName = imageName.substring(0, underscoreIndex);
+    /*************************************************************************/
+    /*                             GETTER                                   */
+    /***********************************************************************/
+
+    /**
+     * Récupère l'image du poisson
+     * @return myFishImage qui est une variable globale contenant l'image du poisson 
+     */
+    public Image getImage(){
+        return myFishImage;
+    }
+
+    /**
+     * Récupère l'abscisse du poisson 
+     * @return x qui est une variable globale contenant l'abscisse du poisson  
+     */
+    public double getX(){
+        return x;
+    }
+
+    /**
+     * Récupère l'ordonnée du poisson 
+     * @return y qui est une variable globale contenant l'ordonnée du poisson  
+     */
+    public double getY(){
+        return y;
+    }
+
+    /**
+     * Récupère la largeur du poisson en pourcentage de celle de l'aquarium  
+     * @return WIDTH qui est une variable globale contenant la largeur du poisson  
+     */
+    public double getWidth(){
+        return WIDTH;
+    }
+
+    /**
+     * Récupère la hauteur du poisson en pourcentage de celle de l'aquarium  
+     * @return HEIGHT qui est une variable globale contenant la hauteur du poisson  
+     */
+    public double getHeight(){
+        return HEIGHT;
+    }
+
+    /**
+     * Récupère le nom du poisson  
+     * @return name qui est une variable globale contenant le nom du poisson  
+     */
+    public String getName(){
+        return name;
+    }
+
+
+    /*************************************************************************/
+    /*                             SETTER                                   */
+    /***********************************************************************/
+
+    /**
+     * Définir la position du poisson 
+     */
+
+    public void setPosition(double newX, double newY) {
+        x = newX;
+        y = newY;
+    }
+
+    /**
+     * Définir le nouvel objectif du poisson 
+     */
+    public void setGoal(double goalX, double goalY){
+        xGoal = goalX;
+        yGoal = goalY;
+    }
+
+    /**
+     * Démarrer ou freeze le poisson
+     */
+    public void setRunning(boolean bool){
+        running = bool;
+    }
+
+
+    /*************************************************************************/
+    /*                     SIDE FUNCTIONS                                   */
+    /***********************************************************************/
+
+    /**
+     *  Parse le nom du poisson
+     *  L'objectif est de rétirer l'underscored du nom du poisson
+     */
+    private String parseName(String fishName) {
+        String nameParsed = fishName;
+        int underscoreIndex = nameParsed.indexOf("_");
+        if(underscoreIndex != -1){
+            nameParsed = nameParsed.substring(0, underscoreIndex);
+        }
+        return nameParsed;
+    }
+
+    /**
+     * Initialise l'image du poisson 
+     */
+    private void initFishImage(String fishName){
+        String imageName = parseName(fishName);
         if (!imageName.endsWith(".png")) {
             imageName += ".png";
         }
@@ -53,54 +146,19 @@ public class Fish {
         absolutePath = absolutePath.replace(imageName, "src/main/images/"+imageName);
         final Image img = new Image("file:"+absolutePath);
         myFishImage = img;
-        myFish = new ImageView(img);
-        myFish.setFitHeight(HEIGHT);
-        myFish.setFitWidth(WIDTH);
     }
 
-    public ImageView getImageView(){
-        return myFish;
-    }
-
-    public Image getImage(){
-        return myFishImage;
-    }
-
-    public double getX(){
-        return x;
-    }
-    public double getY(){
-        return y;
-    }
-
-    public double getWidth(){
-        return WIDTH;
-    }
-    public double getHeight(){
-        return HEIGHT;
-    }
-
-    public String getName(){
-        return name;
-    }
-    public void setPosition(double newX, double newY) {
-        x = newX;
-        y = newY;
-
-        myFish.setX(x);
-        myFish.setY(y);
-    }
-
-    public void setGoal(double goalX, double goalY){
-        xGoal = goalX;
-        yGoal = goalY;
-    }
-
+    /**
+     * retourne l'état du poisson 
+     */
     public boolean isRunning() {
         return running;
     }
 
-    public void moveFish(int width, int height, GraphicsContext gc){
+    /**
+     * met à jour la position du poisson 
+     */
+    public void moveFish(int width, int height){
         if(timeToGetGoal!=0){
             x = x + (xGoal - x)/timeToGetGoal;
             y = y + (yGoal - y)/timeToGetGoal;
@@ -109,4 +167,5 @@ public class Fish {
             y = yGoal;
         }
     }
+
 }
