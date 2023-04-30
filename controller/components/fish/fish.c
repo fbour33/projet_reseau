@@ -95,3 +95,16 @@ int run(struct fish* fish){
         return -1;
     }
 }
+
+int end_waypoint(struct fish *fish){
+    free(fish->waypoints[0]);
+    fish->waypoints[0] = NULL;
+    for(int i=0; i <fish->wps_nb; i++){
+        if(fish->waypoints[i] == NULL && i != MAX_FISHES-1 && fish->waypoints[i+1] != NULL){
+            fish->waypoints[i] = fish->waypoints[i+1];
+            fish->waypoints[i+1] = NULL;
+        }
+    }
+    fish->wps_nb--;
+    return 0;
+}
