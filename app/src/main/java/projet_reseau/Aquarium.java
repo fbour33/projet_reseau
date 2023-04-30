@@ -39,10 +39,15 @@ public class Aquarium extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        // Création d'une vbox qui va contenir notre menu et notre vue  
+        /**
+        * Création d'une vbox qui va contenir notre menu et notre vue
+        */   
         root = new VBox();
 
-        // création du menu et ajout d'item 
+        /**
+        * création du menu et ajout d'items 
+        */
+        
         MenuBar menuBar = new MenuBar();
         Menu AquariumMenu = new Menu();
         Label aquariumLabel = new Label("Aquarium Menu");
@@ -68,28 +73,42 @@ public class Aquarium extends Application {
         exitItemLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 15));
         exitItem.setGraphic(exitItemLabel);
 
-        // Ajout des items au menu et du menu à la barre de menu 
+        /**
+         * Ajout des items au menu et du menu à la barre de menu
+         */
+         
         AquariumMenu.getItems().addAll(consoleItem,logOutItem,exitItem);
         menuBar.getMenus().addAll(AquariumMenu);
 
-        // création d'un canva et d'un GraphicsContext
+        /**
+         * création d'un canva et d'un GraphicsContext
+         */
         Canvas canvas = new Canvas(WIDTH,HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
-        // création d'un panel qui va contenir notre canvas 
+        /**
+         * création d'un panel qui va contenir notre canvas
+         */ 
         Pane affichage = new Pane();
         affichage.getChildren().addAll(canvas);
 
-        // Ajout de la barre de menu et du panel d'affichage à la Vbox
+        /**
+         * ajout de la barre de menu et du panel d'affichage à la Vbox
+         */
         root.getChildren().addAll(menuBar,affichage);
 
-        // création de l'image de background
+        /**
+         * création de l'image de background
+         */
         File bgfile = new File("bg.png");
         String bgAbsolutePath = bgfile.getAbsolutePath();
         bgAbsolutePath = bgAbsolutePath.replace("bg.png", "src/main/images/bg.png");
         Image backgroundImage = new Image("file:"+bgAbsolutePath);
 
-        // création de la scène et ajout de notre Vbox à la scène
+        /**
+         * création de la scène et ajout de notre Vbox à la scène
+         */
+
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -104,13 +123,17 @@ public class Aquarium extends Application {
                         f.getY() * canvas.getHeight() / 100,
                         f.getWidth() * canvas.getWidth() / 100,
                         f.getHeight() * canvas.getHeight() / 100);
-                    f.moveFish(WIDTH,HEIGHT);
+                    if(f.isRunning()){
+                        f.moveFish(WIDTH,HEIGHT,gc);   
+                    }
                 }
             }
         };
-
         timer.start();
 
+        /**
+         * ajout des évènements liés aux items 
+         */
         consoleItem.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {

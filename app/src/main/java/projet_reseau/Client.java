@@ -19,6 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.scene.control.TextArea;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Client{
     
@@ -55,7 +57,7 @@ public class Client{
     /**
      * booléen permettant de vérifier l'authentification du client au serveur
     */
-    private boolean authentificated;
+    private boolean authenticated;
     /**
      * Socket du serveur 
      */
@@ -64,43 +66,55 @@ public class Client{
      * buffer de lecture des reponses du serveur
      */
     protected BufferedReader in;
-    
+    /**
+     * mutex pour l'écriture dans le socket du serveur
+     */
+    private Lock socketLock = new ReentrantLock();
 
     public Client(){
         config();
         handleConnection();
 
-        // thread pour le ping de connexion
-        Thread pingThread = new Thread(new Runnable(){
+        /**
+        * thread pour le ping de connexion
+        */ 
+        Thread pingThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
                         Thread.sleep(1000 * display_timeout_value);
-                        while (! authentificated) {
+                        while (!authenticated) {
                             Thread.sleep(5000);
                         }
                         if (!connected) {
                             break;
                         }
                         String pong = null;
-                        PrintWriter out =  new PrintWriter(socket.getOutputStream());
-                        out.print("ping 12345");
-                        out.flush();
-                        pong = in.readLine();
+                        try {
+                            socketLock.lock();
+                            PrintWriter out = new PrintWriter(socket.getOutputStream());
+                            out.print("ping 12345");
+                            out.flush();
+                            pong = in.readLine();
+                        } catch (IOException e) {
+                            System.out.println("Exception caught");
+                        } finally {
+                            socketLock.unlock();
+                        }
                         if (!pong.equals("pong 12345")) {
-                            authentificated = false;
+                            authenticated = false;
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                }       
+                }
             }
         });
         pingThread.start();
         fishList = new ArrayList<Fish>();
-        Fish fish = new Fish("PoissonClown",30,90,10,10,100);
+        Fish fish = new Fish("PoissonClown_2",30,40,10,10,100);
         fishList.add(fish);
         
         // je simule getFish dans le client  
@@ -123,6 +137,10 @@ public class Client{
         getFishThread.start();
     }
 
+    /**
+     * Établissement de la connexion au serveur et envoie du message 
+     * d'authentication
+     */
     public void handleConnection(){
         try {
             socket = new Socket(controller_adress, port);
@@ -131,46 +149,69 @@ public class Client{
         } catch (IOException e) {
             connected = false;
         }
-        int bool = handleHello();
-        if(bool==1){
-            authentificated = true;
+        boolean bool = handleHello();
+        if(bool){
+            authenticated = true;
         }
     }
 
-    public int handleHello(){
+    /**
+     * Gestion de la commande Hello pour l'authentification du client
+     * auprès du serveur
+     * @return true si l'authentification du client est réussie
+     * @return false sinon 
+     */
+    public boolean handleHello(){
         String message = "hello in as " + id;
         send(message);
         try{
             String response = in.readLine();
+            /**if(response.equals("no greeting")){
+                send("hello");
+            }*/
             String numberStr = response.substring(response.indexOf("N") + 1);
             id = numberStr; 
-            return 1;
+            return true;
         }catch(IOException e){
-                return 0;
+                return false;
         }
     }
 
-    public void send(String s) {
+    /**
+     * Fonction d'envoi des commandes au serveur 
+     */
+    public void send(String command) {
         if (socketIsConnected()) {
             try {
+                socketLock.lock();
                 PrintWriter out =  new PrintWriter(socket.getOutputStream());
-                out.println(s);
+                out.println(command);
                 out.flush();
-            } catch (IOException e) {System.out.println("Exception caught");}
+            } catch (IOException e) {
+                System.out.println("Exception caught");
+            } finally {
+                socketLock.unlock();
+            }
         }
-        if (s.equals("disconnect")) {
+        if (command.equals("disconnect")) {
             connected = false;
         }
-        if (s.equals("log out")) {
-            authentificated = false;
+        if (command.equals("log out")) {
+            authenticated = false;
         }
     }
 
+    /**
+     * Fonction de vérification de la connexion du socket Serveur 
+     */
     public boolean socketIsConnected() {
         return (socket != null && socket.isConnected());
     }
 
-
+    /**
+     * Gestion des commandes de la console et envoie au serveur
+     * @return response qui est un String pour la réponse du serveur
+     */
     public String handleCommand(String inputConsole) {
         String[] args = inputConsole.split(" ");
         String response;
@@ -183,24 +224,24 @@ public class Client{
                         response = in.readLine();
                         return response;
                     } catch (IOException e) {
-                        return "<NOK. The command 'status' doesn't expect arguments." + System.lineSeparator();
+                        return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
                     }
                 } else {
-                    return "<NOK. The command 'status' doesn't expect arguments." + System.lineSeparator();
+                    return "<NOK. La commande 'status' ne prend aucun argument." + System.lineSeparator();
                 }
 
             case "addFish":
                 if (args.length == 5) {
-                    Pattern pattern = Pattern.compile("^addFish\s+(\\w+)\\s+at\\s+(\\d+x\\d+)(?:,(\\d+x\\d+))?(?:,(\\w+))?$");
+                    Pattern pattern = Pattern.compile("^addFish\\s+(\\w+)\\s+at\\s+(\\d+)x(\\d+),(\\d+)x(\\d+),\\s*(\\w+)$");
                     Matcher matcher = pattern.matcher(inputConsole);
 
-                    if (true) {
+                    if (matcher.matches()) {
                         send(inputConsole);
                         try {
                             response = in.readLine();
                             return response;
                         } catch (IOException e) {
-                            return "<NOK. Usage: addFish 'nameFish' at 'x'x'y', 'w'x'h', 'mobilityModel'" + System.lineSeparator();
+                            return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
                         }
                     }
                 }
@@ -218,7 +259,7 @@ public class Client{
                             response = in.readLine();
                             return response;
                         } catch (IOException e) {
-                            return "<NOK. Usage: 'startFish nameFish'" + System.lineSeparator();
+                            return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
                         }
                     } else {
                         return "<NOK. Usage: 'startFish nameFish'" + System.lineSeparator();
@@ -238,7 +279,7 @@ public class Client{
                             response = in.readLine();
                             return response;
                         } catch (IOException e) {
-                            return "<NOK! Usage: 'delFish nameFish'" + System.lineSeparator();
+                            return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
                         }
                     } else {
                         return "<NOK! Usage: 'delFish nameFish'" + System.lineSeparator();
@@ -246,12 +287,29 @@ public class Client{
                 } else {
                     return "<NOK! Usage: 'delFish nameFish'" + System.lineSeparator();
                 }
-
+            case "log":
+                if(args.length == 2 && args[1].equals("out")){
+                    send(inputConsole);
+                    authenticated = false;
+                    try{
+                        response = in.readLine();
+                        System.out.println(response);
+                        return response;
+                    }catch (IOException e){
+                        return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
+                    }
+                }else {
+                    return "<NOK! Usage: 'log out'" + System.lineSeparator();
+                }
             default:
                 return "<NOK. Command not found." + System.lineSeparator();
         }
     }
 
+    /**
+     * configuration des variables relative à l'affichage 
+     * via le fichier affichage.cfg
+     */
     private void config() {
         try {
             List<String> lines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/affichage.cfg"), StandardCharsets.ISO_8859_1);

@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,6 +43,8 @@ public class Fish {
 
     private void initFishImageView(String fishName){
         String imageName = fishName;
+        int underscoreIndex = imageName.indexOf("_");
+        imageName = imageName.substring(0, underscoreIndex);
         if (!imageName.endsWith(".png")) {
             imageName += ".png";
         }
@@ -93,7 +96,11 @@ public class Fish {
         yGoal = goalY;
     }
 
-    public void moveFish(int width, int height){
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void moveFish(int width, int height, GraphicsContext gc){
         if(timeToGetGoal!=0){
             x = x + (xGoal - x)/timeToGetGoal;
             y = y + (yGoal - y)/timeToGetGoal;
