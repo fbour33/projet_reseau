@@ -23,7 +23,7 @@ import javafx.scene.layout.VBox;
 
 public class Aquarium extends Application {
     private static final int WIDTH = 1000;
-    private static final int HEIGHT = 800;
+    private static final int HEIGHT = 1000;
     private static Client client;
     private Console console;
     VBox root;

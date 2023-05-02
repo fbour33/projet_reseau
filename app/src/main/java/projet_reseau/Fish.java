@@ -9,8 +9,8 @@ import java.io.*;
 
 public class Fish { 
     private Image myFishImage; 
-    private int WIDTH; 
-    private int HEIGHT; 
+    private double WIDTH; 
+    private double HEIGHT; 
     private String name;
     private double x;
     private double y;
@@ -22,7 +22,7 @@ public class Fish {
     /**
      * Conctructeur du poisson 
      */
-    public Fish(String fishName, double posX, double posY, int width, int height, int time) {
+    public Fish(String fishName, double posX, double posY, double width, double height, int time) {
         initFishImage(fishName);
         setPosition(posX, posY);
         name = fishName;
