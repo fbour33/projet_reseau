@@ -18,7 +18,7 @@ int delete_fish(struct view*, char*);
 
 int get_fishes(struct view*, char *resp);
 
-int status(struct view*);
+int status(struct view*, char* resp);
 
 struct view * create_view(int id, int x, int y, int width, int height);
 
