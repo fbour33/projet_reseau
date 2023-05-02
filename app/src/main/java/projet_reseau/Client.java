@@ -146,6 +146,27 @@ public class Client{
         getFishThread.start();
     }
 
+    /*************************************************************************/
+    /*                             GETTER                                   */
+    /***********************************************************************/
+
+    /**
+     * Récupérer les poissons gérés par les clients 
+     */
+    public ArrayList<Fish> getFishs() {
+        return fishList;
+    }
+
+
+    /*************************************************************************/
+    /*                             SETTER                                   */
+    /***********************************************************************/
+
+
+    /*************************************************************************/
+    /*                     SIDE FUNCTIONS                                   */
+    /***********************************************************************/
+
     /**
      * Établissement de la connexion au serveur et envoie du message 
      * d'authentication
@@ -362,8 +383,6 @@ public class Client{
         }
     }
 
-    public ArrayList<Fish> getFishs() {
-        return fishList;
-    }
+    
 
 }
