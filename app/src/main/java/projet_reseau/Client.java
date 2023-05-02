@@ -366,7 +366,7 @@ public class Client{
         getProperties props = getProperties(); 
         props.getStringServer(senderCommand, serverResponse); 
         props.changeProperties();
-        
+
         String[] commmand = props.getCommand();
         String[] response = props.getResponse();  
         Double2D size = props.getSize(); 
@@ -409,6 +409,7 @@ public class Client{
         for(Fish fish : fishList){
             if(fish.getName().equals(command[1])){
                 return fish;
+            }
         }
     }
 
