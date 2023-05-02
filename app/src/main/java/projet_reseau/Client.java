@@ -362,6 +362,39 @@ public class Client{
         }
     }
 
+    public void whichCommand(String senderCommand, String serverResponse){
+        getProperties props = getProperties(); 
+        props.getStringServer(senderCommand, serverResponse); 
+        props.changeProperties();
+        String[] commmand = props.getCommand();
+        String[] response = props.getResponse();  
+        Double2D size = props.getSize(); 
+        Double2D position = props.getPosition(); 
+
+        if(response[0].equals("OK")){
+            if(command[0].equals("addFish")){
+                addFish(command, response, size, position);
+            }
+            else if(command[0].equals("delFish")){
+                delFish(command);
+            }
+        }
+    }
+    public void addFish(String[] command, Point2D size, Point2D position){
+            Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(), 100); 
+            fishList.add(myFish);
+    }
+
+    public void delFish(String[] command){
+        for(Fish fish : fishList){
+            if(fish.getName().equals(command[1])){
+                fishList.remove(fish); 
+            }
+        }
+    }
+
+    public void
+
     public ArrayList<Fish> getFishs() {
         return fishList;
     }
