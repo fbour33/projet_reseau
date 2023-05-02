@@ -79,7 +79,7 @@ int get_fishes(struct view* view, char *resp) {
 
 int status(struct view* view, char* resp) {
     if(view->nb_fishes <= 0) {
-        resp = "There is no fish !\n";
+        sprintf(resp, "There is no fish !\n");
         return -1;
     }
     sprintf(resp, "OK: Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
