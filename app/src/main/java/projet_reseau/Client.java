@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.awt.geom.Point2D;
 
 public class Client{
     
@@ -83,7 +84,7 @@ public class Client{
     public Client(){
         config();
         handleConnection();
-
+        fishList = new ArrayList<Fish>();
         /**
         * thread pour le ping de connexion
         */ 
@@ -122,9 +123,6 @@ public class Client{
             }
         });
         pingThread.start();
-        fishList = new ArrayList<Fish>();
-        Fish fish = new Fish("PoissonClown_2",30,40,10,10,100);
-        fishList.add(fish);
         
         // je simule getFish dans le client  
         Thread getFishThread = new Thread(new Runnable(){
@@ -136,7 +134,9 @@ public class Client{
                         Random rand = new Random();
                         double xg = rand.nextDouble(100);
                         double yg = rand.nextDouble(100);
-                        fish.setGoal(xg,yg);
+                        for(Fish f : fishList){
+                            f.setGoal(xg,yg);
+                        }
                     }catch(Exception e){
                         e.printStackTrace();
                     }
@@ -280,6 +280,9 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
+                            if(response.equals("OK")){
+                                whichCommand(inputConsole,response);
+                            }
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -295,6 +298,7 @@ public class Client{
                     Matcher matcher = pattern.matcher(inputConsole);
 
                     if (matcher.matches()) {
+                        System.out.println(inputConsole);
                         send(inputConsole);
                         try {
                             response = in.readLine();
@@ -318,6 +322,9 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
+                            if(response.equals("OK")){
+                                whichCommand(inputConsole,response);
+                            }
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -384,17 +391,17 @@ public class Client{
     }
 
     public void whichCommand(String senderCommand, String serverResponse){
-        getProperties props = getProperties(); 
+        Properties props = new Properties(); 
         props.getStringServer(senderCommand, serverResponse); 
         props.changeProperties();
-        String[] commmand = props.getCommand();
+        String[] command = props.getCommand();
         String[] response = props.getResponse();  
-        Double2D size = props.getSize(); 
-        Double2D position = props.getPosition(); 
+        Point2D size = props.getSize(); 
+        Point2D position = props.getPosition(); 
 
         if(response[0].equals("OK")){
             if(command[0].equals("addFish")){
-                addFish(command, response, size, position);
+                addFish(command, size, position);
             }
             else if(command[0].equals("delFish")){
                 delFish(command);
@@ -414,7 +421,4 @@ public class Client{
         }
     }
 
-    public ArrayList<Fish> getFishs() {
-        return fishList;
-    }
 }
