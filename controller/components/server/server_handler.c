@@ -150,15 +150,12 @@ int response_ls(int sockfd){
 		if(strcmp(tmp, "list \n") == 0){
 			if(i == 0){
 				strcat(msg, tmp);
-				if (send(sockfd, msg , strlen(msg), 0) <= 0) {
-				return -1;
-				}
-				return 0;
+				break;
 			} else{break;}
 		}
 		strcat(msg, tmp);
 	}
-	printf("%s\n", msg);
+	fprintf(log_f, "ls server response : \n%s", msg);
 	if (write(sockfd, msg, strlen(msg)) <= 0) {
 		return -1;
 	}
