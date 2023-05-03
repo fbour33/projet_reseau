@@ -5,13 +5,13 @@ import java.util.*;
 import java.io.*;
 import java.awt.geom.Point2D;
 
-public class getProperties {
+public class Properties {
     private String[] command;
     private String[] response;  
     private Point2D position; 
     private Point2D size; 
 
-    private getProperties(){
+    public Properties(){
         position = new Point2D.Double(0, 0); 
         size = new Point2D.Double(0, 0);
     }
@@ -33,7 +33,7 @@ public class getProperties {
             response = receiverResponse.split(" "); 
     }
 
-    private void changeProperties(){
+    public void changeProperties(){
         //Change position properties
         String[] separatedPosition = command[2].split("x");
         position.setLocation(Double.parseDouble(separatedPosition[0]), Double.parseDouble(separatedPosition[1])); 

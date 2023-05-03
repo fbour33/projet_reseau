@@ -40,7 +40,7 @@ int delete_fish(struct view* view, char* name){
         }
     }
     if(index == -1) {
-        //printf("\t-> Fish doesn't exist\n");
+        fprintf(log_f, "\t-> Fish doesn't exist\n");
         return -1;
     }
     free_fish(view->fishes[index]);
@@ -80,17 +80,18 @@ int get_fishes(struct view* view, char *resp, int waypoint_idx) {
     return 0;
 }
 
-int status(struct view* view) {
-    if(view->nb_fishes ==0) {
+int status(struct view* view, char* resp) {
+    if(view->nb_fishes <= 0) {
+        sprintf(resp, "There is no fish !\n");
         return -1;
     }
-
-    printf("\tOK : Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
+    sprintf(resp, "OK: Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
     for(int i = 0; i<view->nb_fishes; ++i) {
+        char temp[64];
         struct fish* tmp = view->fishes[i];
-        printf("\n");
-        printf("Fish %s at %d*%d,%d*%d", tmp->name, tmp->position.x, tmp->position.y, 
+        sprintf(temp, "\tFish %s at %d*%d,%d*%d\n", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height);
+        strcat(resp, temp);
     }
     return 0;
 }
@@ -113,7 +114,7 @@ int start_fish(struct view* view, char* name){
         }
     }
     if(index == -1){
-        //printf("\t-> Fish doesn't exist\n");
+        fprintf(log_f, "\t-> Fish doesn't exist\n");
         return -1;
     }
     view->fishes[index]->running = 1;

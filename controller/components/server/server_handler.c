@@ -116,6 +116,23 @@ int response_getFishes(int sockfd){
 	return 0;
 }
 
+int response_status(int sockfd) {
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if(next != NULL) {
+		fprintf(log_f, "Status command don't need arguments\n");
+		send(sockfd, "NOK\n", 5, 0);
+		return -1;
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	char resp[1024];
+	status(global_aquarium->aquarium_views[cli->view_idx], resp);
+	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
+				return -1;
+	}
+	return 0;
+}
+
 int response_ls(int sockfd){
 	char *delim = " ";
     char *next = strtok(NULL, delim);
@@ -263,18 +280,6 @@ int response_logout(int sockfd){
 		}
 		return 0;
 	}
-}
-
-int response_status(int sockfd) {
-	char *delim = " ";
-    char *next = strtok(NULL, delim);
-	if(next != NULL) {
-		fprintf(log_f, "Status command don't need arguments\n");
-		send(sockfd, "NOK\n", 5, 0);
-		return -1;
-	}
-	struct client* cli = get_cli_from_sock(sockfd);
-	return status(global_aquarium->aquarium_views[cli->view_idx]);
 }
 
 /**
