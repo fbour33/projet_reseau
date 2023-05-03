@@ -71,7 +71,7 @@ struct waypoint *create_waypoint(int x, int y, int time){
 int RandomWayPoint(struct fish *fish){
     for(int i=0; i<MAX_WAYPOINT; i++){
         if(fish->waypoints[i] == NULL){
-            struct waypoint *wp = create_waypoint(rand()%101, rand()%101, rand()%10);
+            struct waypoint *wp = create_waypoint(rand()%101, rand()%101, rand()%10+1);
             fish->waypoints[i] = wp;
             fish->wps_nb +=1;
             return 0;
@@ -97,6 +97,8 @@ int run(struct fish* fish){
 }
 
 int end_waypoint(struct fish *fish){
+    fish->position.x = fish->waypoints[0]->pos.x;
+    fish->position.y = fish->waypoints[0]->pos.y;
     free(fish->waypoints[0]);
     fish->waypoints[0] = NULL;
     for(int i=0; i <fish->wps_nb; i++){

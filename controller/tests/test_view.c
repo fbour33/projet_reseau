@@ -37,13 +37,13 @@ void test_get_status_fish() {
     assert(add_fish(v1, f1) == 0);
     assert(add_fish(v1, f2) == 0);
 
-    get_fishes(v1, msg);
+    get_fishes(v1, msg,0);
     printf("%s", msg);
     status(v1);
 
     assert(delete_fish(v1, "Alex") == 0);
 
-    get_fishes(v1, msg);
+    get_fishes(v1, msg, 0);
     printf("%s", msg);
     status(v1);    
     
@@ -51,7 +51,7 @@ void test_get_status_fish() {
     printf("\n\tOK\n");
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     test_create_view();
     test_add_fish_in_view();

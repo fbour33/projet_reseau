@@ -55,7 +55,8 @@ int delete_fish(struct view* view, char* name){
     return 0;
 }
 
-int get_fishes(struct view* view, char *resp) {
+int get_fishes(struct view* view, char *resp, int waypoint_idx) {
+    
     char msg[1024] = "list ";
     for(int i = 0; i< view->nb_fishes; i++) {
         struct fish* tmp = view->fishes[i];
@@ -63,14 +64,16 @@ int get_fishes(struct view* view, char *resp) {
         int time = 0;
         int posx = tmp->position.x;
         int posy = tmp->position.y;
-        if(tmp->running){
-            time = tmp->waypoints[0]->time_left;
-            posx = tmp->waypoints[0]->pos.x;
-            posy = tmp->waypoints[0]->pos.y;
+        if(tmp->running && waypoint_idx < tmp->wps_nb){
+            time = tmp->waypoints[waypoint_idx]->time_left;
+            posx = tmp->waypoints[waypoint_idx]->pos.x;
+            posy = tmp->waypoints[waypoint_idx]->pos.y;
         }
-        sprintf(temp, "[%s at %dx%d,%dx%d,%d] ", tmp->name, posx, posy, 
-                tmp->rectangle.width, tmp->rectangle.height, time);
-        strcat(msg, temp);
+        if( (!tmp->running && waypoint_idx == 0) || (tmp->running && waypoint_idx < tmp->wps_nb)){
+            sprintf(temp, "[%s at %dx%d,%dx%d,%d] ", tmp->name, posx, posy, 
+                    tmp->rectangle.width, tmp->rectangle.height, time);
+            strcat(msg, temp);
+        }
     }
     strcat(msg, "\n");
     strcpy(resp, msg);

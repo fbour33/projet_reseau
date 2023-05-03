@@ -16,7 +16,7 @@ int add_fish(struct view* view, struct fish* fish);
 
 int delete_fish(struct view*, char*);
 
-int get_fishes(struct view*, char *resp);
+int get_fishes(struct view*, char *resp, int waypoint_idx);
 
 int status(struct view*);
 

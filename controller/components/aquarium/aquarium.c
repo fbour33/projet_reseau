@@ -212,9 +212,9 @@ int update_fishes(){
                     if(end_waypoint(v->fishes[f]) != 0){
                         return -1;
                     }
-                    if(v->fishes[f]->wps_nb < 3){
-                        run(v->fishes[f]);
-                    }
+                }
+                if(v->fishes[f]->wps_nb < 3){
+                    run(v->fishes[f]);
                 }
             }
         }

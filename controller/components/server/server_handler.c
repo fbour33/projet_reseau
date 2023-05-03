@@ -109,7 +109,7 @@ int response_getFishes(int sockfd){
 	}
 	struct client* cli = get_cli_from_sock(sockfd);
 	char resp[1024];
-	get_fishes(global_aquarium->aquarium_views[cli->view_idx], resp);
+	get_fishes(global_aquarium->aquarium_views[cli->view_idx], resp, 0);
 	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
 				return -1;
 	}
@@ -117,6 +117,34 @@ int response_getFishes(int sockfd){
 }
 
 int response_ls(int sockfd){
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if(next != NULL){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	struct view *v = global_aquarium->aquarium_views[cli->view_idx];
+	char msg[1024]="";
+	char tmp[128]="";
+	for(int i = 0; i<MAX_WAYPOINT;i++){
+		get_fishes(v, tmp, i);
+		if(strcmp(tmp, "list \n") == 0){
+			if(i == 0){
+				strcat(msg, tmp);
+				if (send(sockfd, msg , strlen(msg), 0) <= 0) {
+				return -1;
+				}
+				return 0;
+			} else{break;}
+		}
+		strcat(msg, tmp);
+	}
+	printf("%s\n", msg);
+	if (write(sockfd, msg, strlen(msg)) <= 0) {
+		return -1;
+	}
 	return 0;
 }
 
