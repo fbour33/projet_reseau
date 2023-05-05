@@ -14,6 +14,8 @@
 
     int handle_message(char buffer[MSG_LEN], int sockfd);
 
+    int response_getFishesContinously(int sockfd);
+
     /**
     * @brief Clean and open the log file 
     * @return the log file descriptor

@@ -76,6 +76,11 @@ int main() {
 				fflush(log_f);
 				break;
 			} 
+			for(int i=0; i<MAX_CLIENTS; i++){
+				if(clients[i] != NULL && clients[i]->last_getFishesContinuously_t != NO_GETFISHESCONTINUOUSLY){
+					response_getFishesContinously(clients[i]->cfd);
+				}
+			}
 			t0 = tmp;
 		}
 
