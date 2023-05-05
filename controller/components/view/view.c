@@ -106,7 +106,6 @@ void free_view(struct view* view) {
 }
 
 int start_fish(struct view* view, char* name){
-    printf("here\n");
     for(int i=0; i<view->nb_fishes; i++){
         if (strcmp(view->fishes[i]->name, name) == 0){
             view->fishes[i]->running = 1;
