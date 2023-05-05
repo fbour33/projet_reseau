@@ -1,145 +1,32 @@
 ------ LOGS ------ 
 Loading aquarium ...
+	-> aquarium loaded (5 display views) !
 Aquarium loaded !
-New connection : socket 5
-Received (socket fd 5): hello
-
-Response sent!
-Received (socket fd 5): ping 0
-
-Response sent!
-Received (socket fd 5): ping 1
-
-Response sent!
+received from prompt : load aquarium
+	-> aquarium loaded (5 display views) !
 New connection : socket 6
-Received (socket fd 6): hello
+Received (socket fd 6): hello in as N1
 
 Response sent!
-Received (socket fd 6): ping 0
-
-Response sent!
-Received (socket fd 5): ping 2
-
-Response sent!
-Received (socket fd 6): ping 1
-
-Response sent!
-Received (socket fd 5): ping 3
-
-Response sent!
-Received (socket fd 6): ping 2
-
-Response sent!
-Received (socket fd 5): ping 4
-
-Response sent!
-Received (socket fd 6): ping 3
-
-Response sent!
-Received (socket fd 5): ping 5
-
-Response sent!
-Received (socket fd 6): ping 4
-
-Response sent!
-Received (socket fd 5): ping 6
-
-Response sent!
-Received (socket fd 6): ping 5
-
-Response sent!
-Received (socket fd 5): ping 7
-
-Response sent!
-Received (socket fd 6): ping 6
-
-Response sent!
-Received (socket fd 5): ping 8
-
-Response sent!
-Received (socket fd 6): ping 7
-
-Response sent!
-Received (socket fd 5): ping 9
-
-Response sent!
-Received (socket fd 6): ping 8
-
-Response sent!
-Client disconnected, socket fd is 5
-Received (socket fd 6): ping 9
-
-Response sent!
-Client disconnected, socket fd is 6
-New connection : socket 5
-Received (socket fd 5): hello
-
-Response sent!
-Received (socket fd 5): ping 0
-
-Response sent!
-Received (socket fd 5): ping 1
-
-Response sent!
-Received (socket fd 5): ping 2
-
-Response sent!
-Received (socket fd 5): ping 3
-
-Response sent!
+Client timeout, socket fd is 6
 New connection : socket 6
-Received (socket fd 6): hello
+Received (socket fd 6): hello in as N1
 
 Response sent!
-Received (socket fd 6): ping 0
+Received (socket fd 6): addFish ClownFish at 61x52,4x3, RandomWayPoint
 
 Response sent!
-Received (socket fd 5): ping 4
+Received (socket fd 6): ping 12345
+Response sent!
+Received (socket fd 6): addFish ClownFish at 61x52,4x3, RandomWayPoint
 
 Response sent!
-Received (socket fd 6): ping 1
+Received (socket fd 6): addFish ClownFish at 61x52,4x3, RandomWayPoint
 
 Response sent!
-Received (socket fd 5): ping 5
+Received (socket fd 6): addFish ClownFish at 61x52,4x3, RandomWayPoint
 
 Response sent!
-Received (socket fd 6): ping 2
+Received (socket fd 6): addFish ClownFish at 61x52,4x3, RandomWayPoint
 
 Response sent!
-Received (socket fd 5): ping 6
-
-Response sent!
-Received (socket fd 6): ping 3
-
-Response sent!
-Received (socket fd 5): ping 7
-
-Response sent!
-Received (socket fd 6): ping 4
-
-Response sent!
-Received (socket fd 5): ping 8
-
-Response sent!
-Received (socket fd 6): ping 5
-
-Response sent!
-Received (socket fd 5): ping 9
-
-Response sent!
-Received (socket fd 6): ping 6
-
-Response sent!
-Client disconnected, socket fd is 5
-Received (socket fd 6): ping 7
-
-Response sent!
-Received (socket fd 6): ping 8
-
-Response sent!
-Received (socket fd 6): ping 9
-
-Response sent!
-Client disconnected, socket fd is 6
-received from prompt : exit
-Exit the program
