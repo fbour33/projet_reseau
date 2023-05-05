@@ -155,7 +155,7 @@ int response_ls(int sockfd){
 		}
 		strcat(msg, tmp);
 	}
-	fprintf(log_f, "ls server response : \n%s", msg);
+	fprintf(log_f, "ls server response for socket %d: \n%s", sockfd, msg);
 	if (write(sockfd, msg, strlen(msg)) <= 0) {
 		return -1;
 	}

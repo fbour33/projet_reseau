@@ -170,14 +170,14 @@ int main() {
 					
                 } else {
                     // print received data
-                    fprintf(log_f, "Received (socket fd %d): %s\n", client_sockets[i], buff);
+                    fprintf(log_f, "Received (socket fd %d): %s", client_sockets[i], buff);
 
                     // handle message and response
                     if (handle_message(buff, client_sockets[i]) == -1) {
 						fprintf(log_f, "handle_message of client message (socket : %d) error\n", client_sockets[i]);
 						break;
 					}
-					fprintf(log_f, "Response sent!\n");
+					fprintf(log_f, "Response sent!\n\n");
                 }
             }
 
