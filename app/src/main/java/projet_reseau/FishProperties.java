@@ -12,8 +12,8 @@ public class FishProperties {
     public FishProperties(){}
 
     public String[] parser(String str){
+        str = str.replaceAll("\\,", " ");
         str = str.replaceAll("\\[|\\]|at|\\:", ""); 
-        str = str.replaceAll("\\, ", ","); 
         String[] elements = str.split("\\s+");
         return elements;
     }
@@ -30,12 +30,18 @@ public class FishProperties {
     }
 
     public Point2D createPosition(String[] fishes){
-        String[] separatedPosition = fishes[2].split("x");
+        int index = 2; 
+        if(!fishes[0].equals("addFish"))
+            index = 1; 
+        String[] separatedPosition = fishes[index].split("x");
         return new Point2D.Double(Double.parseDouble(separatedPosition[0]), Double.parseDouble(separatedPosition[1]));
     }
 
     public Point2D createSize(String[] fishes){
-        String[] separatedSize = fishes[3].split("x");
+        int index = 3; 
+        if(!fishes[0].equals("addFish"))
+            index = 2; 
+        String[] separatedSize = fishes[index].split("x");
         return new Point2D.Double(Double.parseDouble(separatedSize[0]), Double.parseDouble(separatedSize[1]));
     }
 
@@ -58,15 +64,16 @@ public class FishProperties {
     }
 
     //public static void main(String[] args){
-    //    FishProperties fish = new FishProperties(); 
+    //   FishProperties fish = new FishProperties(); 
     //    fish.getStringServer("ls", "list [PoissonRouge at 92x40,10x4,5] [PoissonClown at 22x80,12x6,5]");
-    //    ArrayList<String[]> test = fish.changeLsProperties(fish.getResponse());
+    //   ArrayList<String[]> test = fish.parsedFishList(fish.getResponse());
     //    for(String[] e : test){
     //        System.out.println(Arrays.toString(e)); 
     //    }
     //    //System.out.println(Arrays.toString(fish.parser("NOK : Ok")));
     //    fish.getStringServer("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
     //    System.out.println(Arrays.toString(fish.getCommand())); 
+    //    System.out.println(fish.getCommand()[2]); 
     //    System.out.println(Arrays.toString(fish.getResponse())); 
     //    fish.getStringServer("delFish ClownFish", "OK");
     //    System.out.println(Arrays.toString(fish.getCommand())); 

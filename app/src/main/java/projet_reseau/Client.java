@@ -122,7 +122,7 @@ public class Client{
         pingThread.start();
         
         // je simule getFish dans le client  
-        //whichCommand("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
+        whichCommand("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
         
 
         Thread getFishThread = new Thread(new Runnable(){
@@ -135,7 +135,8 @@ public class Client{
                         double xg = rand.nextDouble(100);
                         double yg = rand.nextDouble(100);
                         for(Fish f : fishList){
-                            f.setGoal(xg,yg);
+                            f.setGoalList(new Point2D.Double(xg, yg));
+                            f.setTime(100);
                         }
                     }catch(Exception e){
                         e.printStackTrace();
@@ -400,12 +401,12 @@ public class Client{
                 case "startFish":
                     startFish(command);
                 case "ls": 
-                    lsCommand(props.parsedFishList(response));
+                    lsCommand(props.parsedFishList(response), props);
             }
         }
     }
     public void addFish(String[] command, Point2D size, Point2D position){
-        Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(),100); 
+        Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY()); 
         fishList.add(myFish);
     }
 
@@ -436,6 +437,16 @@ public class Client{
         return null;
     }
 
+    private Fish findFish(String name){
+        for(Fish fish : fishList){
+            String fishName = fish.getName();
+            if(fishName.equals(name)){
+                return fish;
+            }
+        }
+        return null; 
+    }
+
     private String readLines(BufferedReader input) throws IOException {
         List<String> lines = new ArrayList<>();
         String inputString = "";
@@ -452,17 +463,15 @@ public class Client{
         return concatenatedLines;
     }
 
-    public void lsCommand(ArrayList<String[]> fishes){
-        //for(String[] str : fishes)
+    public void lsCommand(ArrayList<String[]> fishes, FishProperties props){
+        for(String[] strFish : fishes){
+            Fish fish = findFish(strFish[0]);
+            Point2D position = props.createPosition(strFish);
+            fish.setGoalList(position);
+            fish.setTime(Integer.parseInt(strFish[3]));
+        }
     }
 
-    //private Fish findFish(String name){
-    //    for(Fish fish : fishList){
-    //        String fishName = fish.getName();
-    //        if(fishName.equals(name)){
-    //            return fish;
-    //        }
-    //    }
-    //}
+    
 
 }
