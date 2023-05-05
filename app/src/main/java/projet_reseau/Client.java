@@ -113,9 +113,9 @@ public class Client{
                         } finally {
                             socketLock.unlock();
                         }
-                        if (!pong.equals("pong 12345")) {
-                            authenticated = false;
-                        }
+                        //if (!pong.equals("pong 12345")) {
+                        //    authenticated = false;
+                        //}
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -125,6 +125,9 @@ public class Client{
         pingThread.start();
         
         // je simule getFish dans le client  
+        //whichCommand("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
+        
+
         Thread getFishThread = new Thread(new Runnable(){
             @Override
             public void run() {
@@ -144,7 +147,9 @@ public class Client{
             }
         });
         getFishThread.start();
+        //whichCommand("delFish ClownFish", "OK");
     }
+
 
     /*************************************************************************/
     /*                             GETTER                                   */
@@ -280,9 +285,7 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            if(response.equals("OK")){
-                                whichCommand(inputConsole,response);
-                            }
+                            whichCommand(inputConsole,response);
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -322,9 +325,7 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            if(response.equals("OK")){
-                                whichCommand(inputConsole,response);
-                            }
+                            whichCommand(inputConsole,response);
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -391,36 +392,35 @@ public class Client{
     }
 
     public void whichCommand(String senderCommand, String serverResponse){
-        Properties props = new Properties(); 
+        FishProperties props = new FishProperties(); 
         props.getStringServer(senderCommand, serverResponse); 
-        props.changeProperties();
 
-
-        String[] commmand = props.getCommand();
+        String[] command = props.getCommand();
         String[] response = props.getResponse();  
-        Point2D size = props.getSize(); 
-        Point2D position = props.getPosition(); 
 
         if(response[0].equals("OK")){
             switch(command[0]){
                 case "addFish":
-                    addFish(command, response, size, position);
+                    addFish(command, props.createSize(command), props.createPosition(command));
                     break;
                 case "delFish":
                     delFish(command);
                 case "startFish":
-                    startFish(command); 
+                    startFish(command);
+                case "ls": 
+                    lsCommand(props.parsedFishList(response));
             }
         }
     }
-    public void addFish(String[] command, Point2D size, Point2D position, time){
+    public void addFish(String[] command, Point2D size, Point2D position){
             Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(), 100); 
             fishList.add(myFish);
     }
 
     public void delFish(String[] command){
         for(Fish fish : fishList){
-            if(fish.getName().equals(command[1])){
+            String fishName = fish.getName();
+            if(fishName.equals(command[1])){
                 fishList.remove(fish); 
             }
         }
@@ -428,18 +428,24 @@ public class Client{
 
     public void startFish(String[] command){
         for(Fish fish : fishList){
-            if(fish.getName().equals(command[1])){
+            String fishName = fish.getName();
+            if(fishName.equals(command[1])){
                 fish.setRunning(true); 
             }
         }
     }
 
-    private Fish findFish(String name){
-        for(Fish fish : fishList){
-            if(fish.getName().equals(command[1])){
-                return fish;
-            }
-        }
+    public void lsCommand(ArrayList<String[]> fishes){
+        //for(String[] str : fishes)
     }
+
+    //private Fish findFish(String name){
+    //    for(Fish fish : fishList){
+    //        String fishName = fish.getName();
+    //        if(fishName.equals(name)){
+    //            return fish;
+    //        }
+    //    }
+    //}
 
 }
