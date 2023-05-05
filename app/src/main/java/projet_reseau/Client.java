@@ -94,7 +94,7 @@ public class Client{
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
-                        Thread.sleep(1000 * display_timeout_value);
+                        Thread.sleep(1000 * display_timeout_value/2);
                         while (!authenticated) {
                             Thread.sleep(5000);
                         }
@@ -104,17 +104,14 @@ public class Client{
                         String pong = null;
                         try {
                             socketLock.lock();
-                            out = new PrintWriter(socket.getOutputStream());
-                            out.print("ping 12345");
+                            out = new PrintWriter(socket.getOutputStream(),true);
+                            out.println("ping 12345");
                             out.flush();
                             pong = in.readLine();
                         } catch (IOException e) {
                             System.out.println("Exception caught");
                         } finally {
                             socketLock.unlock();
-                        }
-                        if (!pong.equals("pong 12345")) {
-                            authenticated = false;
                         }
                     }
                 } catch (Exception e) {
@@ -176,6 +173,7 @@ public class Client{
             socket = new Socket(controller_adress, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             connected = true;
+            out = new PrintWriter(socket.getOutputStream(),true);
         } catch (IOException e) {
             connected = false;
         }
@@ -202,9 +200,6 @@ public class Client{
         send(message);
         try{
             String response = in.readLine();
-            /**if(response.equals("no greeting")){
-                send("hello");
-            }*/
             String numberStr = response.substring(response.indexOf("N") + 1);
             id = numberStr; 
             return true;
@@ -218,14 +213,11 @@ public class Client{
      */
     public void send(String command) {
         if (socketIsConnected()) {
-            try {
+            try{
                 socketLock.lock();
-                out =  new PrintWriter(socket.getOutputStream());
                 out.println(command);
                 out.flush();
-            } catch (IOException e) {
-                System.out.println("Exception caught");
-            } finally {
+            }finally{
                 socketLock.unlock();
             }
         }
@@ -262,7 +254,7 @@ public class Client{
                 if (args.length == 1) {
                     send(inputConsole);
                     try {
-                        response = in.readLine();
+                        response = readLines(in);
                         return response;
                     } catch (IOException e) {
                         return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -280,9 +272,7 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            if(response.equals("OK")){
-                                whichCommand(inputConsole,response);
-                            }
+                            whichCommand(inputConsole,response);
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -301,7 +291,7 @@ public class Client{
                         System.out.println(inputConsole);
                         send(inputConsole);
                         try {
-                            response = in.readLine();
+                            response = readLines(in);
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -322,9 +312,7 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            if(response.equals("OK")){
-                                whichCommand(inputConsole,response);
-                            }
+                            whichCommand(inputConsole,response);
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -396,7 +384,7 @@ public class Client{
         props.changeProperties();
 
 
-        String[] commmand = props.getCommand();
+        String[] command = props.getCommand();
         String[] response = props.getResponse();  
         Point2D size = props.getSize(); 
         Point2D position = props.getPosition(); 
@@ -404,7 +392,7 @@ public class Client{
         if(response[0].equals("OK")){
             switch(command[0]){
                 case "addFish":
-                    addFish(command, response, size, position);
+                    addFish(command, size, position);
                     break;
                 case "delFish":
                     delFish(command);
@@ -413,8 +401,8 @@ public class Client{
             }
         }
     }
-    public void addFish(String[] command, Point2D size, Point2D position, time){
-            Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(), 100); 
+    public void addFish(String[] command, Point2D size, Point2D position){
+            Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(),100); 
             fishList.add(myFish);
     }
 
@@ -434,12 +422,28 @@ public class Client{
         }
     }
 
-    private Fish findFish(String name){
+    private Fish findFish(String[] command){
         for(Fish fish : fishList){
             if(fish.getName().equals(command[1])){
                 return fish;
             }
         }
+        return null;
     }
 
+    private String readLines(BufferedReader input) throws IOException {
+        List<String> lines = new ArrayList<>();
+        String inputString = "";
+        int c;
+        while ((c = input.read()) != -1) {
+            if (c == '\n') {
+            lines.add(inputString);
+            inputString = "";
+            } else {
+                inputString += (char) c;
+            }
+        }
+        String concatenatedLines = String.join("", lines);
+        return concatenatedLines;
+    }
 }
