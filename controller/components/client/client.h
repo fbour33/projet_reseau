@@ -3,10 +3,14 @@
 
 #include "../aquarium/aquarium.h"
 
+#define NO_GETFISHESCONTINUOUSLY 4294967295
+
 struct client{
     int cfd;
     int view_idx;
-    int last_msg_t;
+    size_t last_msg_t;
+    size_t last_getFishesContinuously_t;
+    int getFishesContinuously_current_waypoint;
 };
 
 extern struct client* clients[MAX_CLIENTS];

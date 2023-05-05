@@ -163,6 +163,38 @@ int response_ls(int sockfd){
 }
 
 int response_getFishesContinously(int sockfd){
+	char *delim = " ";
+    char *next = strtok(NULL, delim);
+	if(next != NULL){
+		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
+			return -1;
+		}
+	}
+	struct client* cli = get_cli_from_sock(sockfd);
+	if(cli->last_getFishesContinuously_t == NO_GETFISHESCONTINUOUSLY && cli->getFishesContinuously_current_waypoint == -1){
+		cli->last_getFishesContinuously_t = 0;
+		cli->getFishesContinuously_current_waypoint = 0; 
+	}
+	if(cli->getFishesContinuously_current_waypoint == MAX_WAYPOINT){
+		cli->getFishesContinuously_current_waypoint = -1;
+		cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
+		return 0;
+	}
+	if(t-cli->last_getFishesContinuously_t >= fish_update_interval-1){
+		char msg[1024];
+		get_fishes(global_aquarium->aquarium_views[cli->view_idx], msg, cli->getFishesContinuously_current_waypoint);
+		if(strcmp(msg, "list \n") == 0){
+			cli->getFishesContinuously_current_waypoint = -1;
+			cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
+			return 0;
+		}
+		if (send(sockfd, msg, strlen(msg), 0) <= 0) {
+			return -1;
+		}
+		fprintf(log_f, "GetFishesContinuously response for socket %d: %s", sockfd, msg);
+		cli->getFishesContinuously_current_waypoint++;
+		cli->last_getFishesContinuously_t = t;
+	}
 	return 0;
 }
 
@@ -299,14 +331,14 @@ int handle_message(char buffer[MSG_LEN], int sockfd) {
 		if (cli != NULL && strncmp(token, "ping", 4) == 0) {
 			return response_ping(sockfd);
 		}
+		if (cli != NULL && strncmp(token, "getFishesContinuously", 21) == 0 ){
+			return response_getFishesContinously(sockfd);
+		}
 		if (cli != NULL && strncmp(token, "getFishes", 9) == 0){
 			return response_getFishes(sockfd);
 		}
 		if (cli != NULL&& strncmp(token, "ls", 2) == 0){
 			return response_ls(sockfd);
-		}
-		if (cli != NULL && strncmp(token, "getFishesContinuously", 21) == 0 ){
-			return response_getFishesContinously(sockfd);
 		}
 		if (cli != NULL && strncmp(token, "addFish", 7) == 0 ){
 			return response_addFish(sockfd);
