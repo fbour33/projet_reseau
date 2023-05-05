@@ -26,7 +26,7 @@ public class Fish {
         initFishImage(fishName);
         setPosition(posX, posY);
         name = fishName;
-        running = true;
+        running = false;
         xGoal = -1;
         yGoal = -1;
         WIDTH = width;
@@ -167,5 +167,5 @@ public class Fish {
             y = yGoal;
         }
     }
-
+    
 }
