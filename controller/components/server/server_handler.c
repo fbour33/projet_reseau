@@ -127,7 +127,7 @@ int response_status(int sockfd) {
 	struct client* cli = get_cli_from_sock(sockfd);
 	char resp[1024];
 	status(global_aquarium->aquarium_views[cli->view_idx], resp);
-	if (send(sockfd, resp, strlen(resp), 0) <= 0) {
+	if (write(sockfd, resp, strlen(resp)) <= 0) {
 				return -1;
 	}
 	return 0;
