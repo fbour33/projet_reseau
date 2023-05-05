@@ -25,7 +25,7 @@ int add_fish(struct view* view, struct fish* fish) {
         //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }
-    printf("here\n");
+    
     for(int i = 0; i < MAX_FISHES; ++i) {
         if(view->fishes[i] == NULL) {
             view->fishes[i] = fish;
