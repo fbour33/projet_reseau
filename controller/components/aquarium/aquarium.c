@@ -10,9 +10,14 @@ struct aquarium *global_aquarium;
 struct aquarium *create_aquarium(){
     struct aquarium *aquarium = malloc(sizeof(struct aquarium));
     aquarium->num_aquarium_views=0;
+    aquarium->dimension.width = WIDTH;
+    aquarium->dimension.height = HEIGHT;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         aquarium->aquarium_views[i] = NULL;
     }
+    // creation de la vue des poissons perdus
+    aquarium->aquarium_views[MAX_CLIENTS] = create_view(MAX_CLIENTS, 0, 0, 
+                                        aquarium->dimension.width, aquarium->dimension.height);
     return aquarium;
 }
 

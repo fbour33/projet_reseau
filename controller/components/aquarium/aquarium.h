@@ -6,10 +6,13 @@
 
 #define MAX_CLIENTS 8
 
+#define HEIGHT 1000
+#define WIDTH 1000
+
 struct aquarium{
     struct dimension dimension;
     int num_aquarium_views;
-    struct view *aquarium_views[MAX_CLIENTS];
+    struct view *aquarium_views[MAX_CLIENTS+1]; // +1 pour vue des poissons perdus
 };
 
 extern struct aquarium *global_aquarium;
