@@ -106,18 +106,14 @@ void free_view(struct view* view) {
 }
 
 int start_fish(struct view* view, char* name){
-    int index = -1;
+    printf("here\n");
     for(int i=0; i<view->nb_fishes; i++){
         if (strcmp(view->fishes[i]->name, name) == 0){
-            index=i;
-            break;
+            view->fishes[i]->running = 1;
+            run(view->fishes[i]);
+            return 0;
         }
     }
-    if(index == -1){
-        fprintf(log_f, "\t-> Fish doesn't exist\n");
-        return -1;
-    }
-    view->fishes[index]->running = 1;
-    run(view->fishes[index]);
-    return 0;
+    fprintf(log_f, "\t-> Fish doesn't exist\n");
+    return -1;
 }
