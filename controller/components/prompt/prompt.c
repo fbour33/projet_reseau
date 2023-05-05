@@ -24,54 +24,25 @@ int handle_command_line(char *command_line){
     token = strtok(command_line, delim);
 
     if(strncmp(token, "load",4) == 0){
-        return call_command(LOAD);
+        return command_load_aquarium();
     }
     else if(strncmp(token, "show",4) == 0){
-        return call_command(SHOW);
+        return command_show_aquarium();
     }
     else if(strncmp(token, "add",3) == 0){
-        return call_command(ADD);
+        return command_add_aquarium();
     }
     else if(strncmp(token, "del",3) == 0){
-        return call_command(DEL);
+        return command_del_aquarium();
     }
     else if(strncmp(token, "save\n",4) == 0){
-        return call_command(SAVE);
+        return command_save_aquarium();
     }
     else{
         fprintf(log_f, "\t-> Invalid command\n");
         printf("\t-> Invalid command\n");
         return SUCCESS;
     }
-    return ERROR;
-}
-
-/**
- * @brief function for calling the right callback function
- * @return 0 on success, -1 on failure
- */
-int call_command(enum COMMAND command){
-    if(global_aquarium==NULL && command!=LOAD){
-        fprintf(log_f, "\t-> Impossible to execute a command on non-existing aquarium\n");
-        printf("\t-> Impossible to execute a command on non-existing aquarium\n");
-        return ERROR;
-    }
-    
-    switch (command){
-    case LOAD:
-        return command_load_aquarium();
-    case SHOW:
-        return command_show_aquarium();
-    case ADD:
-        return command_add_aquarium();
-    case DEL:
-        return command_del_aquarium();
-    case SAVE:
-        return command_save_aquarium();
-    default:
-        break;
-    }
-
     return ERROR;
 }
 
