@@ -47,10 +47,10 @@ enum FISH_TYPE string_to_fish_type(char* str){
 }
 
 enum STRATEGY string_to_strategy(char* str){
-    if(strcasecmp(str, "Vertical") == 0){
+    if(strcasecmp(str, "VerticalWayPoint") == 0){
         return VERTICAL;
     }
-    if(strcasecmp(str, "Horizontal") == 0){
+    if(strcasecmp(str, "HorizontalWayPoint") == 0){
         return HORIZONTAL;
     }
     if(strcasecmp(str, "RandomWayPoint") == 0){
@@ -80,6 +80,30 @@ int RandomWayPoint(struct fish *fish){
     return -1;
 }
 
+int HorizontalWayPoint(struct fish *fish){
+    for(int i=0; i<MAX_WAYPOINT; i++){
+        if(fish->waypoints[i] == NULL){
+            struct waypoint *wp = create_waypoint(rand()%101, 0, rand()%10+1);
+            fish->waypoints[i] = wp;
+            fish->wps_nb +=1;
+            return 0;
+        }
+    }
+    return -1;
+}
+
+int VerticalWayPoint(struct fish *fish){
+    for(int i=0; i<MAX_WAYPOINT; i++){
+        if(fish->waypoints[i] == NULL){
+            struct waypoint *wp = create_waypoint(0, rand()%101, rand()%10+1);
+            fish->waypoints[i] = wp;
+            fish->wps_nb +=1;
+            return 0;
+        }
+    }
+    return -1;
+}
+
 int run(struct fish* fish){
     switch (fish->strategy){
     case RANDOMWAYPOINT:
@@ -88,8 +112,14 @@ int run(struct fish* fish){
         }
         return 0;
     case HORIZONTAL :
+        if(fish->wps_nb < 3) {
+            HorizontalWayPoint(fish);
+        }
         return 0;
     case VERTICAL :
+        if(fish->wps_nb < 3) {
+            VerticalWayPoint(fish);
+        }
         return 0;
     default:
         return -1;
