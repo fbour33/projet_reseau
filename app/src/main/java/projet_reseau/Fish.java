@@ -20,7 +20,8 @@ public class Fish {
     private double xGoal;
     private double yGoal;
     private boolean running;
-    private int timeToGetGoal;
+    private double elapsedTime;
+    private int time;
     private ArrayList<Point2D> xyGoal;
     
     /**
@@ -31,10 +32,10 @@ public class Fish {
         setPosition(posX, posY);
         xyGoal = new ArrayList<Point2D>(); 
         name = fishName;
-        running = true;
+        running = false;
         WIDTH = width;
         HEIGHT = height;
-        timeToGetGoal = 100;
+        time = 100;
     }
 
     /*************************************************************************/
@@ -121,7 +122,7 @@ public class Fish {
      * Donner le temps pour atteindre l'objectif
      */
     public void setTime(int time){
-        timeToGetGoal = time; 
+        this.time = time; 
     }
 
     /*************************************************************************/
@@ -166,20 +167,26 @@ public class Fish {
     /**
      * met à jour la position du poisson 
      */
-    public void moveFish(int width, int height){
-        //System.out.println("Je m'exécute");
-        if(!xyGoal.isEmpty()){
-            //System.out.println("Je m'exécute");
-            if(timeToGetGoal!=0){
-                Point2D point = xyGoal.get(0);
-                x = x + (point.getX() - x)/timeToGetGoal;
-                y = y + (point.getY() - y)/timeToGetGoal;
+    public void moveFish(int FPS) {
+    if (!xyGoal.isEmpty()) {
+        Point2D point = xyGoal.get(0);
+        if (time != 0) {
+            elapsedTime += 1.0 / FPS;
+            double dx = (point.getX() - x) / time;
+            double dy = (point.getY() - y) / time;
+            x += elapsedTime * dx;
+            y += elapsedTime * dy;
+            if (elapsedTime >= time) {
                 xyGoal.remove(0);
-            }else{
-                x = (xyGoal.get(0)).getX();
-                y = (xyGoal.get(0)).getY();
+                elapsedTime = 0;
             }
+        } else {
+            x = point.getX();
+            y = point.getY();
+            xyGoal.remove(0);
         }
     }
+}
+
     
 }

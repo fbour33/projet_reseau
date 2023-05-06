@@ -20,10 +20,16 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class Aquarium extends Application {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 900;
+    private int FPS = 60;
+    private Timeline timeline;
     private static Client client;
     private Console console;
     VBox root;
@@ -110,23 +116,27 @@ public class Aquarium extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                gc.drawImage(backgroundImage, 0, 0);
-                for (Fish f : client.getFishs()) {
-                    gc.drawImage(f.getImage(),
-                        f.getX() * canvas.getWidth() / 100, 
-                        f.getY() * canvas.getHeight() / 100,
-                        f.getWidth() * canvas.getWidth() / 100,
-                        f.getHeight() * canvas.getHeight() / 100);
-                    if(f.isRunning()){
-                        f.moveFish(WIDTH,HEIGHT);   
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(
+            new KeyFrame(Duration.millis(1000. / (double)FPS),
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent arg0) {
+                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    gc.drawImage(backgroundImage, 0, 0);
+                    for (Fish f : client.getFishs()) {
+                        f.moveFish(FPS);
+                        gc.drawImage(f.getImage(),
+                            f.getX() * canvas.getWidth() / 100, 
+                            f.getY() * canvas.getHeight() / 100,
+                            f.getWidth() * canvas.getWidth() / 100,
+                            f.getHeight() * canvas.getHeight() / 100);
                     }
                 }
-            }
-        };
-        timer.start();
+            },new KeyValue[0])
+        );
+        timeline.playFromStart();
 
         /**
          * ajout des évènements liés aux items 
