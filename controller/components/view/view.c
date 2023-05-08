@@ -21,13 +21,19 @@ int add_fish(struct view* view, struct fish* fish) {
         //printf("There is no more space in this aquarium !\n");
         return -1;
     }
-    if (fish_already_exists(fish)){
+    if (fish_already_exists_in_this_view(view, fish)){
         //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }
-    view->fishes[view->nb_fishes] = fish;
-    view->nb_fishes++;
-    return 0;
+    
+    for(int i = 0; i < MAX_FISHES; ++i) {
+        if(view->fishes[i] == NULL) {
+            view->fishes[i] = fish;
+            view->nb_fishes++;
+            return 0;
+        }
+    }
+    return -1;
 }
 
 // the fish is overwrited
@@ -39,11 +45,14 @@ int delete_fish(struct view* view, char* name){
             break;
         }
     }
+
     if(index == -1) {
         fprintf(log_f, "\t-> Fish doesn't exist\n");
         return -1;
     }
+
     free_fish(view->fishes[index]);
+
     view->fishes[index] = NULL;
     for(int i=index;i<MAX_FISHES-1; i++){
         if(view->fishes[i+1] != NULL && view->fishes[i] == NULL){
@@ -106,18 +115,22 @@ void free_view(struct view* view) {
 }
 
 int start_fish(struct view* view, char* name){
-    int index = -1;
     for(int i=0; i<view->nb_fishes; i++){
         if (strcmp(view->fishes[i]->name, name) == 0){
-            index=i;
-            break;
+            view->fishes[i]->running = 1;
+            run(view->fishes[i]);
+            return 0;
         }
     }
-    if(index == -1){
-        fprintf(log_f, "\t-> Fish doesn't exist\n");
-        return -1;
+    fprintf(log_f, "\t-> Fish doesn't exist\n");
+    return -1;
+}
+
+int fish_already_exists_in_this_view(struct view* view, struct fish* fish) {
+    for(int i = 0; i < view->nb_fishes-1; ++i) {
+        if(strcmp(view->fishes[i]->name, fish->name) == 0) {
+            return 1;
+        }
     }
-    view->fishes[index]->running = 1;
-    run(view->fishes[index]);
     return 0;
 }
