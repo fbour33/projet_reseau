@@ -1,6 +1,10 @@
 #ifndef SERVER_HANDLER
     #define SERVER_HANDLER
 
+
+    #include<fcntl.h>
+    #include <errno.h>
+
     #include "../client/client.h"
     #include "../../parser/parser.h"
 
