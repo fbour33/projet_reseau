@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "../parser/parser.h"
-#include "../utilities/tools.h"
 #include "../components/aquarium/aquarium.h"
 
 void test_parser_load_aquarium() {
