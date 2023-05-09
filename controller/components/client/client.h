@@ -10,7 +10,6 @@ struct client{
     int view_idx;
     size_t last_msg_t;
     size_t last_getFishesContinuously_t;
-    int getFishesContinuously_current_waypoint;
 };
 
 extern struct client* clients[MAX_CLIENTS];

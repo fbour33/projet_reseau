@@ -77,7 +77,6 @@ public class Client{
     private Lock socketLock = new ReentrantLock();
 
 
-
     /**
      * constructeur ddu client 
      */
@@ -92,9 +91,8 @@ public class Client{
             @Override
             public void run() {
                 try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
-                        Thread.sleep(1000 * display_timeout_value/2);
+                        Thread.sleep(1000 * display_timeout_value/3);
                         while (!authenticated) {
                             Thread.sleep(5000);
                         }
@@ -119,32 +117,40 @@ public class Client{
                 }
             }
         });
-        pingThread.start();
-        
-        // je simule getFish dans le client  
-        //whichCommand("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
-        
-
+          
         Thread getFishThread = new Thread(new Runnable(){
             @Override
             public void run() {
-                while(true){
-                    try{
-                        Thread.sleep(1000*display_timeout_value);
-                        Random rand = new Random();
-                        double xg = rand.nextDouble(100);
-                        double yg = rand.nextDouble(100);
-                        for(Fish f : fishList){
-                            f.setGoal(xg,yg);
+                try {
+                    String commandeFish = "ls";
+                    while (true) {
+                        Thread.sleep(1000 * display_timeout_value);
+                        send("ls");
+                        if (!connected) {
+                            break;
                         }
-                    }catch(Exception e){
-                        e.printStackTrace();
+                        try {
+                            if(commandeFish.equals("ls")) {
+                                ArrayList<String> response = readLinesLs(in);
+                                for(String line : response){
+                                    System.out.println(line);
+                                    whichCommand("ls", line);
+                                }
+                            }else if(commandeFish.equals("getfishcontinuously")) {
+                                String response = in.readLine();
+                                System.out.println(response);
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Exception caught");
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
+        pingThread.start();
         getFishThread.start();
-        //whichCommand("delFish ClownFish", "OK");
     }
 
 
@@ -259,7 +265,7 @@ public class Client{
                 if (args.length == 1) {
                     send(inputConsole);
                     try {
-                        response = readLines(in);
+                        response = readLinesStatus(in);
                         return response;
                     } catch (IOException e) {
                         return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -277,7 +283,10 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            whichCommand(inputConsole,response);
+                            System.out.println(response);
+                            if(response != null && inputConsole != null) {
+                                 whichCommand(inputConsole,response);
+                            }
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -296,7 +305,10 @@ public class Client{
                         System.out.println(inputConsole);
                         send(inputConsole);
                         try {
-                            response = readLines(in);
+                            response = in.readLine();
+                            if(response != null && inputConsole != null) {
+                                 whichCommand(inputConsole,response);
+                            }
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -317,7 +329,9 @@ public class Client{
                         send(inputConsole);
                         try {
                             response = in.readLine();
-                            whichCommand(inputConsole,response);
+                            if(response != null && inputConsole != null) {
+                                 whichCommand(inputConsole,response);
+                            }
                             return response;
                         } catch (IOException e) {
                             return "Exception: problème lors de la récupération de la réponse du serveur" + System.lineSeparator();
@@ -397,15 +411,19 @@ public class Client{
                     break;
                 case "delFish":
                     delFish(command);
+                    break;
                 case "startFish":
                     startFish(command);
-                case "ls": 
-                    lsCommand(props.parsedFishList(response));
+                    break;
+                default: break;
             }
+        }
+        if(command[0].equals("ls")){
+            lsCommand(props.parsedFishList(response),props);
         }
     }
     public void addFish(String[] command, Point2D size, Point2D position){
-        Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY(),100); 
+        Fish myFish = new Fish(command[1], position.getX(), position.getY(), size.getX(), size.getY()); 
         fishList.add(myFish);
     }
 
@@ -427,42 +445,65 @@ public class Client{
         }
     }
 
-    private Fish findFish(String[] command){
+    private Fish findFish(String name){
         for(Fish fish : fishList){
-            if(fish.getName().equals(command[1])){
+            String fishName = fish.getName();
+            if(fishName.equals(name)){
                 return fish;
             }
         }
-        return null;
+        return null; 
     }
 
-    private String readLines(BufferedReader input) throws IOException {
-        List<String> lines = new ArrayList<>();
-        String inputString = "";
-        int c;
-        while ((c = input.read()) != -1) {
-            if (c == '\n') {
-            lines.add(inputString);
-            inputString = "";
-            } else {
-                inputString += (char) c;
+    public String readLinesStatus(BufferedReader reader) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        String line;
+        boolean ignore = true;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("Connecté")) {
+                ignore = false;
             }
+            if (ignore) {
+                continue;
+            }
+            if (!line.matches(".*\\d+.*")) {
+                break;
+            }
+            builder.append(line);
         }
-        String concatenatedLines = String.join("", lines);
-        return concatenatedLines;
+        return builder.toString();
     }
 
-    public void lsCommand(ArrayList<String[]> fishes){
-        //for(String[] str : fishes)
+    public ArrayList<String> readLinesLs(BufferedReader reader) throws IOException {
+        ArrayList<String> builder = new ArrayList<String>();
+        String line;
+        boolean ignore = true;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("list")) {
+                ignore = false;
+            }
+            if (ignore) {
+                continue;
+            }
+            if (!line.contains("list")) {
+                break;
+            }
+            builder.add(line);
+        }
+        return builder;
     }
 
-    //private Fish findFish(String name){
-    //    for(Fish fish : fishList){
-    //        String fishName = fish.getName();
-    //        if(fishName.equals(name)){
-    //            return fish;
-    //        }
-    //    }
-    //}
+    public void lsCommand(ArrayList<String[]> fishes, FishProperties props){
+        for(String[] strFish : fishes){
+            System.out.println(strFish[0]);
+            Fish fish = findFish(strFish[0]);
+            Point2D position = props.createPosition(strFish);
+            if(fish != null){
+                fish.setGoalList(position);
+                fish.setTime(Integer.parseInt(strFish[3]));
+            }
+            System.out.println("time" + Integer.parseInt(strFish[3]));
+        }
+    }
 
 }

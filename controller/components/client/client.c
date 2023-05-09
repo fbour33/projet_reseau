@@ -8,7 +8,6 @@ struct client* create_client(int cfd, int view_idx){
     cli->view_idx = view_idx;
     cli->last_msg_t = t;
     cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
-    cli->getFishesContinuously_current_waypoint = -1;
     return cli;
 }   
 

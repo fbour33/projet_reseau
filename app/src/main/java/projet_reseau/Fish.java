@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.*;
+import java.lang.*; 
+import java.util.*; 
+import java.awt.geom.Point2D;
 
 public class Fish { 
     private Image myFishImage; 
@@ -17,21 +20,22 @@ public class Fish {
     private double xGoal;
     private double yGoal;
     private boolean running;
-    private int timeToGetGoal;
+    private double elapsedTime;
+    private int time;
+    private ArrayList<Point2D> xyGoal;
     
     /**
      * Conctructeur du poisson 
      */
-    public Fish(String fishName, double posX, double posY, double width, double height, int time) {
+    public Fish(String fishName, double posX, double posY, double width, double height) {
         initFishImage(fishName);
         setPosition(posX, posY);
+        xyGoal = new ArrayList<Point2D>(); 
         name = fishName;
         running = false;
-        xGoal = -1;
-        yGoal = -1;
         WIDTH = width;
         HEIGHT = height;
-        timeToGetGoal = time;
+        time = 100;
     }
 
     /*************************************************************************/
@@ -101,11 +105,10 @@ public class Fish {
     }
 
     /**
-     * Définir le nouvel objectif du poisson 
+     * Définir les nouveaux objectifs du poisson 
      */
-    public void setGoal(double goalX, double goalY){
-        xGoal = goalX;
-        yGoal = goalY;
+    public void setGoalList(Point2D position){
+        xyGoal.add(position);
     }
 
     /**
@@ -115,6 +118,12 @@ public class Fish {
         running = bool;
     }
 
+    /**
+     * Donner le temps pour atteindre l'objectif
+     */
+    public void setTime(int time){
+        this.time = time; 
+    }
 
     /*************************************************************************/
     /*                     SIDE FUNCTIONS                                   */
@@ -158,14 +167,26 @@ public class Fish {
     /**
      * met à jour la position du poisson 
      */
-    public void moveFish(int width, int height){
-        if(timeToGetGoal!=0){
-            x = x + (xGoal - x)/timeToGetGoal;
-            y = y + (yGoal - y)/timeToGetGoal;
-        }else{
-            x = xGoal;
-            y = yGoal;
+    public void moveFish(int FPS) {
+    if (!xyGoal.isEmpty()) {
+        Point2D point = xyGoal.get(0);
+        if (time != 0) {
+            elapsedTime += 1.0 / FPS;
+            double dx = (point.getX() - x) / time;
+            double dy = (point.getY() - y) / time;
+            x += elapsedTime * dx;
+            y += elapsedTime * dy;
+            if (elapsedTime >= time) {
+                xyGoal.remove(0);
+                elapsedTime = 0;
+            }
+        } else {
+            x = point.getX();
+            y = point.getY();
+            xyGoal.remove(0);
         }
     }
+}
+
     
 }

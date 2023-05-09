@@ -171,29 +171,28 @@ int response_getFishesContinously(int sockfd){
 		}
 	}
 	struct client* cli = get_cli_from_sock(sockfd);
-	if(cli->last_getFishesContinuously_t == NO_GETFISHESCONTINUOUSLY && cli->getFishesContinuously_current_waypoint == -1){
+	if(cli->last_getFishesContinuously_t == NO_GETFISHESCONTINUOUSLY){
 		cli->last_getFishesContinuously_t = 0;
-		cli->getFishesContinuously_current_waypoint = 0; 
 	}
-	if(cli->getFishesContinuously_current_waypoint == MAX_WAYPOINT){
-		cli->getFishesContinuously_current_waypoint = -1;
+	if(recv(sockfd,NULL,1, MSG_PEEK | MSG_DONTWAIT) == 0) { // test si la connection ne s'est pas fermée (ex: sur ctrl+c côté client)
 		cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
+		fprintf(log_f, "Connection with socket %d stopped, no GetFishContinuously response anymore\n", sockfd);
 		return 0;
 	}
-	if(t-cli->last_getFishesContinuously_t >= fish_update_interval-1){
+	if(t-cli->last_getFishesContinuously_t >= fish_update_interval){
 		char msg[1024];
-		get_fishes(global_aquarium->aquarium_views[cli->view_idx], msg, cli->getFishesContinuously_current_waypoint);
+		get_fishes(global_aquarium->aquarium_views[cli->view_idx], msg, 0);
+		/*
 		if(strcmp(msg, "list \n") == 0){
-			cli->getFishesContinuously_current_waypoint = -1;
 			cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
 			return 0;
-		}
+		}*/
 		if (send(sockfd, msg, strlen(msg), 0) <= 0) {
 			return -1;
 		}
 		fprintf(log_f, "GetFishesContinuously response for socket %d: %s", sockfd, msg);
-		cli->getFishesContinuously_current_waypoint++;
 		cli->last_getFishesContinuously_t = t;
+		cli->last_msg_t = t;
 	}
 	return 0;
 }
