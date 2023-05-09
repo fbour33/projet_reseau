@@ -7,7 +7,9 @@ int handle_bind() {
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, SERV_PORT, &hints, &result) != 0) {
+	char port[32];
+	sprintf(port, "%d", controller_port);
+	if (getaddrinfo(NULL, port , &hints, &result) != 0) {
 		perror("getaddrinfo()");
 		exit(EXIT_FAILURE);
 	}
