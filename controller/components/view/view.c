@@ -26,7 +26,7 @@ int add_fish(struct view* view, struct fish* fish) {
         return -1;
     }
     
-    for(int i = 0; i < MAX_FISHES; ++i) {
+    for(int i = 0; i < MAX_FISHES; i++) {
         if(view->fishes[i] == NULL) {
             view->fishes[i] = fish;
             view->nb_fishes++;
