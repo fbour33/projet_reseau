@@ -127,8 +127,8 @@ int start_fish(struct view* view, char* name){
 }
 
 int fish_already_exists_in_this_view(struct view* view, struct fish* fish) {
-    for(int i = 0; i < view->nb_fishes-1; ++i) {
-        if(strcmp(view->fishes[i]->name, fish->name) == 0) {
+    for(int i = 0; i < MAX_FISHES; i++) {
+        if(view->fishes[i] != NULL && strcmp(view->fishes[i]->name, fish->name) == 0) {
             return 1;
         }
     }
