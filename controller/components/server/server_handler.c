@@ -215,6 +215,7 @@ int response_addFish(int sockfd){
 	delim=",";
 	char* h = strtok(NULL, delim);
 	if(!is_number(x) || !is_number(y) || !is_number(w) || !is_number(h)){
+		fprintf(log_f, "reponse : NOK (Error in positions)\n");
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
 			return -1;
 		}
@@ -225,6 +226,7 @@ int response_addFish(int sockfd){
 	move[strlen(move)-1] = '\0';
 	enum STRATEGY strat = string_to_strategy(move);
 	if(strat == UNREGISTERED){
+		fprintf(log_f, "reponse : NOK (Modèle non supporté)\n");
 		if (send(sockfd, "NOK : Modèle non supporté\n", 29, 0) <= 0) {
 			return -1;
 		}
@@ -237,6 +239,7 @@ int response_addFish(int sockfd){
 	char *type_str = strtok(tmp, delim);
 	enum FISH_TYPE type = string_to_fish_type(type_str);
 	if(type == INVALID){
+		fprintf(log_f, "reponse : NOK (Invalid type)\n");
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
 			return -1;
 		}
@@ -252,6 +255,7 @@ int response_addFish(int sockfd){
 		}
 		return 0;
 	}
+	fprintf(log_f, "reponse : OK\n");
 	if (send(sockfd, "OK\n", 4, 0) <= 0) {
 			return -1;
 	}
