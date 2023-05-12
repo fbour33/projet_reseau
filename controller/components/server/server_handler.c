@@ -387,7 +387,7 @@ void echo_server(int sockfd) {
 FILE* init_log_f(char* log_dir) {
 	FILE *fp;
 
-	strcat(log_dir, "log.txt");
+	strcat(log_dir, "/log.txt");
     fp = fopen(log_dir, "w"); // ouvrir le fichier en mode écriture pour l'effacer
     fclose(fp);
 

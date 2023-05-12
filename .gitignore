@@ -5,6 +5,7 @@
 # Ignore Gradle build output directory
 build
 build.gradle
+gradle.bat
 
 .vscode/
 app/bin/
@@ -16,4 +17,4 @@ app/build.gradle
 *.class
 
 controller/server
-controller/log.txt
+log.txt
