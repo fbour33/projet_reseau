@@ -30,13 +30,15 @@ public class FishProperties {
     }
 
     public Point2D createPosition(String[] fishes){
-        if(fishes.length == 1)
-            return new Point2D.Double(-1, -1); 
-        int index = 2; 
-        if(!fishes[0].equals("addFish"))
-            index = 1; 
-        String[] separatedPosition = fishes[index].split("x");
-        return new Point2D.Double(Double.parseDouble(separatedPosition[0]), Double.parseDouble(separatedPosition[1]));
+        System.out.println(" fishes length " + fishes.length);
+        if(fishes.length > 1) {
+            int index = 2; 
+            if(!fishes[0].equals("addFish"))
+                index = 1; 
+            String[] separatedPosition = fishes[index].split("x");
+            return new Point2D.Double(Double.parseDouble(separatedPosition[0]), Double.parseDouble(separatedPosition[1]));
+        }
+        return new Point2D.Double(-1, -1);
     }
 
     public Point2D createSize(String[] fishes){
@@ -64,36 +66,4 @@ public class FishProperties {
     public String[] getResponse(){
         return Arrays.copyOf(response, response.length); 
     }
-
-    //public static void main(String[] args){
-    //   FishProperties fish = new FishProperties(); 
-    //    fish.getStringServer("ls", "list [PoissonRouge at 92x40,10x4,5] [PoissonClown at 22x80,12x6,5]");
-    //   ArrayList<String[]> test = fish.parsedFishList(fish.getResponse());
-    //    for(String[] e : test){
-    //        System.out.println(Arrays.toString(e)); 
-    //    }
-    //    //System.out.println(Arrays.toString(fish.parser("NOK : Ok")));
-    //    fish.getStringServer("addFish ClownFish at 61x52,4x3, RandomWayPoint", "OK");
-    //    System.out.println(Arrays.toString(fish.getCommand())); 
-    //    System.out.println(fish.getCommand()[2]); 
-    //    System.out.println(Arrays.toString(fish.getResponse())); 
-    //    fish.getStringServer("delFish ClownFish", "OK");
-    //    System.out.println(Arrays.toString(fish.getCommand())); 
-    //    System.out.println(Arrays.toString(fish.getResponse())); 
-    //    fish.getStringServer("startFish ClownFish", "NOK : baguette");
-    //    System.out.println(Arrays.toString(fish.getCommand())); 
-    //    System.out.println(Arrays.toString(fish.getResponse())); 
-    //}
-
 }
-
-
-    //public void createPositionSize(String[] fishes){
-    //        //Change position properties
-    //        String[] separatedPosition = fishes[2].split("x");
-    //        position.setLocation(Double.parseDouble(separatedPosition[0]), Double.parseDouble(separatedPosition[1])); 
-//
-    //        //Change size properties
-    //        String[] separatedSize = fishes[3].split("x"); 
-    //        size.setLocation(Double.parseDouble(separatedSize[0]), Double.parseDouble(separatedSize[1]));
-    //}
