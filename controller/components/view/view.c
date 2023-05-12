@@ -26,7 +26,7 @@ int add_fish(struct view* view, struct fish* fish) {
         return -1;
     }
     
-    for(int i = 0; i < MAX_FISHES; ++i) {
+    for(int i = 0; i < MAX_FISHES; i++) {
         if(view->fishes[i] == NULL) {
             view->fishes[i] = fish;
             view->nb_fishes++;
@@ -98,8 +98,8 @@ int status(struct view* view, char* resp) {
     for(int i = 0; i<view->nb_fishes; ++i) {
         char temp[64];
         struct fish* tmp = view->fishes[i];
-        sprintf(temp, "\tFish %s at %d*%d,%d*%d\n", tmp->name, tmp->position.x, tmp->position.y, 
-                tmp->rectangle.width, tmp->rectangle.height);
+        sprintf(temp, "\tFish %s at %dx%d,%dx%d, %s\n", tmp->name, tmp->position.x, tmp->position.y, 
+                tmp->rectangle.width, tmp->rectangle.height, tmp->running == 1 ? "started" : "notStarted");
         strcat(resp, temp);
     }
     return 0;
@@ -127,8 +127,8 @@ int start_fish(struct view* view, char* name){
 }
 
 int fish_already_exists_in_this_view(struct view* view, struct fish* fish) {
-    for(int i = 0; i < view->nb_fishes-1; ++i) {
-        if(strcmp(view->fishes[i]->name, fish->name) == 0) {
+    for(int i = 0; i < MAX_FISHES; i++) {
+        if(view->fishes[i] != NULL && strcmp(view->fishes[i]->name, fish->name) == 0) {
             return 1;
         }
     }

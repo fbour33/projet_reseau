@@ -1,11 +1,14 @@
 #ifndef SERVER_HANDLER
     #define SERVER_HANDLER
 
+
+    #include<fcntl.h>
+    #include <errno.h>
+
     #include "../client/client.h"
     #include "../../parser/parser.h"
 
     #define MSG_LEN 1024
-    #define SERV_PORT "3000"
     #define SERV_ADDR "localhost"
 
     void echo_server(int sockfd);

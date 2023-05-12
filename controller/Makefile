@@ -55,13 +55,13 @@ $(OBJ_DIR)/test_parser.o: tests/test_parser.c
 $(OBJ_DIR)/test_view.o: tests/test_view.c
 	$(CC) $(CFLAGS) -c tests/test_view.c -o $@
 
-test_aquarium: $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/parser.o
+test_aquarium: $(OBJ_DIR)/test_aquarium.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
-test_parser: $(OBJ_DIR)/test_parser.o $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o
+test_parser: $(OBJ_DIR)/test_parser.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
-test_view: $(OBJ_DIR)/test_view.o $(OBJ_DIR)/view.o $(OBJ_DIR)/fish.o
+test_view: $(OBJ_DIR)/test_view.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
 ############################ CLEAN ########################

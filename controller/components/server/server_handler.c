@@ -7,7 +7,9 @@ int handle_bind() {
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if (getaddrinfo(NULL, SERV_PORT, &hints, &result) != 0) {
+	char port[32];
+	sprintf(port, "%d", controller_port);
+	if (getaddrinfo(NULL, port , &hints, &result) != 0) {
 		perror("getaddrinfo()");
 		exit(EXIT_FAILURE);
 	}
@@ -171,29 +173,28 @@ int response_getFishesContinously(int sockfd){
 		}
 	}
 	struct client* cli = get_cli_from_sock(sockfd);
-	if(cli->last_getFishesContinuously_t == NO_GETFISHESCONTINUOUSLY && cli->getFishesContinuously_current_waypoint == -1){
+	if(cli->last_getFishesContinuously_t == NO_GETFISHESCONTINUOUSLY){
 		cli->last_getFishesContinuously_t = 0;
-		cli->getFishesContinuously_current_waypoint = 0; 
 	}
-	if(cli->getFishesContinuously_current_waypoint == MAX_WAYPOINT){
-		cli->getFishesContinuously_current_waypoint = -1;
+	if(recv(sockfd,NULL,1, MSG_PEEK | MSG_DONTWAIT) == 0) { // test si la connection ne s'est pas fermée (ex: sur ctrl+c côté client)
 		cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
+		fprintf(log_f, "Connection with socket %d stopped, no GetFishContinuously response anymore\n", sockfd);
 		return 0;
 	}
-	if(t-cli->last_getFishesContinuously_t >= fish_update_interval-1){
+	if(t-cli->last_getFishesContinuously_t >= fish_update_interval){
 		char msg[1024];
-		get_fishes(global_aquarium->aquarium_views[cli->view_idx], msg, cli->getFishesContinuously_current_waypoint);
+		get_fishes(global_aquarium->aquarium_views[cli->view_idx], msg, 0);
+		/*
 		if(strcmp(msg, "list \n") == 0){
-			cli->getFishesContinuously_current_waypoint = -1;
 			cli->last_getFishesContinuously_t = NO_GETFISHESCONTINUOUSLY;
 			return 0;
-		}
+		}*/
 		if (send(sockfd, msg, strlen(msg), 0) <= 0) {
 			return -1;
 		}
 		fprintf(log_f, "GetFishesContinuously response for socket %d: %s", sockfd, msg);
-		cli->getFishesContinuously_current_waypoint++;
 		cli->last_getFishesContinuously_t = t;
+		cli->last_msg_t = t;
 	}
 	return 0;
 }
@@ -216,6 +217,7 @@ int response_addFish(int sockfd){
 	delim=",";
 	char* h = strtok(NULL, delim);
 	if(!is_number(x) || !is_number(y) || !is_number(w) || !is_number(h)){
+		fprintf(log_f, "reponse : NOK (Error in positions)\n");
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
 			return -1;
 		}
@@ -226,6 +228,7 @@ int response_addFish(int sockfd){
 	move[strlen(move)-1] = '\0';
 	enum STRATEGY strat = string_to_strategy(move);
 	if(strat == UNREGISTERED){
+		fprintf(log_f, "reponse : NOK (Modèle non supporté)\n");
 		if (send(sockfd, "NOK : Modèle non supporté\n", 29, 0) <= 0) {
 			return -1;
 		}
@@ -238,6 +241,7 @@ int response_addFish(int sockfd){
 	char *type_str = strtok(tmp, delim);
 	enum FISH_TYPE type = string_to_fish_type(type_str);
 	if(type == INVALID){
+		fprintf(log_f, "reponse : NOK (Invalid type)\n");
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
 			return -1;
 		}
@@ -253,6 +257,7 @@ int response_addFish(int sockfd){
 		}
 		return 0;
 	}
+	fprintf(log_f, "reponse : OK\n");
 	if (send(sockfd, "OK\n", 4, 0) <= 0) {
 			return -1;
 	}
@@ -382,7 +387,7 @@ void echo_server(int sockfd) {
 FILE* init_log_f(char* log_dir) {
 	FILE *fp;
 
-	strcat(log_dir, "/log.txt");
+	strcat(log_dir, "log.txt");
     fp = fopen(log_dir, "w"); // ouvrir le fichier en mode écriture pour l'effacer
     fclose(fp);
 

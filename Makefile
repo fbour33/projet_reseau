@@ -1,42 +1,70 @@
-SRC_DIR = src
-BIN_DIR = bin
-AFFICHAGE_DIR = affichage
-CONTROLLER_DIR = controller
-CC = gcc
-JAVA = java
-CFLAGS = -Wall -Wextra
-JFLAGS = 
+CC=gcc
+LOG_DIR=$(shell pwd)
+CFLAGS=-pthread -Wall -DLOG_DIR="\"$(LOG_DIR)\"" #-Wextra
+OBJ_DIR=build
+CTRL_DIR=controller
 
-EXT = a
+objects = $(OBJ_DIR)/parser.o $(OBJ_DIR)/aquarium.o $(OBJ_DIR)/prompt.o $(OBJ_DIR)/client.o $(OBJ_DIR)/view.o $(OBJ_DIR)/tools.o $(OBJ_DIR)/fish.o
+test_objects = $(OBJ_DIR)/test_aquarium.o $(OBJ_DIR)/test_parser.o $(OBJ_DIR)/test_view.o
 
-ifeq ($(EXT),c)
-	CONTROLLER_SRCS := $(shell find . -name "*.c")
-	CONTROLLER_OBJS := $(CONTROLLER_SRCS:.c=.o)
-else
-	CONTROLLER_SRCS := $(shell find . -name "*.c")
-	CONTROLLER_OBJS := $(CONTROLLER_SRCS:.c=.o)
-#	AFFICHAGE_SRCS := $(shell find . -name "*.java")
-#	AFFICHAGE_CLASSES := $(AFFICHAGE_SRCS:.java=.class)
-endif
 
-####################### OPTIONS ##################
 
-all: server $(AFFICHAGE_CLASSES)
+all: server
 
-####################### C ########################
+test: test_aquarium test_parser test_view
 
-server: $(CONTROLLER_OBJS)
+####################### SERVER #######################
+
+$(OBJ_DIR)/prompt.o: $(CTRL_DIR)/components/prompt/prompt.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/tools.o: $(CTRL_DIR)/utilities/tools.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/view.o: $(CTRL_DIR)/components/view/view.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/aquarium.o: $(CTRL_DIR)/components/aquarium/aquarium.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/parser.o: $(CTRL_DIR)/parser/parser.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/server_handler.o : $(CTRL_DIR)/components/server/server_handler.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/server.o : $(CTRL_DIR)/components/server/server.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/client.o : $(CTRL_DIR)/components/client/client.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJ_DIR)/fish.o: $(CTRL_DIR)/components/fish/fish.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+server: $(OBJ_DIR)/server.o $(OBJ_DIR)/server_handler.o $(objects)
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+####################### TESTS ########################
 
-####################### JAVA #####################
+$(OBJ_DIR)/test_aquarium.o: $(CTRL_DIR)/tests/test_aquarium.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-$(AFFICHAGE_CLASSES): $(AFFICHAGE_SRCS)
-	javac $(AFFICHAGE_SRCS)
+$(OBJ_DIR)/test_parser.o: $(CTRL_DIR)/tests/test_parser.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-####################### CLEAN ####################
+$(OBJ_DIR)/test_view.o: $(CTRL_DIR)/tests/test_view.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
+test_aquarium: $(OBJ_DIR)/test_aquarium.o $(objects)
+	$(CC) $(CFLAGS) -o $@ $^
+
+test_parser: $(OBJ_DIR)/test_parser.o $(objects)
+	$(CC) $(CFLAGS) -o $@ $^
+
+test_view: $(OBJ_DIR)/test_view.o $(objects)
+	$(CC) $(CFLAGS) -o $@ $^
+
+############################ CLEAN ########################
 clean:
-	rm -f server $(CONTROLLER_OBJS) $(AFFICHAGE_CLASSES)
+	rm -f $(OBJ_DIR)/*.o server test_aquarium test_parser test_view

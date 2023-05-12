@@ -26,7 +26,7 @@ struct aquarium *create_aquarium(){
  * @brief   load a aquarium from the aquarium.load file  
  */
 void load_aquarium(struct aquarium *aquarium){
-    parser_load_aquarium("../aquarium.load",aquarium);
+    parser_load_aquarium("aquarium.load",aquarium);
     fprintf(log_f, "\t-> aquarium loaded (%d display views) !\n",aquarium->num_aquarium_views);
     printf("\t-> aquarium loaded (%d display views) !\n",aquarium->num_aquarium_views);
 }
