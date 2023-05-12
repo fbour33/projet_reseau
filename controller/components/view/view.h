@@ -28,6 +28,12 @@ int fish_already_exists(struct fish* fish);
 
 /** 
  * @brief check if a fish already exists in the current view
+ * @return return the fish position if it exists, -1 otherwise 
+**/
+int fish_position(struct view* view, char* name);
+
+/** 
+ * @brief check if a fish already exists in the current view
  * @return booelan : 1 if fish already exists, 0 if it exists 
 **/
 int fish_already_exists_in_this_view(struct view* view, struct fish* fish);
