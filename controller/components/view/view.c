@@ -36,15 +36,8 @@ int add_fish(struct view* view, struct fish* fish) {
     return -1;
 }
 
-// the fish is overwrited
 int delete_fish(struct view* view, char* name){
-    int index = -1;
-    for(int i=0; i<view->nb_fishes; i++){
-        if (strcmp(view->fishes[i]->name, name) == 0){
-            index=i;
-            break;
-        }
-    }
+    int index = fish_position(view, name);
 
     if(index == -1) {
         fprintf(log_f, "\t-> Fish doesn't exist\n");
@@ -124,6 +117,16 @@ int start_fish(struct view* view, char* name){
     }
     fprintf(log_f, "\t-> Fish doesn't exist\n");
     return -1;
+}
+
+int fish_position(struct view* view, char* name) {
+    int index = -1;
+        for(int i = 0; i < MAX_FISHES; i++) {
+        if(view->fishes[i] != NULL && strcmp(view->fishes[i]->name, name) == 0) {
+            index = i;
+        }
+    }
+    return index;
 }
 
 int fish_already_exists_in_this_view(struct view* view, struct fish* fish) {
