@@ -22,7 +22,7 @@ int main() {
 	int sfd, cfd, max_sockfd;
 
 	//Load the config file
-	parser_controller_config_file("../controller.cfg", &controller_port, &display_timeout, &fish_update_interval);
+	parser_controller_config_file("controller.cfg", &controller_port, &display_timeout, &fish_update_interval);
 
 	// Time handle
 	time_t t0 = time(NULL);
