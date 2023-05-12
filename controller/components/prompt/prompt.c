@@ -166,7 +166,7 @@ int command_del_aquarium(){
         return ERROR;
     }
     char *id = strtok(NULL, delim);
-    if(id==NULL){
+    if(id==NULL || !is_valid_ID(id)){
         fprintf(log_f, "\t-> invalid id\n");
         printf("\t-> invalid id\n");
         return ERROR;
