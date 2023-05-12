@@ -11,10 +11,12 @@ gradle.bat
 app/bin/
 javafx-sdk-20
 app/build.gradle
+app/affichage.cfg
 
 # Ignore build files
 *.o
 *.class
 
 controller/server
+server
 log.txt
