@@ -65,18 +65,16 @@ void add_view_aquarium(struct aquarium* aquarium, struct view* view){
  * @param   view
  */
 void del_view_aquarium(struct aquarium* aquarium, int view_id){
-    int status = 0;
-    int index = 0;
+    int index = -1;
     for(int i=0; i<aquarium->num_aquarium_views; i++){
         if(aquarium->aquarium_views[i]->id==view_id){
             // fprintf(log_f, "id aquarium : %d, id :%d", aquarium->aquarium_views[i]->id, view_id);
             index=i;
-            status++;
             break;
         }
     }
 
-    if(status == 0) {
+    if(index < 0) {
         fprintf(log_f, "\t-> Your id doesn't exist\n");
         printf("\t-> Your id doesn't exist\n");
         return ;

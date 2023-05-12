@@ -3,7 +3,7 @@
 
 #include "../../utilities/tools.h"
 
-#define MAX_FISHES 3
+#define MAX_FISHES 7
 #define MAX_WAYPOINT 5
 
 enum STRATEGY{

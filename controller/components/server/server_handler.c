@@ -145,8 +145,8 @@ int response_ls(int sockfd){
 	}
 	struct client* cli = get_cli_from_sock(sockfd);
 	struct view *v = global_aquarium->aquarium_views[cli->view_idx];
-	char msg[1024]="";
-	char tmp[128]="";
+	char msg[MAX_FISHES*256]="";
+	char tmp[256]="";
 	for(int i = 0; i<MAX_WAYPOINT;i++){
 		get_fishes(v, tmp, i);
 		if(strcmp(tmp, "list \n") == 0){
@@ -251,6 +251,7 @@ int response_addFish(int sockfd){
 	struct fish* new = create_fish(name, type, strat, atoi(x), atoi(y), atoi(w), atoi(h));
 	struct client* cli = get_cli_from_sock(sockfd);
 	if(add_fish(global_aquarium->aquarium_views[cli->view_idx], new) == -1){
+		printf("error add\n");
 		free_fish(new);
 		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
 			return -1;
