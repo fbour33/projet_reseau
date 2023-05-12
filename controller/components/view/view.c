@@ -17,7 +17,7 @@ struct view *create_view(int id, int x, int y, int width, int height){
 }
 
 int add_fish(struct view* view, struct fish* fish) {
-    if (view->nb_fishes == MAX_FISHES-1) {
+    if (view->nb_fishes == MAX_FISHES) {
         //printf("There is no more space in this aquarium !\n");
         return -1;
     }
@@ -25,7 +25,6 @@ int add_fish(struct view* view, struct fish* fish) {
         //printf("Fish %s already exists!\n", fish->name);
         return -1;
     }
-    
     for(int i = 0; i < MAX_FISHES; i++) {
         if(view->fishes[i] == NULL) {
             view->fishes[i] = fish;
