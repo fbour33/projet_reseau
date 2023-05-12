@@ -9,7 +9,6 @@
     #include "../../parser/parser.h"
 
     #define MSG_LEN 1024
-    #define SERV_ADDR "localhost"
 
     void echo_server(int sockfd);
 
