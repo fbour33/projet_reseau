@@ -106,6 +106,7 @@ public class Client{
                             out.println("ping 12345");
                             out.flush();
                             pong = in.readLine();
+                            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         } catch (IOException e) {
                             System.out.println("Exception caught");
                         } finally {
@@ -125,7 +126,7 @@ public class Client{
                     String commandeFish = "ls";
                     while (true) {
                         Thread.sleep(1000 * display_timeout_value);
-                        send("ls");
+                        send(commandeFish);
                         if (!connected) {
                             break;
                         }
@@ -136,9 +137,9 @@ public class Client{
                                     System.out.println(line);
                                     whichCommand("ls", line);
                                 }
-                            }else if(commandeFish.equals("getfishcontinuously")) {
+                            }else if(commandeFish.equals("getFishesContinuously")) {
                                 String response = in.readLine();
-                                System.out.println(response);
+                                whichCommand("getFishesContinuously",response);
                             }
                         } catch (IOException e) {
                             System.out.println("Exception caught");
@@ -280,8 +281,9 @@ public class Client{
                     Matcher matcher = pattern.matcher(inputConsole);
 
                     if (matcher.matches()) {
-                        send(inputConsole);
                         try {
+                            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            send(inputConsole);
                             response = in.readLine();
                             System.out.println(response);
                             if(response != null && inputConsole != null) {
@@ -418,7 +420,7 @@ public class Client{
                 default: break;
             }
         }
-        if(command[0].equals("ls")){
+        if(command[0].equals("ls") || command[0].equals("getFishesContinuously")){
             lsCommand(props.parsedFishList(response),props);
         }
     }
@@ -502,7 +504,6 @@ public class Client{
                 fish.setGoalList(position);
                 fish.setTime(Integer.parseInt(strFish[3]));
             }
-            System.out.println("time" + Integer.parseInt(strFish[3]));
         }
     }
 
