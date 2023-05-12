@@ -1,0 +1,4 @@
+------ LOGS ------ 
+Loading aquarium ...
+Couldn't open aquarium load file	-> aquarium loaded (0 display views) !
+Aquarium loaded !

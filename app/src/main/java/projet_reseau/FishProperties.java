@@ -30,6 +30,8 @@ public class FishProperties {
     }
 
     public Point2D createPosition(String[] fishes){
+        if(fishes.length == 1)
+            return new Point2D.Double(-1, -1); 
         int index = 2; 
         if(!fishes[0].equals("addFish"))
             index = 1; 
