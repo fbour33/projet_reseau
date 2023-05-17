@@ -12,12 +12,6 @@ enum STRATEGY{
 
 enum STRATEGY string_to_strategy(char* str);
 
-enum FISH_TYPE{
-    INVALID, REDFISH,CLOWNFISH
-};
-
-enum FISH_TYPE string_to_fish_type(char* str);
-
 struct waypoint{
     struct position pos;
     int total_time;
@@ -30,7 +24,6 @@ struct waypoint *create_waypoint(int x, int y, int time);
 struct fish{
     char* name;
     int running;
-    enum FISH_TYPE type;
     enum STRATEGY strategy;
     struct position position;
     struct dimension rectangle;
@@ -41,7 +34,6 @@ struct fish{
 /**
  * @fn              create_fish
  * @brief           create a fish using the given value for the parameters
- * @param fish_type the type of the fish to be created
  * @param strategy  the moving strategy of the fish to be created
  * @param x         the x coordinates of the fish
  * @param y         the y coordinates of the fish
@@ -49,7 +41,7 @@ struct fish{
  * @param height    the height of the fish
  * @return          the adress of the strcuture fish created
  */
-struct fish * create_fish(char * name,enum FISH_TYPE fish_type, enum STRATEGY strategy,int x,int y,int width,int height);
+struct fish * create_fish(char * name, enum STRATEGY strategy,int x,int y,int width,int height);
 
 /**
  * @fn          free_fish

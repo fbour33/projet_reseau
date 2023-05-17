@@ -82,15 +82,11 @@ int get_fishes(struct view* view, char *resp, int waypoint_idx) {
 }
 
 int status(struct view* view, char* resp) {
-    if(view->nb_fishes <= 0) {
-        sprintf(resp, "There is no fish !\n");
-        return -1;
-    }
-    sprintf(resp, "OK: Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
+    sprintf(resp, "OK : Connecté au contrôleur, %d poissons trouvés\n", view->nb_fishes);
     for(int i = 0; i<view->nb_fishes; ++i) {
         char temp[64];
         struct fish* tmp = view->fishes[i];
-        sprintf(temp, "\tFish %s at %dx%d,%dx%d, %s\n", tmp->name, tmp->position.x, tmp->position.y, 
+        sprintf(temp, "Fish %s at %dx%d,%dx%d, %s\n", tmp->name, tmp->position.x, tmp->position.y, 
                 tmp->rectangle.width, tmp->rectangle.height, tmp->running == 1 ? "started" : "notStarted");
         strcat(resp, temp);
     }
