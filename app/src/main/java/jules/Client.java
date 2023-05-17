@@ -300,6 +300,15 @@ public class Client{
         }
     }
 
+    private String parseName(String fishName) {
+        String nameParsed = fishName;
+        int underscoreIndex = nameParsed.indexOf("_");
+        if(underscoreIndex != -1){
+            nameParsed = nameParsed.substring(0, underscoreIndex);
+        }
+        return nameParsed;
+    }
+
     /**
      * Gestion des commandes de la console et envoie au serveur
      * @return response qui est un String pour la réponse du serveur
@@ -324,8 +333,18 @@ public class Client{
                     Matcher matcher = pattern.matcher(inputConsole);
 
                     if (matcher.matches()) {
-                        out.println(inputConsole);
-                        return true;
+                        String[] command = inputConsole.split(" "); 
+                        String imageName = parseName(command[1]);
+                        if (!imageName.endsWith(".png")) {
+                            imageName += ".png";
+                        }
+                        File file = new File(imageName);
+                        if(file.exists()){
+                            out.println(inputConsole);
+                            return true;
+                        }else{
+                            consoleOutPromptQueue.put("<NOK. Fish name doesn't match with an image." + System.lineSeparator());
+                        }
                     }
                 }
                 consoleOutPromptQueue.put("<NOK. Usage: addFish 'nameFish' at 'x'x'y', 'w'x'h', 'mobilityModel'" + System.lineSeparator());
