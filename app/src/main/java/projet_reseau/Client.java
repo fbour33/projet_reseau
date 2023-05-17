@@ -159,12 +159,12 @@ public class Client{
     /*                             GETTER                                   */
     /***********************************************************************/
 
-    /**
+   /**
      * Récupérer les poissons gérés par les clients 
      */
     public ArrayList<Fish> getFishs() {
         return fishList;
-    }
+    } 
 
 
     /*************************************************************************/

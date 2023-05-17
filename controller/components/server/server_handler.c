@@ -238,17 +238,8 @@ int response_addFish(int sockfd){
 	delim = "_";
 	char tmp[32];
 	strcpy(tmp, name);
-	char *type_str = strtok(tmp, delim);
-	enum FISH_TYPE type = string_to_fish_type(type_str);
-	if(type == INVALID){
-		fprintf(log_f, "reponse : NOK (Invalid type)\n");
-		if (send(sockfd, "NOK\n", 5, 0) <= 0) {
-			return -1;
-		}
-		return 0;
-	}
 
-	struct fish* new = create_fish(name, type, strat, atoi(x), atoi(y), atoi(w), atoi(h));
+	struct fish* new = create_fish(name, strat, atoi(x), atoi(y), atoi(w), atoi(h));
 	struct client* cli = get_cli_from_sock(sockfd);
 	if(add_fish(global_aquarium->aquarium_views[cli->view_idx], new) == -1){
 		printf("error add\n");
