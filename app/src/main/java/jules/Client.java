@@ -155,7 +155,12 @@ public class Client{
                         String command = consoleInPromptQueue.take();
                         boolean send = sendConsoleCommand(command);
                         if(send){
-                            String resp = consoleQueue.take();
+                            String resp = null;
+                            if(!command.split(" ")[0].trim().equals("hello")){
+                                System.out.println("Thread with command =! hello : "+ command);
+                                resp = consoleQueue.take();
+                            }
+                            System.out.println("Thread with command "+ command);
                             try{
                                 resp = handleConsoleCommand(command, resp);
                             } catch (InterruptedException e){
@@ -364,12 +369,16 @@ public class Client{
                 return false;
 
             case "log":
-                if(args.length == 2 && args[1].equals("out")){
+                if(args.length == 2 && args[1].trim().equals("out")){
                     out.println(inputConsole);
                     return true;
                 }else {
                     consoleOutPromptQueue.put("<NOK! Usage: 'log out'" + System.lineSeparator());
+
                 }
+                return false;
+            case "hello" :
+                consoleOutPromptQueue.put("<Restart the program to reconnect" + System.lineSeparator());
                 return false;
             default:
                 consoleOutPromptQueue.put("<NOK. Command not found." + System.lineSeparator());
@@ -381,7 +390,6 @@ public class Client{
     private String handleConsoleCommand(String senderCommand, String serverResponse) throws InterruptedException {
         String[] command = senderCommand.split(" ");
         String[] response = serverResponse.split(" ");
-        System.out.println("here with command "+command[0]);
         if(response[0].equals("OK")){
             switch(command[0]){
                 case "addFish":
@@ -405,10 +413,10 @@ public class Client{
                 default: return serverResponse;
             }
         }
-        /*
-        if(command[0].equals("ls") || command[0].equals("getFishesContinuously")){
-            lsCommand(props.parsedFishList(response),props);
-        }*/
+        if (command[0].equals("log")){
+            logOut();
+        }
+        
         return serverResponse;
     }
 
@@ -447,6 +455,25 @@ public class Client{
             }
         }
     }
+
+    public void logOut(){
+        out.println("log out");
+        ArrayList<Fish> newList = new ArrayList<>(fishList);
+        for(Fish fish : newList){
+            fishList.remove(fish);
+        }
+        authenticated = false;
+        connected = false;
+        try{
+            in.close();
+            out.close();
+            socket.close();
+        } catch(IOException e){
+            System.out.println("Error in logOut");
+            System.exit(0);
+        }
+    }
+
 
     private String[] extractList(String str){
         String temp = str.substring(5, str.length()-1);

@@ -148,14 +148,14 @@ public class Main extends Application {
         logOutItem.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
-               //client.handleCommand("log out");
+               client.logOut();
             }
         });
 
         exitItem.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
-                //client.handleCommand("log out");
+                client.logOut();
                 System.exit(0);
             }
         });
