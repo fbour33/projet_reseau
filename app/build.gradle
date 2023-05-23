@@ -37,6 +37,6 @@ application {
     mainClass = 'jules.Main'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}

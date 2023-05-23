@@ -21,8 +21,9 @@ public class Fish {
     private double yGoal;
     private boolean running;
     private double elapsedTime;
-    private int time;
+    //private int time;
     private ArrayList<Point2D> xyGoal;
+    private ArrayList<Integer> timeList; 
     
     /**
      * Conctructeur du poisson 
@@ -31,11 +32,12 @@ public class Fish {
         initFishImage(fishName);
         setPosition(posX, posY);
         xyGoal = new ArrayList<Point2D>(); 
+        timeList = new ArrayList<Integer>();
         name = fishName;
         running = false;
         WIDTH = width;
         HEIGHT = height;
-        time = 100;
+        //time = 0;
     }
 
     /*************************************************************************/
@@ -122,7 +124,7 @@ public class Fish {
      * Donner le temps pour atteindre l'objectif
      */
     public void setTime(int time){
-        this.time = time; 
+        timeList.add(time); 
     }
 
     /*************************************************************************/
@@ -168,8 +170,9 @@ public class Fish {
      * met à jour la position du poisson 
      */
     public void moveFish(int FPS) {
-    if (!xyGoal.isEmpty()) {
+    if (!xyGoal.isEmpty() && !timeList.isEmpty()) {
         Point2D point = xyGoal.get(0);
+        int time = timeList.get(0);
         if (time != 0) {
             elapsedTime += 1.0 / FPS;
             double dx = (point.getX() - x) / time;
@@ -178,12 +181,14 @@ public class Fish {
             y += elapsedTime * dy;
             if (elapsedTime >= time) {
                 xyGoal.remove(0);
+                timeList.remove(0);
                 elapsedTime = 0;
             }
         } else {
             x = point.getX();
             y = point.getY();
             xyGoal.remove(0);
+            timeList.remove(0);
         }
     }
 }
