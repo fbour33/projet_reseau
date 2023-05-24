@@ -1,4 +1,4 @@
-package jules;
+package client;
 
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;

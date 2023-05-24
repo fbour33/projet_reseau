@@ -1,4 +1,4 @@
-package jules;
+package client;
 
 public class Goal {
     public int x;

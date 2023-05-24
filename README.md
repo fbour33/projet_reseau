@@ -1,16 +1,38 @@
-# Client sur localhost (Client + serveur sur la même machine)
+# Projet de Réseau
 
-## Compilation et exécution du serveur 
+## Arborescence de fichiers
 
-- Compiler le projet avec la commande make 
-- Exécuter le serveur avec la commande ./serveur, un aquarium est déjà chargé en mémoire
+- app/ : Dossier du code de l'afficheur 
+    - app/logCLient.txt : Fichier de log du client
+    - app/affichage.cfg : Fichier de config. de l'afficheur
+- build/ : Fichier objet du controller (après compilation)
+- controller/ : Dossier du code du serveur
+- aquarium.load : Fichier de paramètre de l'aquarium
+- controller.cfg : Fichier de config. du controller
+- log.txt : Fichier de log du serveur
+
+## Compilation du projet
+
+- Compiler le serveur avec la commande make 
+- Mettre en place gradle avec ./gradlew
   
-## Execution du client
+## Execution du projet
 
-- Taper la commande ./gradlew run sur un autre terminal
+- ./gradlew run pour le client
+- ./server pour le serveur
 
+## Exemple de commande client:
 
-# Client sur une adresse IP (Client + serveur des machines différentes)
+- addFish ClownFish_1 at 70x30,10x3, RandomWaypoint
+- startFish ClownFish_1 
+- status
 
-- Modifier dans le dossier app la ligne controller-address du fichier affichge.cfg en ajoutant l'adresse IP du réseau auquel vous êtes connecté. 
+### Console utilisateur
+
+- La console utilisateur du serveurse trouve sur le terminal qui la lancé
+- La console utilisateur du client se trouve en cliquant sur "Aquarium Menu" -> Open console
+
+## Client et serveur distant
+
+- Modifier dans le dossier app la ligne controller-address du fichier affichge.cfg en ajoutant l'adresse IP du serveur.
 - Suivre les mêmes étapes de compilation et d'exécution que sur un client en localhost

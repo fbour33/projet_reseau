@@ -1,4 +1,4 @@
-package jules;
+package client;
 
 import javafx.scene.image.Image;
 import java.nio.file.Files;

@@ -34,7 +34,7 @@ javafx {
 }
 
 application {
-    mainClass = 'jules.Main'
+    mainClass = 'client.Main'
 }
 
 //tasks.named('test') {

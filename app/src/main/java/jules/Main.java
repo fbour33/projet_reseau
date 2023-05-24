@@ -1,4 +1,4 @@
-package jules;
+package client;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
