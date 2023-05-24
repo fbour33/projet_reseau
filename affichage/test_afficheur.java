@@ -44,7 +44,7 @@ public class test_afficheur {
             // Envoi du message d'ajout d'un poisson
             outputStream = socket.getOutputStream();
             writer = new PrintWriter(outputStream, true);
-            writer.println("addFish CloWNFish at 40x30,10x3, RandomWaypoint");
+            writer.println("addFish ClownFish at 40x30,10x3, RandomWaypoint");
 
             // Lecture de la réponse du serveur
             inputStream = socket.getInputStream();

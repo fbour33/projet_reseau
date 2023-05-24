@@ -20,3 +20,4 @@ app/affichage.cfg
 controller/server
 server
 log.txt
+app/logClient.txt
