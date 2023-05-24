@@ -89,11 +89,19 @@ public class Client{
     */
     private BlockingQueue<String> consoleQueue = new LinkedBlockingDeque<>();
 
+    /**
+    * 
+    */
+   private static BufferedWriter writerLog; 
+
 
 
     public Client(){
         config();
         handleConnection();
+        createFile("logClient.txt");
+        openFile("logClient.txt"); 
+
         fishList = new ArrayList<Fish>();
 
         Thread filterThread = new Thread(new Runnable() {
@@ -104,11 +112,14 @@ public class Client{
                         while (connected && authenticated) {
                             try {                     
                                 String msg = in.readLine();
-                                System.out.println("Received "+ msg);
+                                System.out.println("Received "+ msg + System.lineSeparator());
+                                if(!msg.equals(""))
+                                    writeToFile("Received : " + msg + System.lineSeparator());
                                 String[] tokens = msg.split(" ");
 
                                 if(tokens[0].trim().equals("list")) {
                                     System.out.println("adding "+msg+" in list");
+                                    //writeToFile("Received : adding "+msg+" in list" + System.lineSeparator());
                                     listQueue.put(String.valueOf(msg));
                                 }
 
@@ -137,6 +148,7 @@ public class Client{
                     while (true) {
                         while (connected && authenticated) {
                             out.println(msg);
+                            writeToFile("Sent : " + msg); 
                             Thread.sleep(1000*display_timeout_value/2);
                         }   
                     }
@@ -187,6 +199,7 @@ public class Client{
                                 for (Fish f : fishList){
                                     if(f.isRunning() && f.goals.size() < 2){
                                             out.println("ls");
+                                            writeToFile("Sent : ls");
                                         break;
                                     }
                                 }
@@ -258,6 +271,7 @@ public class Client{
             connected = false;
         }
         out.println("hello in as "+id);
+        writeToFile("hello in as "+ id + System.lineSeparator());
         String resp = null;
         try{
             resp = in.readLine();
@@ -321,13 +335,15 @@ public class Client{
     public boolean sendConsoleCommand(String inputConsole) throws InterruptedException{
         String[] args = inputConsole.split(" ");
         String response;
-
+        writeToFile(inputConsole);
         switch (args[0]) {
             case "status":
                 if (args.length == 1) {
                     out.println("status");
+                    //writeToFile("Sent : status");
                     return true;
                 } else {
+                    writeToFile("Received : <NOK. La commande 'status' ne prend aucun argument." + System.lineSeparator());
                     consoleOutPromptQueue.put("<NOK. La commande 'status' ne prend aucun argument." + System.lineSeparator());
                     return false;
                 }
@@ -342,16 +358,23 @@ public class Client{
                         String imageName = parseName(command[1]);
                         if (!imageName.endsWith(".png")) {
                             imageName += ".png";
+                            System.out.println(imageName);
                         }
                         File file = new File(imageName);
-                        if(file.exists()){
+                        String absolutePath = file.getAbsolutePath();
+                        System.out.println(file.getAbsolutePath());
+                        absolutePath = absolutePath.replace(imageName, "src/main/images/"+imageName);
+                        File newFile = new File(absolutePath);
+                        if(newFile.exists()){
                             out.println(inputConsole);
                             return true;
                         }else{
+                            writeToFile("Received : <NOK. Fish name doesn't match with an image." + System.lineSeparator());
                             consoleOutPromptQueue.put("<NOK. Fish name doesn't match with an image." + System.lineSeparator());
                         }
                     }
                 }
+                writeToFile("Received : <NOK. Usage: addFish 'nameFish' at 'x'x'y', 'w'x'h', 'mobilityModel'" + System.lineSeparator());
                 consoleOutPromptQueue.put("<NOK. Usage: addFish 'nameFish' at 'x'x'y', 'w'x'h', 'mobilityModel'" + System.lineSeparator());
                 return false;
 
@@ -364,9 +387,11 @@ public class Client{
                         out.println(inputConsole);
                         return true;
                     } else {
+                        writeToFile("Received : <NOK. Usage: 'startFish nameFish'" + System.lineSeparator());
                         consoleOutPromptQueue.put("<NOK. Usage: 'startFish nameFish'" + System.lineSeparator());
                     }
                 } else {
+                    writeToFile("Received : <NOK. Usage: 'startFish nameFish'" + System.lineSeparator());
                     consoleOutPromptQueue.put("<NOK. Usage: 'startFish nameFish'" + System.lineSeparator());
                 }
                 return false;
@@ -380,9 +405,11 @@ public class Client{
                         out.println(inputConsole);
                         return true;
                     } else {
+                        writeToFile("Received : <NOK! Usage: 'delFish nameFish'" + System.lineSeparator());
                         consoleOutPromptQueue.put("<NOK! Usage: 'delFish nameFish'" + System.lineSeparator());
                     }
                 } else {
+                    writeToFile("Received : <NOK! Usage: 'delFish nameFish'" + System.lineSeparator());
                     consoleOutPromptQueue.put("<NOK! Usage: 'delFish nameFish'" + System.lineSeparator());
                 }
                 return false;
@@ -392,16 +419,72 @@ public class Client{
                     out.println(inputConsole);
                     return true;
                 }else {
+                    writeToFile("<NOK! Usage: 'log out'");
                     consoleOutPromptQueue.put("<NOK! Usage: 'log out'" + System.lineSeparator());
 
                 }
                 return false;
             case "hello" :
+                writeToFile("Received : <Restart the program to reconnect" + System.lineSeparator());
                 consoleOutPromptQueue.put("<Restart the program to reconnect" + System.lineSeparator());
                 return false;
             default:
+                writeToFile("Received : <NOK. Command not found." + System.lineSeparator());
                 consoleOutPromptQueue.put("<NOK. Command not found." + System.lineSeparator());
                 return false;
+        }
+    }
+
+    
+
+    public void createFile(String fileName){
+        File file = new File(fileName);
+        if (file.exists()) {
+            try {
+                file.delete();
+                System.out.println("Le fichier existant a été supprimé avec succès !");
+            }catch (SecurityException e) {
+                System.out.println("Une erreur s'est produite lors de la suppression du fichier existant : " + e.getMessage());
+            }
+        }
+        try {
+            file.createNewFile();
+            System.out.println("Le nouveau fichier a été créé avec succès !");
+        } catch (IOException e) {
+            System.out.println("Une erreur s'est produite lors de la création du nouveau fichier : " + e.getMessage());
+        }
+    }
+
+    public static void openFile(String fileName) {
+        try {
+            writerLog = new BufferedWriter(new FileWriter(fileName, true));
+            System.out.println("Le fichier a été ouvert avec succès !");
+        } catch (IOException e) {
+            System.out.println("Une erreur s'est produite lors de l'ouverture du fichier : " + e.getMessage());
+        }
+    }
+
+    public static void writeToFile(String content) {
+        try {
+            writerLog = new BufferedWriter(new FileWriter("logClient.txt", true));
+            writerLog.write(content);
+            writerLog.newLine(); // Ajouter un saut de ligne après chaque écriture
+            writerLog.flush();
+            writerLog.close();
+            //System.out.println("Le contenu a été écrit avec succès dans le fichier !");
+        } catch (IOException e) {
+            System.out.println("Une erreur s'est produite lors de l'écriture dans le fichier : " + e.getMessage());
+        }
+    }
+
+    public static void closeFile() {
+        try {
+            if (writerLog != null) {
+                writerLog.close();
+                System.out.println("Le fichier a été fermé avec succès !");
+            }
+        } catch (IOException e) {
+            System.out.println("Une erreur s'est produite lors de la fermeture du fichier : " + e.getMessage());
         }
     }
 
@@ -434,6 +517,7 @@ public class Client{
         }
         if (command[0].equals("log")){
             logOut();
+            closeFile();
         }
         
         return serverResponse;
